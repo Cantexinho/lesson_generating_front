@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginFailed, setLoginFailed] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://127.0.0.1:8000/users", {
+    const response = await fetch("http://127.0.0.1:8000/users/get", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,6 +22,7 @@ const Login = (props) => {
       navigate("/home");
     } else {
       console.log("Failed to login");
+      setLoginFailed(true);
     }
   };
 
@@ -31,14 +33,22 @@ const Login = (props) => {
         onSubmit={handleSubmit}
       >
         <input
-          className="w-full p-2 mb-6 text-primary border-b-2 border-primary outline-none focus:bg-gray-300"
+          className={`w-full p-2 mb-6 text-primary outline-none focus:bg-gray-300 ${
+            loginFailed
+              ? "border-b-2 border-red-600"
+              : "border-b-2 border-primary"
+          }`}
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-          className="w-full p-2 mb-6 text-primary border-b-2 border-primary outline-none focus:bg-gray-300"
+          className={`w-full p-2 mb-6 text-primary outline-none focus:bg-gray-300 ${
+            loginFailed
+              ? "border-b-2 border-red-600"
+              : "border-b-2 border-primary"
+          }`}
           type="password"
           placeholder="Password"
           value={password}
