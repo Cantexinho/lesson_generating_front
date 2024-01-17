@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: (theme) => ({
         futuristic_background:
-          "url('C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/minimalistic_3.png')",
+          "url('./assets/images/minimalistic_3.png')",
       }),
       width: {
         116: "29rem",
