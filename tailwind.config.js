@@ -6,6 +6,11 @@ module.exports = {
       width: {
         116: "29rem",
       },
+      colors: {
+        login_color_blue: "#0D3D69",
+        cl_color_dark_blue: "#00182E",
+        cl_color_light_blue: "#0D406E",
+      },
     },
   },
   variants: {

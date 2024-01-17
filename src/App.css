@@ -18,3 +18,31 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.body {
+  background: #2c2a2a;
+}
+
+.bg-blue {
+  background-color: #251e8a;
+}
+
+.bg-gray {
+  background-color: #000107;
+}
+
+.second-bg-gray {
+  background-color: #121216;
+}
+
+.second-bg-gray_transparent {
+  background-color: #12121665;
+}
+
+.namefield-bg-gray {
+  background-color: #1e1e24b0;
+}
+
+.logo-blue {
+  background-color: #00182E;
+}
