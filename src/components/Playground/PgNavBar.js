@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
 
-const PgNavBar = () => {
+const PgNavBar = ({ pgMainState }) => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const handleAccountBtnClick = () => {
@@ -13,13 +13,7 @@ const PgNavBar = () => {
       await lessonDataOperations.fetchAllLessons(setLessons);
     };
     fetchData();
-  }, []);
-
-  const handleLessons = async (e) => {
-    e.preventDefault();
-    await lessonDataOperations.fetchAllLessons(setLessons);
-    setLessons();
-  };
+  }, [pgMainState]);
 
   return (
     <nav className="flex flex-col fixed justify-top items-center second-bg-gray h-screen rounded overflow-y">
@@ -43,7 +37,7 @@ const PgNavBar = () => {
       <div className="mt-40 max-h-screen h-full overflow-y-auto scrollbar">
         <ul className="flex flex-col items-center w-52">
           {lessons.map((lesson) => (
-            <button className="relative flex items-center justify-left pl-2 w-full h-12 text-white border border-cl_color_dark_blue rounded hover:bg-cl_color_dark_blue pg-bg-gray">
+            <button className="relative flex items-center justify-left pl-2 w-full h-12 text-white text-sm border border-cl_color_dark_blue rounded hover:bg-cl_color_dark_blue pg-bg-gray">
               {lesson.name}
             </button>
           ))}

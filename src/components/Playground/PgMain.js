@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Spinner from "./Spinner";
 import * as inputHandlers from "../../utils/inputHandlers";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
@@ -8,9 +8,8 @@ import TitleSelect from "./PgTitle";
 import PartNumberSelect from "./PgPartNumber";
 import PartComponent from "./PgPartComponent";
 
-const PgMain = () => {
+const PgMain = ({ parts, setParts }) => {
   const [title, setTitle] = useState("");
-  const [parts, setParts] = useState([]);
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [loading, setLoading] = useState({});
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -66,9 +65,9 @@ const PgMain = () => {
           Delete Lesson
         </button>
       </form>
-      <div className="flex flex-col items-center second-bg-gray">
+      <div className="flex flex-col items-center">
         {submitLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center w-full">
             <Spinner />
           </div>
         ) : (
