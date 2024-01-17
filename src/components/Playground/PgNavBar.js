@@ -1,14 +1,28 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
 
 const PgNavBar = () => {
   const navigate = useNavigate();
+  const [lessons, setLessons] = useState([]);
   const handleAccountBtnClick = () => {
     navigate("/login");
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      await lessonDataOperations.fetchAllLessons(setLessons);
+    };
+    fetchData();
+  }, []);
+
+  const handleLessons = async (e) => {
+    e.preventDefault();
+    await lessonDataOperations.fetchAllLessons(setLessons);
+    setLessons();
+  };
 
   return (
-    <nav className="flex flex-col fixed justify-top items-center second-bg-gray h-screen rounded overflow-y border border-cl_color_light_blue">
+    <nav className="flex flex-col fixed justify-top items-center second-bg-gray h-screen rounded overflow-y">
       <div className="flex fixed flex-col items-center justify-center">
         <a className="flex flex-col items-center mt-4 mb-4" href="/home">
           <img
@@ -20,25 +34,24 @@ const PgNavBar = () => {
             CyberLearn
           </p>
         </a>
-        <div className="flex justify-center space-x-1 mb-8">
-          <button className="text-white p-2 hover:bg-cl_color_dark_blue border border-cl_color_light_blue namefield-bg-gray">
+        <div className="flex justify-center space-x-1 mb-4">
+          <button className="text-white p-1 hover:bg-cl_color_dark_blue border border-cl_color_light_blue second-bg-gray">
             New Lesson
           </button>
         </div>
       </div>
-      <div className="mt-44 mb-4 max-h-screen h-full overflow-y-auto scrollbar">
+      <div className="mt-40 max-h-screen h-full overflow-y-auto scrollbar">
         <ul className="flex flex-col items-center w-52">
-          <button className="relative flex items-center justify-center w-full h-12 text-white border border-cl_color_dark_blue text-lg rounded hover:bg-cl_color_dark_blue namefield-bg-gray">
-            Created lesson
-          </button>
-          <button className="relative flex items-center justify-center w-full h-12 text-white border border-cl_color_dark_blue text-lg rounded hover:bg-cl_color_dark_blue namefield-bg-gray">
-            Created lesson
-          </button>
+          {lessons.map((lesson) => (
+            <button className="relative flex items-center justify-left pl-2 w-full h-12 text-white border border-cl_color_dark_blue rounded hover:bg-cl_color_dark_blue pg-bg-gray">
+              {lesson.name}
+            </button>
+          ))}
         </ul>
       </div>
-      <div className="flex justify-center w-full space-x-1 mb-2 mt-auto">
+      <div className="flex justify-center w-full space-x-1 mb-1 mt-auto">
         <button
-          className="text-white border border-cl_color_light_blue p-2 w-full hover:bg-cl_color_dark_blue namefield-bg-gray"
+          className="text-white border border-cl_color_light_blue p-2 w-full hover:bg-cl_color_dark_blue second-bg-gray"
           onClick={handleAccountBtnClick}
         >
           Log out

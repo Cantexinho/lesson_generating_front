@@ -39,7 +39,7 @@ const PgMain = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow w-max-screen items-center justify-top ml-80 mr-20">
+    <div className="flex flex-col flex-grow w-max-screen items-center justify-top ml-80 mr-28">
       <form
         onSubmit={handleGenerateSubmit}
         className="flex w-full items-center justify-center mt-2 md:flex-row mb-4"

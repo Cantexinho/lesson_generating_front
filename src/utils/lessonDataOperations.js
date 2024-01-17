@@ -21,9 +21,9 @@ export const handleGenerate = async (
   }
 };
 
-export const fetchAllLessons = async () => {
+export const fetchAllLessons = async (setLessons) => {
   const lessonData = await crudService.fetchAllLessons();
-  return lessonData;
+  setLessons(lessonData);
 };
 
 export const fetchLessonData = async (title, selectedNumber) => {
