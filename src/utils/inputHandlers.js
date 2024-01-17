@@ -7,5 +7,5 @@ export const handleNumberChange = (e, setSelectedNumber) => {
 };
 
 export const handleLogout = (navigate) => {
-  navigate("/");
+  navigate("/home");
 };

@@ -45,7 +45,7 @@ const NavBar = () => {
         <nav className="flex items-center">
           <ul className="mx-4 flex">
             <li className="second-bg-gray text-white text-lg px-6 py-1 border border-white hover:bg-cl_color_dark_blue">
-              <a href="/playground">Go to Playground</a>
+              <a href="/login">Go to Playground</a>
               <FontAwesomeIcon icon={faArrowRight} className="ml-2" size="xs" />
             </li>
           </ul>

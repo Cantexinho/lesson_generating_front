@@ -19,7 +19,7 @@ const Login = (props) => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      navigate("/home");
+      navigate("/playground");
     } else {
       console.log("Failed to login");
       setLoginFailed(true);
