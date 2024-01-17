@@ -2,7 +2,7 @@ import React from "react";
 
 const PartNumberSelect = ({ selectedNumber, handleNumberChange }) => {
   return (
-    <div className="flex flex-col mb-4 md:mb-0 md:mr-4 items-center justify-center">
+    <div className="flex flex-col mr-4 items-center justify-center">
       <label
         className="block text-gray-700 text-sm font-bold text-white mb-2"
         htmlFor="number"

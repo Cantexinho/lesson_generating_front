@@ -42,7 +42,7 @@ const PgMain = () => {
     <div className="flex flex-col flex-grow w-max-screen items-center justify-top ml-80 mr-20">
       <form
         onSubmit={handleGenerateSubmit}
-        className="flex items-center w-full justify-center mt-2 md:flex-row mb-4"
+        className="flex w-full items-center justify-center mt-2 md:flex-row mb-4"
       >
         <TitleSelect
           title={title}
