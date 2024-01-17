@@ -21,6 +21,13 @@ export const handleGenerate = async (
   }
 };
 
+export const fetchLessons = async () => {
+  const lessonData = await crudService.fetchLessonByName();
+  return lessonData != null
+    ? crudService.fetchLessonParts()
+    : await generateLessonData();
+};
+
 export const fetchLessonData = async (title, selectedNumber) => {
   const lessonData = await crudService.fetchLessonByName(title);
   return lessonData != null

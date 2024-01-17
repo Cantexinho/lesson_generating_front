@@ -8,7 +8,7 @@ const NavBar = () => {
       <a className="flex items-center" href="/home">
         <img
           className="w-16 h-16 rounded-2xl"
-          src={require("C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/logo.png")}
+          src={require("../../assets/images/logo.png")}
           alt="Logo"
         />
         <p className="text-white text-2xl font-semibold flex-shrink-0 mx-2">

@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
 import HomeSection from "../components/Home/HomeSection";
-import start_now from "C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/start_now.png";
+import start_now from "../assets/images/start_now.png";
 
 const Home = () => {
   return (

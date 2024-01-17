@@ -33,12 +33,14 @@ const Login = (props) => {
 
   return (
     <div className="flex flex-col items-center justify-top h-screen bg-gray p-10">
-      <img
-        className="mt-2 w-28 h-28 rounded-2xl"
-        src={require("C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/logo.png")}
-        alt="Your Logo Alt Text"
-      />
-      <p className="text-white text-xl font-semibold mb-10">Cyber Learn</p>
+      <a href="/">
+        <img
+          className="mt-2 w-28 h-28 rounded-2xl"
+          src={require("../assets/images/logo.png")}
+          alt="Your Logo Alt Text"
+        />
+        <p className="text-white text-xl font-semibold mb-10">Cyber Learn</p>
+      </a>
       <form className="flex flex-col justify-center items-center border border-gray-700 w-96 p-8 pb-4 second-bg-gray rounded-xl shadow">
         <div className="mb-3 w-full">
           <label className="text-primary text-gray-300" htmlFor="username">
