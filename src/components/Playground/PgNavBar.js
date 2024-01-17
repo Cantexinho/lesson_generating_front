@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import * as lessonDataOperations from "../../utils/lessonDataOperations";
 
 const PgNavBar = () => {
   const navigate = useNavigate();

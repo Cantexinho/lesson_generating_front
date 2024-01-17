@@ -16,7 +16,7 @@ const PartComponent = ({
       key={part.id}
       className="flex mb-4 w-full max-w-6xl flex justify-between relative"
     >
-      <div className="border border-gray-700 namefield-bg-gray rounded-sm p-4 relative text-white md:min-w-[1040px] md:min-h-[100px]">
+      <div className="border border-gray-700 namefield-bg-gray rounded-sm p-4 relative text-white">
         {loading[part.id] ? (
           <div className="absolute inset-0 flex justify-center items-center">
             <Spinner />

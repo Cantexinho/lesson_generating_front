@@ -21,11 +21,9 @@ export const handleGenerate = async (
   }
 };
 
-export const fetchLessons = async () => {
-  const lessonData = await crudService.fetchLessonByName();
-  return lessonData != null
-    ? crudService.fetchLessonParts()
-    : await generateLessonData();
+export const fetchAllLessons = async () => {
+  const lessonData = await crudService.fetchAllLessons();
+  return lessonData;
 };
 
 export const fetchLessonData = async (title, selectedNumber) => {

@@ -8,7 +8,7 @@ const TitleSelect = ({ title, handleTitleChange }) => {
         Enter title of lesson
       </label>
       <input
-        className="flex-grow w-full p-2 namefield-bg-gray border border-cl_color_light_blue rounded mr-4 text-white focus:outline-none focus:outline-blue-700"
+        className="p-2 namefield-bg-gray border border-cl_color_light_blue rounded mr-4 text-white focus:outline-none focus:outline-blue-700"
         type="text"
         value={title}
         onChange={handleTitleChange}
