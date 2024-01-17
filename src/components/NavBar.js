@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import NavBarButton from "./NavBarButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const NavBar = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex items-top w-full p-2 mb-2 second-bg-gray border border-cl_color_dark_blue">
+    <div className="flex items-top w-full fixed top-0 p-2 mb-2 second-bg-gray border border-cl_color_dark_blue">
       <a className="flex items-center" href="/home">
         <img
           className="w-16 h-16 rounded-2xl"
-          src={require("C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/logo.png")}
+          src={require("C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/logo.png")}
           alt="Logo"
         />
         <p className="text-white text-2xl font-semibold flex-shrink-0 mx-2">
-          Cyber Learn
+          CyberLearn
         </p>
       </a>
-      <div className="flex items-center pl-20 ml-20">
+      <div className="flex items-center pl-10 ml-10">
         <nav className="flex items-center w-full second-bg-gray">
           <ul className="flex space-x-2">
             <NavBarButton
@@ -47,7 +45,8 @@ const NavBar = () => {
         <nav className="flex items-center">
           <ul className="mx-4 flex">
             <li className="second-bg-gray text-white text-lg px-6 py-1 border border-white hover:bg-cl_color_dark_blue">
-              <a href="/contact">Go to Playground</a>
+              <a href="/playground">Go to Playground</a>
+              <FontAwesomeIcon icon={faArrowRight} className="ml-2" size="xs" />
             </li>
           </ul>
         </nav>

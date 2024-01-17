@@ -1,33 +1,47 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import NavBar from "../components/NavBar";
-import HomeSectionLeft from "../components/HomeSectionLeft";
-import HomeSectionRight from "../components/HomeSectionRight";
+import HomeSection from "../components/HomeSection";
+import start_now from "C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/start_now.png";
 
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex flex-col items-center bg-gray">
+    <div className="flex flex-col items-center bg-futuristic_background bg-cover">
       <NavBar />
-      <HomeSectionRight />
-      <HomeSectionLeft />
-      <div className="flex justify-center max-w-screen max-h-screen mt-4 second-bg-gray_transparent border border-cl_color_dark_blue">
-        <div className="flex flex-col items-left justify-center ml-20">
-          <h1 className="text-2xl font-bold text-white pb-4">
-            Move to a new beginning!
-          </h1>
-          <p className="text-xl text-white">
-            AI is transforming the way we access and utilize data and promises a
-            future where the quest for information is not just quick but also
-            exceptionally insightful.
-          </p>
-        </div>
-        <img
-          className="m-4 max-w-sm h-auto rounded-2xl"
-          src={require("C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/futuristic_future.png")}
+      <div className="flex flex-col pt-10 mt-10">
+        <HomeSection
+          img_placement={"right"}
+          img_name={"ai_presenter_1"}
+          sectionHeader={"Gather information quickly!"}
+          sectionText={
+            "In the fast-paced world of today, the ability to gather information quickly is paramount. In the times of information, Artificial Intelligence has emerged as a game-changer, revolutionizing the speed and efficiency with which we can access and process information."
+          }
+        />
+        <HomeSection
+          img_placement={"left"}
+          img_name={"student_learning"}
+          sectionHeader={"Learn efficiently!"}
+          sectionText={
+            "AI-driven tools excel at predictive analysis, anticipating user needs and proactively providing information before it's explicitly requested. These systems can learn from user behavior, preferences, and historical data to tailor their outputs, creating a personalized and streamlined information retrieval experience."
+          }
+        />
+        <HomeSection
+          img_placement={"right"}
+          img_name={"futuristic_future"}
+          sectionHeader={"Move to a new beginning!"}
+          sectionText={
+            "AI is transforming the way we access and utilize data and promises a future where the quest for information is not just quick but also exceptionally insightful."
+          }
         />
       </div>
+      <button>
+        <div className="flex flex-col items-left justify-center m-5 second-bg-gray_transparent rounded-full border boder-bg-blue">
+          <img
+            className={"m-3 w-32 h-auto rounded-full "}
+            src={start_now}
+            alt=""
+          />
+        </div>
+      </button>
     </div>
   );
 };
