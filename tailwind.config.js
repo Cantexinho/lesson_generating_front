@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: (theme) => ({
         futuristic_background:
-          "url('C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/minimalistic_2.png')",
+          "url('C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/minimalistic_3.png')",
       }),
       width: {
         116: "29rem",

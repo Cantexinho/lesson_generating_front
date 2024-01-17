@@ -1,6 +1,6 @@
-import ai_presenter_1 from "C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/ai_presenter_1.png";
-import futuristic_future from "C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/futuristic_future.png";
-import student_learning from "C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/student_learning.png";
+import ai_presenter_1 from "C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/ai_presenter_1.png";
+import futuristic_future from "C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/futuristic_future.png";
+import student_learning from "C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/student_learning.png";
 
 const HomeSection = ({
   img_placement,

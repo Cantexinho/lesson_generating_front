@@ -37,7 +37,7 @@ const Register = (props) => {
     <div className="flex flex-col items-center justify-top h-screen bg-gray p-10">
       <img
         className="mt-2 w-28 h-28 rounded-2xl"
-        src={require("C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/logo.png")}
+        src={require("C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/logo.png")}
         alt="Your Logo Alt Text"
       />
       <p className="text-white text-xl font-semibold mb-8">Cyber Learn</p>

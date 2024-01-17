@@ -1,7 +1,7 @@
 import React from "react";
-import NavBar from "../components/NavBar";
-import HomeSection from "../components/HomeSection";
-import start_now from "C:/Users/karolispakalnis/Desktop/lesson_generating_front/src/assets/images/start_now.png";
+import NavBar from "../components/Home/NavBar";
+import HomeSection from "../components/Home/HomeSection";
+import start_now from "C:/Users/cante/Desktop/LessonGenerating/lesson_generating_website/src/assets/images/start_now.png";
 
 const Home = () => {
   return (
@@ -35,11 +35,13 @@ const Home = () => {
       </div>
       <button>
         <div className="flex flex-col items-left justify-center m-5 second-bg-gray_transparent rounded-full border boder-bg-blue">
-          <img
-            className={"m-3 w-32 h-auto rounded-full "}
-            src={start_now}
-            alt=""
-          />
+          <a href="/login">
+            <img
+              className={"m-3 w-32 h-auto rounded-full "}
+              src={start_now}
+              alt=""
+            />
+          </a>
         </div>
       </button>
     </div>

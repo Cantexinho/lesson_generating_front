@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as inputHandlers from "../utils/inputHandlers";
-import PgMain from "../components/PgMain";
-import PgNavBar from "../components/PgNavBar";
+import PgMain from "../components/Playground/PgMain";
+import PgNavBar from "../components/Playground/PgNavBar";
 
 const Playground = () => {
   const navigate = useNavigate();
@@ -10,20 +10,19 @@ const Playground = () => {
     inputHandlers.handleLogout(navigate);
   };
   return (
-    <div className="flex items-center min-h-screen bg-gray">
+    <div className="flex min-h-screen bg-gray">
       <PgNavBar />
-      <div className="flex-grow"></div>
       <PgMain />
-      <div className="flex-grow">
-        <button
-          onClick={handleLogoutSubmit}
-          className="absolute top-4 right-4 p-2 bg-blue-500 text-white rounded"
-        >
-          Logout
-        </button>
-      </div>
     </div>
   );
 };
 
 export default Playground;
+{
+  /* <button
+        onClick={handleLogoutSubmit}
+        className="absolute top-4 right-4 p-2 bg-blue-500 text-white rounded"
+      >
+        Logout
+      </button> */
+}
