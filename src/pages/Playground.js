@@ -25,6 +25,7 @@ const Playground = () => {
 
   const handleLessonSelect = async (selectedLesson) => {
     setLesson(selectedLesson);
+    setTitle(selectedLesson.name);
     setLessonId(selectedLesson.id);
   };
 
