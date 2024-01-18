@@ -1,47 +1,27 @@
-import React, { useState, useEffect } from "react";
 import Spinner from "./Spinner";
-import * as inputHandlers from "../../utils/inputHandlers";
-import * as lessonDataOperations from "../../utils/lessonDataOperations";
 import * as partHandlers from "../../utils/partHandlers";
-import * as lessonHandlers from "../../utils/lessonHandlers";
 import TitleSelect from "./PgTitle";
 import PartNumberSelect from "./PgPartNumber";
 import PartComponent from "./PgPartComponent";
 
-const PgMain = ({ parts, setParts }) => {
-  const [title, setTitle] = useState("");
-  const [selectedNumber, setSelectedNumber] = useState(1);
-  const [loading, setLoading] = useState({});
-  const [submitLoading, setSubmitLoading] = useState(false);
-
-  const handleTitleChangeSubmit = (e) => {
-    inputHandlers.handleTitleChange(e, setTitle);
-  };
-
-  const handleNumberChangeSubmit = (e) => {
-    inputHandlers.handleNumberChange(e, setSelectedNumber);
-  };
-
-  const handleGenerateSubmit = async (e) => {
-    e.preventDefault();
-    await lessonDataOperations.handleGenerate(
-      title,
-      selectedNumber,
-      setSubmitLoading,
-      setParts
-    );
-  };
-
-  const handleDeleteLessonSubmit = async (e) => {
-    e.preventDefault();
-    await lessonHandlers.handleDeleteLesson(title, setSubmitLoading, setParts);
-  };
-
+const PgMain = ({
+  parts,
+  setParts,
+  title,
+  handleTitleChangeSubmit,
+  selectedNumber,
+  handleNumberChangeSubmit,
+  loading,
+  setLoading,
+  submitLoading,
+  handleGenerateSubmit,
+  handleDeleteLessonSubmit,
+}) => {
   return (
-    <div className="flex flex-col flex-grow w-max-screen items-center justify-top ml-80 mr-28">
+    <div className="flex flex-col flex-grow items-center justify-top ml-80 mr-28">
       <form
         onSubmit={handleGenerateSubmit}
-        className="flex w-full items-center justify-center mt-2 md:flex-row mb-4"
+        className="flex w-full max-w-full items-center justify-center mt-2 md:flex-row mb-4"
       >
         <TitleSelect
           title={title}
@@ -65,7 +45,7 @@ const PgMain = ({ parts, setParts }) => {
           Delete Lesson
         </button>
       </form>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center flex-grow">
         {submitLoading ? (
           <div className="flex justify-center items-center w-full">
             <Spinner />

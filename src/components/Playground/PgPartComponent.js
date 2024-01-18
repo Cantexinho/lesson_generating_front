@@ -14,7 +14,7 @@ const PartComponent = ({
   return (
     <div
       key={part.id}
-      className="flex mb-4 w-full max-w-6xl flex justify-between relative"
+      className="flex mb-4 w-full flex justify-between relative"
     >
       <div className="border border-gray-700 namefield-bg-gray rounded-sm p-4 w-full relative text-white">
         {loading[part.id] ? (

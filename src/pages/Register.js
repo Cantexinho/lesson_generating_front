@@ -35,13 +35,13 @@ const Register = (props) => {
 
   return (
     <div className="flex flex-col items-center justify-top h-screen bg-gray p-10">
-      <a href="/">
+      <a className="flex flex-col items-center justify-center" href="/">
         <img
           className="mt-2 w-28 h-28 rounded-2xl"
           src={require("../assets/images/logo.png")}
           alt="Your Logo Alt Text"
         />
-        <p className="text-white text-xl font-semibold mb-8">Cyber Learn</p>
+        <p className="text-white text-xl font-semibold mb-8">CyberLearn</p>
       </a>
       <form className="flex flex-col justify-center items-center border border-gray-700 w-96 p-8 pb-4 second-bg-gray rounded-xl shadow">
         <div className="mb-3 w-full">

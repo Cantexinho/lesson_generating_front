@@ -26,6 +26,16 @@ export const fetchAllLessons = async (setLessons) => {
   setLessons(lessonData);
 };
 
+export const fetchSingleLesson = async (lesson, setParts) => {
+  try {
+    const lessonData = await crudService.fetchLessonParts(lesson.id);
+    const parts = await handleLessonData(lessonData);
+    setParts(parts);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export const fetchLessonData = async (title, selectedNumber) => {
   const lessonData = await crudService.fetchLessonByName(title);
   return lessonData != null

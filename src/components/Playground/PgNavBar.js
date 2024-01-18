@@ -2,9 +2,15 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
 
-const PgNavBar = ({ pgMainState }) => {
+const PgNavBar = ({
+  pgMainState,
+  handleNewLessonButton,
+  handleLessonSelect,
+  selectedLesson,
+}) => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
+
   const handleAccountBtnClick = () => {
     navigate("/login");
   };
@@ -29,15 +35,26 @@ const PgNavBar = ({ pgMainState }) => {
           </p>
         </a>
         <div className="flex justify-center space-x-1 mb-4">
-          <button className="text-white p-1 hover:bg-cl_color_dark_blue border border-cl_color_light_blue second-bg-gray">
+          <button
+            className="text-white p-1 hover:bg-cl_color_dark_blue border border-cl_color_light_blue second-bg-gray"
+            onClick={handleNewLessonButton}
+          >
             New Lesson
           </button>
         </div>
       </div>
-      <div className="mt-40 max-h-screen h-full overflow-y-auto scrollbar">
+      <div className="mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar border border-cl_color_light_blue">
         <ul className="flex flex-col items-center w-52">
           {lessons.map((lesson) => (
-            <button className="relative flex items-center justify-left pl-2 w-full h-12 text-white text-sm border border-cl_color_dark_blue rounded hover:bg-cl_color_dark_blue pg-bg-gray">
+            <button
+              key={lesson.id}
+              className={`relative flex items-center justify-left pl-2 w-full h-12 text-white text-sm border-t border-b border-gray-700 rounded ${
+                selectedLesson && selectedLesson.id === lesson.id
+                  ? "bg-cl_color_dark_blue hover:bg-cl_color_dark_blue"
+                  : "pg-bg-gray hover:bg-cl_color_dark_blue"
+              }`}
+              onClick={() => handleLessonSelect(lesson)}
+            >
               {lesson.name}
             </button>
           ))}
