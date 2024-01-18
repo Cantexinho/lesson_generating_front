@@ -37,7 +37,7 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
         <ul className="absolute top-full bg-white border border-gray-400 rounded mt-1">
           {subpages.map((subpage) => (
             <li className="flex items-center justify-center text-base w-32 h-10 second-bg-gray hover:bg-cl_color_dark_blue">
-              <a href="/subpage1">{subpage}</a>
+              <a href={subpage}>{subpage}</a>
             </li>
           ))}
         </ul>

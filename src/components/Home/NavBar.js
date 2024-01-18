@@ -18,11 +18,8 @@ const NavBar = () => {
       <div className="flex items-center pl-10 ml-10">
         <nav className="flex items-center w-full second-bg-gray">
           <ul className="flex space-x-2">
-            <NavBarButton
-              label="Company"
-              showArrow={true}
-              subpages={["About", "Careers"]}
-            ></NavBarButton>
+            <NavBarButton label="Subscribe" showArrow={false}></NavBarButton>
+            <NavBarButton label="Goal" showArrow={false}></NavBarButton>
             <NavBarButton
               label="API"
               showArrow={true}
@@ -34,9 +31,9 @@ const NavBar = () => {
               subpages={["Support", "Business"]}
             ></NavBarButton>
             <NavBarButton
-              label="Goal"
-              showArrow={false}
-              subpages={[]}
+              label="Company"
+              showArrow={true}
+              subpages={["About", "Careers"]}
             ></NavBarButton>
           </ul>
         </nav>
