@@ -7,6 +7,7 @@ import * as lessonDataOperations from "../utils/lessonDataOperations";
 
 const Playground = () => {
   const [title, setTitle] = useState("");
+  const [lessonId, setLessonId] = useState();
   const [parts, setParts] = useState([]);
   const [pgMainState, setPgMainState] = useState([]);
   const [selectedNumber, setSelectedNumber] = useState(1);
@@ -24,6 +25,7 @@ const Playground = () => {
 
   const handleLessonSelect = async (selectedLesson) => {
     setLesson(selectedLesson);
+    setLessonId(selectedLesson.id);
   };
 
   useEffect(() => {
@@ -46,7 +48,12 @@ const Playground = () => {
 
   const handleDeleteLessonSubmit = async (e) => {
     e.preventDefault();
-    await lessonHandlers.handleDeleteLesson(title, setSubmitLoading, setParts);
+    await lessonHandlers.handleDeleteLesson(
+      title,
+      lessonId,
+      setSubmitLoading,
+      setParts
+    );
   };
 
   const handleNewLessonButton = (e) => {
