@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ThemeButton from "../components/Global/ThemeButton";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -87,6 +89,7 @@ const Login = (props) => {
           Don`t have and account? Sign up here!
         </button>
       </form>
+      <ThemeButton />
     </div>
   );
 };
