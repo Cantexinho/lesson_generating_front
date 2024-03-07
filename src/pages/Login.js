@@ -4,7 +4,7 @@ import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 import logo from "../assets/images/logo.png";
-import light_logo from "../assets/images/light_logo.png";
+import light_logo from "../assets/images/light_logo1.png";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
