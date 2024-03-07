@@ -11,8 +11,8 @@ module.exports = {
       },
       colors: {
         login_color_blue: "#0D3D69",
-        cl_color_dark_blue: "#00182E",
-        cl_color_light_blue: "#0D406E",
+        color_dark_blue: "#00182E",
+        color_light_blue: "#0D406E",
       },
     },
   },
