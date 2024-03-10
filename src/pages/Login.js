@@ -40,7 +40,7 @@ const Login = (props) => {
 
   const logoMap = {
     true: logo,
-    false: light_logo,
+    false: logo,
   };
 
   const selectedImagePath = logoMap[theme.isDarkTheme];
@@ -58,7 +58,7 @@ const Login = (props) => {
           alt="Your Logo Alt Text"
         />
         <p
-          className={` text-xl font-semibold mb-10 ${
+          className={`text-xl font-semibold mb-10 ${
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
@@ -66,37 +66,49 @@ const Login = (props) => {
         </p>
       </a>
       <form
-        className={`flex flex-col justify-center items-center border border-gray-700 w-96 p-8 pb-4 rounded-xl shadow ${
-          theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
+        className={`flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow ${
+          theme.isDarkTheme
+            ? "dark-second-bg border border-gray-700"
+            : "light-second-bg"
         }`}
       >
         <div className="mb-3 w-full">
-          <label className="text-primary text-gray-300" htmlFor="username">
+          <label
+            className={`text-primary  ${
+              theme.isDarkTheme ? "text-white" : "text-black"
+            }`}
+            htmlFor="username"
+          >
             Username
           </label>
           <input
             id="username"
-            className={`w-full p-1 mt-1 text-gray-200 outline-none border border-gray-800 namefield-bg-gray focus:outline-blue-700 ${
+            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
               loginFailed
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
-            }`}
+            } ${theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"}`}
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-6 w-full">
-          <label className="text-primary text-gray-300" htmlFor="password">
+          <label
+            className={`text-primary  ${
+              theme.isDarkTheme ? "text-white" : "text-black"
+            }`}
+            htmlFor="password"
+          >
             Password
           </label>
           <input
             id="password"
-            className={`w-full p-1 mt-1 text-gray-200 outline-none border border-gray-800 namefield-bg-gray focus:outline-blue-700 ${
+            className={`w-full p-1 mt-1 text- outline-none focus:outline-blue-600 ${
               loginFailed
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
-            }`}
+            } ${theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"}`}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -109,7 +121,7 @@ const Login = (props) => {
           Log in
         </button>
         <button
-          className="flex-grow mt-5 transform transition-transform duration-100 ease-in-out py-1 text-base text-blue-700 hover:text-blue-800 active:scale-95 rounded"
+          className="flex-grow mt-5 transform transition-transform duration-100 ease-in-out py-1 text-base text-blue-600 hover:text-blue-800 active:scale-95 rounded"
           onClick={handleRegister}
         >
           Don`t have and account? Sign up here!

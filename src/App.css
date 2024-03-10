@@ -33,6 +33,10 @@
   background-color: #121216fa;
 }
 
+.dark-field-cl {
+  background-color: #f1f1f1;
+}
+
 .dark-bg-blue {
   background-color: #251e8a;
 }
@@ -43,10 +47,6 @@
 
 .dark-pg-bg-gray {
   background-color: #0a0a0cde;
-}
-
-.dark-namefield-bg-gray {
-  background-color: #1e1e24b0;
 }
 
 .dark-logo-blue {
@@ -60,11 +60,15 @@
 }
 
 .light-primary-bg {
-  background-color: #817462;
+  background-color: #fafbfc;
 }
 
 .light-second-bg {
-  background-color: #4b4132;
+  background-color: #ffffff;
+
+}
+.light-field-cl {
+  background-color: #fafbfc;
 }
 
 .light-bg-blue {
@@ -77,10 +81,6 @@
 
 .light-pg-bg-gray {
   background-color: #0a0a0cde;
-}
-
-.light-namefield-bg-gray {
-  background-color: #1e1e24b0;
 }
 
 .light-logo-blue {
