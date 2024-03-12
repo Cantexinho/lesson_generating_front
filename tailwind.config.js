@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: (theme) => ({
         futuristic_background: "url('./assets/images/minimalistic_3.png')",
+        random_city: "url('./assets/images/random_city_1.png')",
       }),
       width: {
         116: "29rem",

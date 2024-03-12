@@ -2,10 +2,19 @@ import React from "react";
 import NavBar from "../components/Home/NavBar";
 import HomeSection from "../components/Home/HomeSection";
 import start_now from "../assets/images/start_now.png";
+import { useSelector } from "react-redux";
+import { selectTheme } from "../redux/themeSlice";
 
 const Home = () => {
+  const theme = useSelector(selectTheme);
   return (
-    <div className="flex flex-col items-center bg-futuristic_background bg-cover">
+    <div
+      className={`flex flex-col items-center ${
+        theme.isDarkTheme
+          ? "bg-cover bg-futuristic_background"
+          : "light-primary-bg"
+      }`}
+    >
       <NavBar />
       <div className="flex flex-col pt-10 mt-10">
         <HomeSection

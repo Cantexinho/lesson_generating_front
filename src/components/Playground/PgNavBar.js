@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
+import { useSelector } from "react-redux";
+import { selectTheme } from "../../redux/themeSlice";
+import ThemeButton from "../Global/ThemeButton";
 
 const PgNavBar = ({
   pgMainState,
@@ -10,6 +13,8 @@ const PgNavBar = ({
 }) => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
+
+  const theme = useSelector(selectTheme);
 
   const handleAccountBtnClick = () => {
     navigate("/login");
@@ -22,7 +27,11 @@ const PgNavBar = ({
   }, [pgMainState]);
 
   return (
-    <nav className="flex flex-col fixed justify-top items-center second-bg-gray h-screen rounded overflow-y">
+    <nav
+      className={`flex flex-col fixed justify-top items-center h-screen rounded overflow-y ${
+        theme.isDarkTheme ? "dark-pg-bg-gray" : "light-navbar"
+      }`}
+    >
       <div className="flex fixed flex-col items-center justify-center">
         <a className="flex flex-col items-center mt-4 mb-4" href="/home">
           <img
@@ -30,28 +39,48 @@ const PgNavBar = ({
             src={require("../../assets/images/logo.png")}
             alt="Logo"
           />
-          <p className="text-white text-xl font-semibold flex-shrink-0 mx-2">
+          <p
+            className={` text-xl font-semibold flex-shrink-0 mx-2 ${
+              theme.isDarkTheme ? "text-white" : "text-black"
+            }`}
+          >
             CyberLearn
           </p>
         </a>
         <div className="flex justify-center space-x-1 mb-4">
           <button
-            className="text-white p-1 hover:bg-cl_color_dark_blue border border-cl_color_light_blue second-bg-gray"
+            className={`p-1 second-bg-gray ${
+              theme.isDarkTheme
+                ? "dark-second-bg text-white hover:bg-gray-900 border border-gray-800 "
+                : "light-second-bg text-black hover:bg-gray-300 border border-gray-300 "
+            }`}
             onClick={handleNewLessonButton}
           >
             New Lesson
           </button>
         </div>
       </div>
-      <div className="mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar border border-cl_color_light_blue">
+      <div
+        className={`mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar mx-2 ${
+          theme.isDarkTheme
+            ? "dark-second-bg border border-gray-800"
+            : "light-second-bg border border-gray-200"
+        }`}
+      >
         <ul className="flex flex-col items-center w-52">
           {lessons.map((lesson) => (
             <button
               key={lesson.id}
-              className={`relative flex items-center justify-left pl-2 w-full h-12 text-white text-sm border-t border-b border-gray-700 rounded ${
+              className={`relative flex items-center justify-left pl-2 w-full h-12 text-sm rounded ${
                 selectedLesson && selectedLesson.id === lesson.id
-                  ? "bg-cl_color_dark_blue hover:bg-cl_color_dark_blue"
-                  : "pg-bg-gray hover:bg-cl_color_dark_blue"
+                  ? theme.isDarkTheme
+                    ? "bg-gray-900"
+                    : "bg-gray-300"
+                  : ""
+              } ${
+                theme.isDarkTheme
+                  ? "text-white hover:bg-gray-900 border-t border-b border-gray-700"
+                  : "text-black hover:bg-gray-300 border-t border-b border-gray-300"
               }`}
               onClick={() => handleLessonSelect(lesson)}
             >
@@ -60,9 +89,14 @@ const PgNavBar = ({
           ))}
         </ul>
       </div>
-      <div className="flex justify-center w-full space-x-1 mb-1 mt-auto">
+      <ThemeButton passed_props={"my-2 mb-3"} />
+      <div className="flex justify-center w-52 space-x-1 mb-1 mt-auto">
         <button
-          className="text-white border border-cl_color_light_blue p-2 w-full hover:bg-cl_color_dark_blue second-bg-gray"
+          className={`p-2 w-full ${
+            theme.isDarkTheme
+              ? "text-white dark-primary-bg hover:bg-gray-900 border border-gray-700"
+              : "text-black light-second-bg hover:bg-gray-300 border border-gray-400"
+          }`}
           onClick={handleAccountBtnClick}
         >
           Log out

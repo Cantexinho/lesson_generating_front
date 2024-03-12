@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme, selectTheme } from "../../redux/themeSlice";
 
-const ThemeButton = () => {
+const ThemeButton = ({ passed_props }) => {
   const dispatch = useDispatch();
   const theme = useSelector(selectTheme);
 
@@ -11,19 +11,27 @@ const ThemeButton = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center mt-10 overflow-hidden">
+    <div
+      className={`relative flex flex-col items-center justify-center md:ml-8 ${passed_props}`}
+    >
       <label class="inline-flex relative items-center mr-5 cursor-pointer">
-        <input type="checkbox" className="sr-only peer" readOnly />
+        <input
+          type="checkbox"
+          className="sr-only peer"
+          readOnly
+          checked={theme.isDarkTheme}
+        />
         <div
           onClick={handleThemeToggle}
-          className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-gray-600 peer-checked:after:bg-gray-200 after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-600"
+          className={`w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-gray-600 peer-checked:after:bg-gray-200 after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-600`}
         ></div>
         <span
           className={`ml-2 text-sm font-medium  ${
-            theme.isDarkTheme ? "text-white" : "text-cl_color_light_blue"
+            theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          Dark Mode
+          <span className="hidden 2xl:inline">Dark Mode</span>
+          <span className="2xl:hidden"></span>
         </span>
       </label>
     </div>

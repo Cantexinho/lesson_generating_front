@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const loadThemeFromStorage = () => {
+  const storedTheme = localStorage.getItem("theme");
+  return storedTheme ? JSON.parse(storedTheme) : { isDarkTheme: false };
+};
+
 const themeSlice = createSlice({
   name: "theme",
-  initialState: {
-    isDarkTheme: true,
-  },
+  initialState: loadThemeFromStorage(),
   reducers: {
     toggleTheme: (state) => {
       state.isDarkTheme = !state.isDarkTheme;
+      localStorage.setItem("theme", JSON.stringify(state));
     },
   },
 });

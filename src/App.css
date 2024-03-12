@@ -37,12 +37,12 @@
   background-color: #f1f1f1;
 }
 
-.dark-bg-blue {
-  background-color: #251e8a;
+.dark-bg-gray_transparent {
+  background-color: #121216da;
 }
 
-.dark-second-bg-gray_transparent {
-  background-color: #121216da;
+.dark-bg-blue {
+  background-color: #251e8a;
 }
 
 .dark-pg-bg-gray {
@@ -60,23 +60,29 @@
 }
 
 .light-primary-bg {
-  background-color: #fafbfc;
+  background-color: #e8e8e9;
 }
 
 .light-second-bg {
-  background-color: #ffffff;
+  background-color: #fffffff6;
 
 }
+
+.light-navbar {
+  background-color: #f8f7f7;
+
+}
+
 .light-field-cl {
-  background-color: #fafbfc;
+  background-color: #f3f4f5;
+}
+
+.light-bg-gray_transparent {
+  background-color: #fffffff3;
 }
 
 .light-bg-blue {
   background-color: #251e8a;
-}
-
-.light-second-bg-gray_transparent {
-  background-color: #121216da;
 }
 
 .light-pg-bg-gray {

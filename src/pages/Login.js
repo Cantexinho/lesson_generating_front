@@ -4,7 +4,6 @@ import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 import logo from "../assets/images/logo.png";
-import light_logo from "../assets/images/light_logo1.png";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
@@ -38,27 +37,20 @@ const Login = (props) => {
     navigate("/register");
   };
 
-  const logoMap = {
-    true: logo,
-    false: logo,
-  };
-
-  const selectedImagePath = logoMap[theme.isDarkTheme];
-
   return (
     <div
-      className={`flex flex-col items-center justify-top h-screen p-10 ${
+      className={`flex flex-col items-center justify-top h-screen p-8 ${
         theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
       <a className="flex flex-col items-center justify-center" href="/">
         <img
           className="mt-2 w-28 h-28 rounded-2xl"
-          src={selectedImagePath}
+          src={logo}
           alt="Your Logo Alt Text"
         />
         <p
-          className={`text-xl font-semibold mb-10 ${
+          className={`text-xl font-semibold mt-2 mb-4 ${
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
@@ -127,7 +119,7 @@ const Login = (props) => {
           Don`t have and account? Sign up here!
         </button>
       </form>
-      <ThemeButton />
+      <ThemeButton passed_props={"mt-4"} />
     </div>
   );
 };
