@@ -17,7 +17,7 @@ const PartComponent = ({
   return (
     <div
       key={part.id}
-      className="flex mb-4 w-full flex justify-between relative"
+      className="flex mb-4 w-full justify-between relative text-xs md:text-base"
     >
       <div
         className={`rounded-sm p-4 w-full relative ${

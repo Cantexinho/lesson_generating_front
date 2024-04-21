@@ -124,8 +124,8 @@ const Register = (props) => {
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
             } ${theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"}`}
-            type="text"
-            value={username}
+            type="password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -139,13 +139,13 @@ const Register = (props) => {
             Repeat Password
           </label>
           <input
-            id="password"
+            id="repeat_password"
             className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
               loginFailed
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
             } ${theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"}`}
-            type="text"
+            type="password"
             value={passwordRepeat}
             onChange={(e) => setPasswordRepeat(e.target.value)}
           />

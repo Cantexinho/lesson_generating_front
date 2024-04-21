@@ -30,8 +30,7 @@ const ThemeButton = ({ passed_props }) => {
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          <span className="hidden 2xl:inline">Dark Mode</span>
-          <span className="2xl:hidden"></span>
+          <span>Dark Mode</span>
         </span>
       </label>
     </div>

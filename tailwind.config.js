@@ -3,6 +3,15 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      transitionProperty: {
+        transform: "transform",
+      },
+      transitionDuration: {
+        default: "250ms",
+      },
+      transitionTimingFunction: {
+        default: "ease-in-out",
+      },
       backgroundImage: (theme) => ({
         futuristic_background: "url('./assets/images/minimalistic_3.png')",
         random_city: "url('./assets/images/random_city_1.png')",

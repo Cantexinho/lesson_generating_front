@@ -21,7 +21,7 @@ const PgMain = ({
 }) => {
   const theme = useSelector(selectTheme);
   return (
-    <div className="flex flex-col flex-grow items-center justify-top ml-72 mr-20">
+    <div className="flex flex-col flex-grow items-center justify-top ml-20 mr-20 md:ml-72">
       <form
         onSubmit={handleGenerateSubmit}
         className="flex w-full max-w-full items-center justify-center mt-2 md:flex-row mb-4"
