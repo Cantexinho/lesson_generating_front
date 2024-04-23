@@ -1,18 +1,21 @@
 import NavBarButton from "./NavBarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import ThemeButton from "../Global/ThemeButton";
+import NavBarMenu from "./NavBarMenu";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 
 const NavBar = () => {
   const theme = useSelector(selectTheme);
+
   return (
     <div
-      className={`flex items-top w-full fixed top-0 p-2 mb-2 ${
+      className={`flex items-top w-full h-18 fixed top-0 p-2 mb-2 z-10 ${
         theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
       }`}
     >
+      {/*img*/}
       <a className="flex items-center" href="/home">
         <img
           className="w-16 h-16 rounded-2xl"
@@ -27,9 +30,12 @@ const NavBar = () => {
           CyberLearn
         </p>
       </a>
-      <div className="flex items-center pl-10 ml-10">
+      {/*img*/}
+
+      {/*buttons*/}
+      <div className="flex items-center pl-10 ml-10 hidden xl:flex">
         <nav
-          className={`flex items-center w-full ${
+          className={`flex items-center w-full h-16 ${
             theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
           }`}
         >
@@ -54,8 +60,10 @@ const NavBar = () => {
           </ul>
         </nav>
       </div>
+      {/*buttons*/}
 
-      <div className="flex items-right mx-4 ml-auto">
+      {/* dark mode playground*/}
+      <div className="flex items-right mx-4 ml-auto hidden xl:flex">
         <ThemeButton passed_props={"mt-0 ml-2"} />
         <nav className="flex items-center">
           <ul className="mr-4 flex">
@@ -68,14 +76,34 @@ const NavBar = () => {
             >
               <a href="/login">
                 {" "}
-                <span className="hidden xl:inline">Go to Playground</span>
-                <span className="xl:hidden">Playground</span>
+                <span className="hidden 2xl:inline">Go to Playground</span>
+                <span className="2xl:hidden">Playground</span>
               </a>
-              <FontAwesomeIcon icon={faArrowRight} className="ml-2" size="xs" />
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="ml-2 hidden 2xl:inline"
+                size="xs"
+              />
             </li>
           </ul>
         </nav>
       </div>
+      {/* dark mode playground*/}
+      {/* menu*/}
+      {/* <ThemeButton passed_props={"xl:hidden mt-1 ml-4"} /> */}
+      <NavBarMenu
+        label="Menu"
+        showArrow={true}
+        subpages={[
+          "Subscribe",
+          "Goal",
+          "API",
+          "Contact",
+          "Company",
+          "Playground",
+        ]}
+      ></NavBarMenu>
+      {/* menu*/}
     </div>
   );
 };

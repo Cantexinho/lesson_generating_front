@@ -12,7 +12,7 @@ const ThemeButton = ({ passed_props }) => {
 
   return (
     <div
-      className={`relative flex flex-col items-center justify-center md:ml-8 ${passed_props}`}
+      className={`relative flex flex-col items-center justify-center ${passed_props}`}
     >
       <label class="inline-flex relative items-center mr-5 cursor-pointer">
         <input
@@ -30,7 +30,17 @@ const ThemeButton = ({ passed_props }) => {
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          <span>Dark Mode</span>
+          {theme.isDarkTheme ? (
+            <>
+              <span className="hidden 2xl:inline">Light Mode</span>
+              <span className="2xl:hidden">Light</span>
+            </>
+          ) : (
+            <>
+              <span className="hidden 2xl:inline">Dark Mode</span>
+              <span className="2xl:hidden">Dark</span>
+            </>
+          )}
         </span>
       </label>
     </div>
