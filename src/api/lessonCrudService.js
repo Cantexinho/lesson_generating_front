@@ -5,6 +5,18 @@ export const fetchLessonByName = async (title) => {
   return response.json();
 };
 
+export const fetchLessonById = async (id) => {
+  const response = await fetch(
+    `http://127.0.0.1:8000/lesson?id=${encodeURIComponent(id)}`
+  );
+  return response.json();
+};
+
+export const fetchAllLessons = async () => {
+  const response = await fetch(`http://127.0.0.1:8000/all_lessons`);
+  return response.json();
+};
+
 export const fetchLessonParts = async (id) => {
   const response = await fetch(
     `http://127.0.0.1:8000/lesson/${encodeURIComponent(id)}/parts`
