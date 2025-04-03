@@ -1,6 +1,6 @@
 import NavBarButton from "./NavBarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import ThemeButton from "../Global/ThemeButton";
 import NavBarMenu from "./NavBarMenu";
 import { useSelector } from "react-redux";

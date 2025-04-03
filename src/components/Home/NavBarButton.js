@@ -32,7 +32,7 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
       className={`relative flex items-center justify-center p-2 h-10 text-md rounded-lg ${
         theme.isDarkTheme
           ? "text-white hover:bg-gray-800"
-          : "text-black hover:bg-gray-300"
+          : "text-black hover:bg-gray-100"
       }`}
       onClick={handleButtonClick}
     >
@@ -42,8 +42,8 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
       )}
       {isDropdownOpen && showArrow && (
         <ul
-          className={`absolute top-full border border-gray-300 rounded mt-1 ${
-            theme.isDarkTheme ? "border-gray-600" : "border-gray-300"
+          className={`absolute top-full border rounded mt-1 ${
+            theme.isDarkTheme ? "border-gray-600" : "border-gray-200"
           }`}
         >
           {subpages.map((subpage) => (
@@ -51,7 +51,7 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
               className={`flex items-center justify-center text-base w-24 h-10 ${
                 theme.isDarkTheme
                   ? "dark-second-bg text-white hover:bg-gray-800"
-                  : "light-second-bg text-black hover:bg-gray-300"
+                  : "light-second-bg text-black hover:bg-gray-100"
               }`}
             >
               <a href={subpage}>{subpage}</a>
