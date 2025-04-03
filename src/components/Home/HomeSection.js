@@ -23,7 +23,7 @@ const HomeSection = ({
 
   return (
     <div
-      className={`flex justify-center px-12 max-w-screen max-h-screen mt-4 ${
+      className={`flex justify-center items-center px-12 max-w-screen max-h-screen rounded-3xl mt-8 md:mx-10 lg:mx-52 xl:mx-72 ${
         theme.isDarkTheme
           ? "dark-bg-gray_transparent"
           : "light-bg-gray_transparent"
@@ -31,13 +31,13 @@ const HomeSection = ({
     >
       <img
         className={
-          "m-4 max-w-sm h-auto rounded-2xl lg:block hidden " +
+          "m-4 lg:max-w-72 lg:max-h-72 rounded-2xl xl:block hidden " +
           img_placement_tw_text
         }
         src={selectedImagePath}
         alt=""
       />
-      <div className="flex flex-col items-left justify-center ml-20 my-4">
+      <div className="flex flex-col items-left justify-center ml-4 my-4">
         <h1
           className={`text-2xl font-bold pb-4 ${
             theme.isDarkTheme ? "text-white" : "text-black"

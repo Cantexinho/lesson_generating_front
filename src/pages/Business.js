@@ -1,5 +1,6 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
+import CustomFooter from "../components/Global/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 
@@ -8,13 +9,11 @@ const Support = () => {
   return (
     <div
       className={`flex flex-col h-screen items-center justify-center ${
-        theme.isDarkTheme
-          ? "bg-cover bg-futuristic_background"
-          : "light-primary-bg"
+        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
       <NavBar />
-      <div>
+      <div className="flex-grow flex flex-col items-center justify-center">
         <form
           className={`flex flex-col justify-center items-center w-[550px] mt-20 p-8 pb-4 rounded-xl shadow ${
             theme.isDarkTheme
@@ -76,6 +75,7 @@ const Support = () => {
           </button>
         </form>
       </div>
+      <CustomFooter />
     </div>
   );
 };

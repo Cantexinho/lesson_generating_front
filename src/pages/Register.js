@@ -79,7 +79,7 @@ const Register = (props) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-top min-h-screen p-8 ${
+      className={`flex flex-col items-center justify-center min-h-screen w-screen ${
         theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
@@ -94,7 +94,7 @@ const Register = (props) => {
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          CyberLearn
+          Legatus AI
         </p>
       </a>
       <form

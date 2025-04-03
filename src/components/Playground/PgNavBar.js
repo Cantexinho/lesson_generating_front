@@ -74,7 +74,7 @@ const PgNavBar = ({
                 theme.isDarkTheme ? "text-white" : "text-black"
               }`}
             >
-              CyberLearn
+              Legatus AI
             </p>
           </a>
           <div className="flex justify-center space-x-1 mb-4">
