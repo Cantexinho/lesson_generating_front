@@ -11,10 +11,8 @@ const ThemeButton = ({ passed_props }) => {
   };
 
   return (
-    <div
-      className={`relative flex flex-col items-center justify-center ${passed_props}`}
-    >
-      <label class="inline-flex relative items-center mr-5 cursor-pointer">
+    <div className={`relative flex flex-col justify-center ${passed_props}`}>
+      <label className="inline-flex relative items-center mr-5 cursor-pointer">
         <input
           type="checkbox"
           className="sr-only peer"
@@ -32,13 +30,13 @@ const ThemeButton = ({ passed_props }) => {
         >
           {theme.isDarkTheme ? (
             <>
-              <span className="hidden 2xl:inline">Light Mode</span>
-              <span className="2xl:hidden">Light</span>
+              <span className="hidden xl:inline">Light Mode</span>
+              <span className="xl:hidden">Light</span>
             </>
           ) : (
             <>
-              <span className="hidden 2xl:inline">Dark Mode</span>
-              <span className="2xl:hidden">Dark</span>
+              <span className="hidden xl:inline">Dark Mode</span>
+              <span className="xl:hidden">Dark</span>
             </>
           )}
         </span>
