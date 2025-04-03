@@ -29,9 +29,9 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
   return (
     <li
       ref={dropdownRef}
-      className={`relative flex items-center justify-center w-32 h-10 text-lg rounded border border-gray-400 ${
+      className={`relative flex items-center justify-center p-2 h-10 text-md rounded-lg ${
         theme.isDarkTheme
-          ? "text-white hover:bg-gray-900"
+          ? "text-white hover:bg-gray-800"
           : "text-black hover:bg-gray-300"
       }`}
       onClick={handleButtonClick}
@@ -41,12 +41,16 @@ const NavBarButton = ({ label, showArrow, subpages }) => {
         <FontAwesomeIcon icon={faArrowDown} className="ml-2" size="xs" />
       )}
       {isDropdownOpen && showArrow && (
-        <ul className="absolute top-full bg-white border border-gray-400 rounded mt-1">
+        <ul
+          className={`absolute top-full border border-gray-300 rounded mt-1 ${
+            theme.isDarkTheme ? "border-gray-600" : "border-gray-300"
+          }`}
+        >
           {subpages.map((subpage) => (
             <li
-              className={`flex items-center justify-center text-base w-32 h-10 ${
+              className={`flex items-center justify-center text-base w-24 h-10 ${
                 theme.isDarkTheme
-                  ? "dark-second-bg text-white hover:bg-gray-900"
+                  ? "dark-second-bg text-white hover:bg-gray-800"
                   : "light-second-bg text-black hover:bg-gray-300"
               }`}
             >

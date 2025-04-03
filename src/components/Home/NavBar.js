@@ -11,35 +11,37 @@ const NavBar = () => {
 
   return (
     <div
-      className={`flex items-top w-full h-18 fixed top-0 p-2 mb-2 z-10 ${
-        theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
+      className={`flex items-top w-full h-18 border-b fixed top-0 p-2 mb-2 z-10 ${
+        theme.isDarkTheme
+          ? "dark-second-bg border-gray-600"
+          : "light-second-bg border-gray-300"
       }`}
     >
       {/*img*/}
-      <a className="flex items-center" href="/home">
+      <a className="flex items-center mx-12" href="/home">
         <img
-          className="w-16 h-16 rounded-2xl"
+          className="w-16 h-16 mx-2 rounded-2xl"
           src={require("../../assets/images/logo.png")}
           alt="Logo"
         />
         <p
-          className={`text-2xl font-semibold flex-shrink-0 mx-2 ${
+          className={`text-2xl font-semibold flex-shrink-0 ${
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          CyberLearn
+          Legatus AI
         </p>
       </a>
       {/*img*/}
 
       {/*buttons*/}
-      <div className="flex items-center pl-10 ml-10 hidden xl:flex">
+      <div className="flex items-center pl-20 mx-10">
         <nav
           className={`flex items-center w-full h-16 ${
             theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
           }`}
         >
-          <ul className="flex space-x-2">
+          <ul className="hidden lg:flex">
             <NavBarButton label="Subscribe" showArrow={false}></NavBarButton>
             <NavBarButton label="Goal" showArrow={false}></NavBarButton>
             <NavBarButton
@@ -62,26 +64,26 @@ const NavBar = () => {
       </div>
       {/*buttons*/}
 
-      {/* dark mode playground*/}
-      <div className="flex items-right mx-4 ml-auto hidden xl:flex">
+      {/* dark mode playground login*/}
+      <div className="hidden lg:flex items-center mx-4 ml-auto">
         <ThemeButton passed_props={"mt-0 ml-2"} />
-        <nav className="flex items-center">
+        <nav className="flex">
           <ul className="mr-4 flex">
             <li
-              className={`text-lg px-6 py-1 border   ${
+              className={`text-md px-6 py-1 border rounded-full   ${
                 theme.isDarkTheme
-                  ? "dark-second-bg text-white border-white hover:bg-gray-900"
-                  : "light-second-bg text-black border-gray-400 hover:bg-gray-300"
+                  ? "dark-second-bg text-white border-white hover:bg-gray-800"
+                  : "light-second-bg text-black border-gray-600 hover:bg-gray-300"
               }`}
             >
               <a href="/login">
                 {" "}
-                <span className="hidden 2xl:inline">Go to Playground</span>
-                <span className="2xl:hidden">Playground</span>
+                <span className="hidden xl:inline">Go to Playground</span>
+                <span className="xl:hidden">Playground</span>
               </a>
               <FontAwesomeIcon
                 icon={faArrowRight}
-                className="ml-2 hidden 2xl:inline"
+                className="ml-2 hidden xl:inline"
                 size="xs"
               />
             </li>
@@ -90,7 +92,6 @@ const NavBar = () => {
       </div>
       {/* dark mode playground*/}
       {/* menu*/}
-      {/* <ThemeButton passed_props={"xl:hidden mt-1 ml-4"} /> */}
       <NavBarMenu
         label="Menu"
         showArrow={true}
