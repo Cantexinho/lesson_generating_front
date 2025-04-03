@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeButton from "../components/Global/ThemeButton";
+import CustomFooter from "../components/Global/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 import logo from "../assets/images/logo.png";
@@ -39,7 +40,7 @@ const Login = (props) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-top h-screen p-8 ${
+      className={`flex flex-col items-center justify-center min-h-screen w-screen ${
         theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
@@ -54,7 +55,7 @@ const Login = (props) => {
             theme.isDarkTheme ? "text-white" : "text-black"
           }`}
         >
-          CyberLearn
+          Legatus AI
         </p>
       </a>
       <form

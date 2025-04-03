@@ -8,9 +8,7 @@ const Support = () => {
   return (
     <div
       className={`flex flex-col h-screen items-center justify-center ${
-        theme.isDarkTheme
-          ? "bg-cover bg-futuristic_background"
-          : "light-primary-bg"
+        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
       <NavBar />
