@@ -3,6 +3,15 @@
   100% { transform: rotate(360deg); }
 }
 
+.dropdown-hover-area {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  right: -8px;
+  bottom: -8px;
+  z-index: -1;
+}
+
 .spinner {
   border: 16px solid #f3f3f3;
   border-top: 16px solid #3498db;
@@ -64,11 +73,11 @@
 }
 
 .light-primary-bg {
-  background-color: #fffffff6;
+  background-color: #ffffff;
 }
 
 .light-second-bg {
-  background-color: #fffffff6;
+  background-color: #ffffff;
 
 }
 

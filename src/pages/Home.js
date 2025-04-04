@@ -1,8 +1,7 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
 import HomeSection from "../components/Home/HomeSection";
-import CustomFooter from "../components/Global/CustomFooter";
-import start_now from "../assets/images/start_now.png";
+import CustomFooter from "../components/Footers/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 

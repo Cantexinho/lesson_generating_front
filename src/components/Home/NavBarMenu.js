@@ -30,7 +30,7 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
   return (
     <li
       ref={dropdownRef}
-      className={`absolute flex items-center justify-center rounded-full right-8 w-28 h-9 mx-2 mt-4 text-md border border-gray-400 lg:hidden ${
+      className={`absolute flex items-center justify-center rounded-full right-8 w-28 mx-2 mt-4 text-md border border-gray-400 lg:hidden ${
         theme.isDarkTheme
           ? "dark-second-bg text-white border-white hover:bg-gray-800"
           : "light-second-bg text-black border-gray-600 hover:bg-gray-300"
