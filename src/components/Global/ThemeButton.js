@@ -29,12 +29,12 @@ const ThemeButton = ({ passed_props }) => {
         >
           {theme.isDarkTheme ? (
             <>
-              <span className="hidden xl:inline">Light Mode</span>
+              <span className="hidden xl:inline">Light</span>
               <span className="xl:hidden">Light</span>
             </>
           ) : (
             <>
-              <span className="hidden xl:inline">Dark Mode</span>
+              <span className="hidden xl:inline">Dark</span>
               <span className="xl:hidden">Dark</span>
             </>
           )}
