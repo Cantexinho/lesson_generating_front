@@ -11,7 +11,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`flex items-top w-full h-18 border-b fixed top-0 p-2 mb-2 z-10 ${
+      className={`flex items-top w-full h-16 border-b fixed top-0 p-2 mb-2 z-10 ${
         theme.isDarkTheme
           ? "dark-second-bg border-gray-600"
           : "light-second-bg border-gray-300"
@@ -20,7 +20,7 @@ const NavBar = () => {
       {/*img*/}
       <a className="flex items-center mx-12" href="/home">
         <img
-          className="w-16 h-16 mx-2 rounded-2xl"
+          className="w-12 h-12 mx-2 rounded-2xl"
           src={require("../../assets/images/logo.png")}
           alt="Logo"
         />
@@ -37,27 +37,38 @@ const NavBar = () => {
       {/*buttons*/}
       <div className="flex items-center pl-20 mx-10">
         <nav
-          className={`flex items-center w-full h-16 ${
+          className={`flex items-center w-full h-12 ${
             theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
           }`}
         >
           <ul className="hidden lg:flex">
-            <NavBarButton label="Subscribe" showArrow={false}></NavBarButton>
-            <NavBarButton label="Goal" showArrow={false}></NavBarButton>
+            <NavBarButton
+              label="Subscribe"
+              showArrow={false}
+              navigateTo={"/subscribe"}
+            ></NavBarButton>
+            <NavBarButton
+              label="Goal"
+              showArrow={false}
+              navigateTo={"/goal"}
+            ></NavBarButton>
             <NavBarButton
               label="API"
               showArrow={true}
               subpages={["Documentation", "Pricing"]}
+              navigateTo={"/docs"}
             ></NavBarButton>
             <NavBarButton
               label="Contact"
               showArrow={true}
               subpages={["Support", "Business"]}
+              navigateTo={"/support"}
             ></NavBarButton>
             <NavBarButton
               label="Company"
               showArrow={true}
               subpages={["About", "Careers"]}
+              navigateTo={"/company"}
             ></NavBarButton>
           </ul>
         </nav>
