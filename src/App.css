@@ -5,8 +5,8 @@
 
 .dropdown-hover-area {
   position: absolute;
-  top: -8px;
-  left: -8px;
+  top: -16px;
+  left: -16px;
   right: -8px;
   bottom: -8px;
   z-index: -1;
@@ -73,11 +73,11 @@
 }
 
 .light-primary-bg {
-  background-color: #fffffff6;
+  background-color: #ffffff;
 }
 
 .light-second-bg {
-  background-color: #fffffff6;
+  background-color: #ffffff;
 
 }
 
