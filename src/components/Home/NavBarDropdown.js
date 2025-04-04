@@ -15,7 +15,7 @@ const NavBarDropdown = ({ subpages }) => {
       {subpages.map((subpage) => (
         <li
           key={subpage}
-          className={`flex items-center justify-center text-base w-32 h-10 rounded-xl ${
+          className={`flex items-center justify-center text-base h-8 rounded-md my-2 ${
             theme.isDarkTheme
               ? "dark-second-bg text-white hover:bg-gray-800"
               : "light-second-bg text-black hover:bg-gray-100"
