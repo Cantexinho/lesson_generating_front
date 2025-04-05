@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
-import CustomFooter from "../components/Global/CustomFooter";
+import CustomFooter from "../components/Footers/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 

@@ -1,8 +1,7 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
 import HomeSection from "../components/Home/HomeSection";
-import CustomFooter from "../components/Global/CustomFooter";
-import start_now from "../assets/images/start_now.png";
+import CustomFooter from "../components/Footers/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 
@@ -18,7 +17,8 @@ const Home = () => {
       <div className="flex-grow flex flex-col pt-10 mt-10 ">
         <HomeSection
           img_placement={"right"}
-          img_name={"ai_presenter_1"}
+          img_name={"ai_learning"}
+          image_props={"w-72"}
           sectionHeader={"Gather information quickly!"}
           sectionText={
             "In the fast-paced world of today, the ability to gather information quickly is paramount. In the times of information, Artificial Intelligence has emerged as a game-changer, revolutionizing the speed and efficiency with which we can access and process information."
@@ -27,6 +27,7 @@ const Home = () => {
         <HomeSection
           img_placement={"left"}
           img_name={"student_learning"}
+          image_props={"w-72"}
           sectionHeader={"Learn efficiently!"}
           sectionText={
             "AI-driven tools excel at predictive analysis, anticipating user needs and proactively providing information before it's explicitly requested. These systems can learn from user behavior, preferences, and historical data to tailor their outputs, creating a personalized and streamlined information retrieval experience."
@@ -35,6 +36,7 @@ const Home = () => {
         <HomeSection
           img_placement={"right"}
           img_name={"futuristic_future"}
+          image_props={"w-72"}
           sectionHeader={"Move to a new beginning!"}
           sectionText={
             "AI is transforming the way we access and utilize data and promises a future where the quest for information is not just quick but also exceptionally insightful."

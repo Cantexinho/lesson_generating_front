@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeButton from "../components/Global/ThemeButton";
-import CustomFooter from "../components/Global/CustomFooter";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 import logo from "../assets/images/logo.png";
