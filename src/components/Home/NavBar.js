@@ -55,19 +55,36 @@ const NavBar = () => {
             <NavBarButton
               label="API"
               showArrow={true}
-              subpages={["Documentation", "Pricing"]}
+              subpages={{
+                col1: ["Home", "About", "Contact"],
+                col2: ["Services", "Blog", "FAQ"],
+              }}
               navigateTo={"/docs"}
             ></NavBarButton>
             <NavBarButton
               label="Contact"
               showArrow={true}
-              subpages={["Support", "Business"]}
+              subpages={{
+                col1: ["Home", "About", "Contact"],
+                col2: ["Services", "Blog", "FAQ"],
+                col3: ["Services", "Blog", "FAQ"],
+              }}
               navigateTo={"/support"}
             ></NavBarButton>
             <NavBarButton
               label="Company"
               showArrow={true}
-              subpages={["About", "Careers"]}
+              subpages={{
+                col1: ["Home", "About", "Contact"],
+              }}
+              navigateTo={"/company"}
+            ></NavBarButton>
+            <NavBarButton
+              label="Tools"
+              showArrow={true}
+              subpages={{
+                col1: ["lesson-generator", "bg-remover", "image-observer"],
+              }}
               navigateTo={"/company"}
             ></NavBarButton>
           </ul>
