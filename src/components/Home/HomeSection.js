@@ -1,12 +1,14 @@
 import ai_presenter_1 from "../../assets/images/ai_presenter_1.png";
 import futuristic_future from "../../assets/images/futuristic_future.png";
 import student_learning from "../../assets/images/student_learning.png";
+import ai_learning from "../../assets/images/ai_learning.png";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 
 const HomeSection = ({
   img_placement,
   img_name,
+  image_props,
   sectionHeader,
   sectionText,
 }) => {
@@ -14,30 +16,26 @@ const HomeSection = ({
   const img_placement_tw_text = img_placement === "right" ? "order-2" : "";
 
   const imagePathMap = {
-    ai_presenter_1: ai_presenter_1,
-    futuristic_future: futuristic_future,
-    student_learning: student_learning,
+    ai_presenter_1,
+    futuristic_future,
+    student_learning,
+    ai_learning,
   };
 
   const selectedImagePath = imagePathMap[img_name];
 
   return (
-    <div
-      className={`flex justify-center items-center px-12 max-w-screen max-h-screen rounded-3xl mt-8 md:mx-10 lg:mx-52 xl:mx-72 ${
-        theme.isDarkTheme
-          ? "dark-bg-gray_transparent"
-          : "light-bg-gray_transparent"
+    <section
+      className={`flex items-center justify-center gap-8 p-8 lg:px-24 xl:px-32 w-full ${
+        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
       }`}
     >
       <img
-        className={
-          "m-4 lg:max-w-72 lg:max-h-72 rounded-2xl xl:block hidden " +
-          img_placement_tw_text
-        }
+        className={`rounded-2xl ${image_props} ${img_placement_tw_text} max-w-full h-auto`}
         src={selectedImagePath}
         alt=""
       />
-      <div className="flex flex-col items-left justify-center ml-4 my-4">
+      <div className="flex flex-col justify-center text-center lg:text-left max-w-2xl">
         <h1
           className={`text-2xl font-bold pb-4 ${
             theme.isDarkTheme ? "text-white" : "text-black"
@@ -53,7 +51,7 @@ const HomeSection = ({
           {sectionText}
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 

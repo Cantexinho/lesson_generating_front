@@ -1,6 +1,10 @@
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .dropdown-hover-area {
@@ -35,11 +39,11 @@
 }
 
 .dark-primary-bg {
-  background-color: #0C0C0E;
+  background-color: #0c0c0e;
 }
 
 .dark-second-bg {
-  background-color: #0C0C0E;
+  background-color: #0c0c0e;
 }
 
 .dark-field-cl {
@@ -63,7 +67,11 @@
 }
 
 .dark-logo-blue {
-  background-color: #00182E;
+  background-color: #00182e;
+}
+
+.dark-hover-gray:hover {
+  background-color: #1b1b1b;
 }
 
 /*Light*/
@@ -78,12 +86,10 @@
 
 .light-second-bg {
   background-color: #ffffff;
-
 }
 
 .light-navbar {
   background-color: #f8f7f7;
-
 }
 
 .light-field-cl {
@@ -103,5 +109,9 @@
 }
 
 .light-logo-blue {
-  background-color: #00182E;
+  background-color: #00182e;
+}
+
+.light-hover-gray:hover {
+  background-color: #f8f7f7;
 }
