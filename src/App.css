@@ -32,6 +32,17 @@
   transform: translate(-50%, -50%);
 }
 
+/*All*/
+
+.main-hover-border:hover {
+  border-color: #C7A154;
+}
+
+.main-hover-text:hover {
+  color: #C7A154;
+}
+
+
 /*Dark*/
 
 .dark-body {
@@ -43,7 +54,7 @@
 }
 
 .dark-second-bg {
-  background-color: #0c0c0e;
+  background-color: #0c0c0e80;
 }
 
 .dark-field-cl {
@@ -74,6 +85,26 @@
   background-color: #1b1b1b;
 }
 
+.dark-main-bg {
+  background-color: #fba33ea6;
+}
+
+.dark-main-hover-bg:hover {
+  background-color: #C7A154;
+}
+
+.dark-main-hover-border:hover {
+  border-color: #C7A154;
+}
+
+.dark-main-hover-text:hover {
+  color: #C7A154;
+}
+
+.dark-main-focus-outline:focus {
+  outline-color: #C7A154;
+}
+
 /*Light*/
 
 .light-body {
@@ -85,7 +116,7 @@
 }
 
 .light-second-bg {
-  background-color: #ffffff;
+  background-color: #ffffff80;
 }
 
 .light-navbar {
@@ -114,4 +145,20 @@
 
 .light-hover-gray:hover {
   background-color: #f8f7f7;
+}
+
+.light-main-hover-bg:hover {
+  background-color: #20444D;
+}
+
+.light-main-hover-border:hover {
+  border-color: #20444D;
+}
+
+.light-main-hover-text:hover {
+  color: #20444D;
+}
+
+.light-main-focus-outline:focus {
+  outline-color: #20444D;
 }

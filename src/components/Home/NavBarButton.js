@@ -29,16 +29,23 @@ const NavBarButton = ({ label, showArrow, subpages, navigateTo }) => {
   return (
     <li
       ref={dropdownRef}
-      className={`relative z-10 flex items-center justify-center p-2 text-md rounded-lg ${
+      className={`relative z-10 flex items-center justify-center p-3 text-md border-b-0 ${
         theme.isDarkTheme
-          ? "text-white hover:text-gray-400"
-          : "text-black hover:text-gray-600"
+          ? "text-white hover:border-b-2 dark-main-hover-border"
+          : "text-black hover:border-b-2 light-main-hover-border"
       }`}
       onClick={handleButtonClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {label}
+      <span
+        className={`${
+          theme.isDarkTheme ? "text-shadow-light" : ""
+        } font-semibold font-custom`}
+      >
+        {label}
+      </span>
+
       {showArrow && (
         <FontAwesomeIcon
           icon={isDropdownOpen ? faArrowUp : faArrowDown}
