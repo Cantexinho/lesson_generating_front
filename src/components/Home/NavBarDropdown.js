@@ -22,8 +22,8 @@ const NavBarDropdown = ({ subpages }) => {
                 key={subpage}
                 className={`flex items-center justify-center text-base h-8 rounded-md my-2 px-2 ${
                   theme.isDarkTheme
-                    ? "dark-second-bg text-white dark-hover-gray"
-                    : "light-second-bg text-black light-hover-gray"
+                    ? "text-white dark-hover-gray"
+                    : "text-black light-hover-gray"
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
