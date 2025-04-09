@@ -1,8 +1,6 @@
 import NavBarButton from "./NavBarButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import ThemeButton from "../Global/ThemeButton";
 import NavBarMenu from "./NavBarMenu";
+import NavbarRight from "../Navigation/NavbarRight";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { useState } from "react";
@@ -27,17 +25,21 @@ const NavBar = () => {
         theme.isDarkTheme
           ? scrolled
             ? "dark-primary-bg"
-            : "dark-second-bg"
+            : "dark-transparent-bg"
           : scrolled
           ? "light-primary-bg"
-          : "light-second-bg"
+          : "light-transparent-bg"
       }`}
     >
       {/*img*/}
       <a className="flex items-center lg:mx-12" href="/home">
         <img
           className="w-16 h-16 rounded-2xl"
-          src={require("../../assets/images/logo.png")}
+          src={
+            theme.isDarkTheme
+              ? require("../../assets/images/legatus-logo-white.png")
+              : require("../../assets/images/legatus-logo-black.png")
+          }
           alt="Logo"
         />
         <p
@@ -92,35 +94,7 @@ const NavBar = () => {
       {/*buttons*/}
 
       {/* dark mode playground login*/}
-      <div className="hidden lg:flex items-center mx-4 ml-auto">
-        <ThemeButton passed_props={"mt-0 ml-2"} />
-        <nav className="flex">
-          <ul className="mr-4 flex">
-            <li
-              className={`text-md px-6 py-1 border rounded-full   ${
-                theme.isDarkTheme
-                  ? "dark-second-bg text-white border-white hover:bg-gray-800"
-                  : "light-second-bg text-black border-gray-600 hover:bg-gray-300"
-              }`}
-            >
-              <a href="/login">
-                {" "}
-                <span className="hidden xl:inline font-semibold font-custom ">
-                  Go to Playground
-                </span>
-                <span className="xl:hidden font-semibold font-custom ">
-                  Playground
-                </span>
-              </a>
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className="ml-2 hidden xl:inline"
-                size="xs"
-              />
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <NavbarRight />
       {/* dark mode playground*/}
       {/* menu*/}
       <NavBarMenu

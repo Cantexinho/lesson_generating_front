@@ -9,8 +9,8 @@ const NavBarDropdown = ({ subpages }) => {
     <ul
       className={`absolute z-0 top-full left-0 border rounded-xl px-4 py-1 mt-4 min-w-max ${
         theme.isDarkTheme
-          ? "dark-second-bg border-gray-600"
-          : "light-second-bg border-gray-200"
+          ? "dark-transparent-bg border-gray-600"
+          : "light-transparent-bg border-gray-200"
       }`}
     >
       <div className="dropdown-hover-area" />
