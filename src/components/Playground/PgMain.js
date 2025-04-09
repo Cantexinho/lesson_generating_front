@@ -29,6 +29,7 @@ const PgMain = ({
         <TitleSelect
           title={title}
           handleTitleChange={handleTitleChangeSubmit}
+          passedProps={`flex flex-col flex-grow w-max-full mr-4 `}
         />
         <PartNumberSelect
           selectedNumber={selectedNumber}
