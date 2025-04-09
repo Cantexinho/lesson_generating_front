@@ -22,8 +22,8 @@ const PartComponent = ({
       <div
         className={`rounded-sm p-4 w-full relative ${
           theme.isDarkTheme
-            ? "text-white dark-second-bg border border-gray-800"
-            : "text-black light-second-bg border border-gray-300"
+            ? "text-white dark-transparent-bg border border-gray-800"
+            : "text-black light-transparent-bg border border-gray-300"
         }`}
       >
         {loading[part.id] ? (

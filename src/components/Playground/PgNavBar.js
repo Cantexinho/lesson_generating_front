@@ -81,8 +81,8 @@ const PgNavBar = ({
             <button
               className={`p-1 second-bg-gray ${
                 theme.isDarkTheme
-                  ? "dark-second-bg text-white hover:bg-gray-900 border border-gray-800 "
-                  : "light-second-bg text-black hover:bg-gray-300 border border-gray-300 "
+                  ? "dark-transparent-bg text-white hover:bg-gray-900 border border-gray-800 "
+                  : "light-transparent-bg text-black hover:bg-gray-300 border border-gray-300 "
               }`}
               onClick={handleNewLessonButton}
             >
@@ -93,8 +93,8 @@ const PgNavBar = ({
         <div
           className={`mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar mx-2 ${
             theme.isDarkTheme
-              ? "dark-second-bg border border-gray-800"
-              : "light-second-bg border border-gray-200"
+              ? "dark-transparent-bg border border-gray-800"
+              : "light-transparent-bg border border-gray-200"
           }`}
         >
           <ul className="flex flex-col items-center w-52">
@@ -125,7 +125,7 @@ const PgNavBar = ({
             className={`p-2 w-full ${
               theme.isDarkTheme
                 ? "text-white dark-primary-bg hover:bg-gray-900 border border-gray-700"
-                : "text-black light-second-bg hover:bg-gray-300 border border-gray-400"
+                : "text-black light-transparent-bg hover:bg-gray-300 border border-gray-400"
             }`}
             onClick={handleAccountBtnClick}
           >

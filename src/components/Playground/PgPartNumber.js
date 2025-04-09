@@ -20,8 +20,8 @@ const PartNumberSelect = ({ selectedNumber, handleNumberChange }) => {
         onChange={handleNumberChange}
         className={`mx-4 h-10 w-full focus:outline-none focus:outline-blue-700 ${
           theme.isDarkTheme
-            ? "text-white dark-second-bg border border-gray-800"
-            : "text-black light-second-bg border border-gray-300"
+            ? "text-white dark-transparent-bg border border-gray-800"
+            : "text-black light-transparent-bg border border-gray-300"
         }`}
       >
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (

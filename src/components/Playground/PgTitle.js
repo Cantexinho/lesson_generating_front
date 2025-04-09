@@ -21,7 +21,7 @@ const TitleSelect = ({
         Title
       </span>
       <input
-        className={`flex w-[800px] text-xl font-custom p-4 mt-2 rounded-xl focus:outline-none h-18 ${
+        className={`flex w-[400px] lg:w-[800px] text-xl font-custom p-4 mt-2 rounded-xl focus:outline-none h-18 ${
           theme.isDarkTheme
             ? "text-white dark-main-focus-outline dark-primary-bg border-b-2 border-gray-800"
             : "text-black light-main-focus-outline light-primary-bg border-b-2  border-gray-300"
