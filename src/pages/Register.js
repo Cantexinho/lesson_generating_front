@@ -100,8 +100,8 @@ const Register = (props) => {
       <form
         className={`flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow ${
           theme.isDarkTheme
-            ? "dark-second-bg border border-gray-700"
-            : "light-second-bg"
+            ? "dark-transparent-bg border border-gray-700"
+            : "light-transparent-bg"
         }`}
       >
         <div className="mb-3 w-full">

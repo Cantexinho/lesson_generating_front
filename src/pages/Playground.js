@@ -74,7 +74,7 @@ const Playground = () => {
   return (
     <div
       className={`flex min-h-screen ${
-        theme.isDarkTheme ? "dark-second-bg" : "light-primary-bg"
+        theme.isDarkTheme ? "dark-transparent-bg" : "light-primary-bg"
       }`}
     >
       <PgNavBar
