@@ -1,15 +1,8 @@
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import TitleSelect from "../Playground/PgTitle";
 
-const TopSection = ({
-  sectionProps,
-  handleGenerateSubmit,
-  title,
-  handleTitleChangeSubmit,
-}) => {
+const TopSection = ({ title, handleTitleChangeSubmit }) => {
   const theme = useSelector(selectTheme);
   const bgImage = require(`../../assets/images/ai_rome_2.png`);
 

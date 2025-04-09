@@ -3,21 +3,22 @@ import NavBar from "../components/Home/NavBar";
 import ImageSection from "../components/Sections/ImageSection";
 import CustomFooter from "../components/Footers/CustomFooter";
 import TopSection from "../components/Sections/TopSection";
+import ToolsSection from "../components/Sections/ToolsSection";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 
 const Home = () => {
   const theme = useSelector(selectTheme);
-  const bgImage = require("../assets/images/ai_rome_1.png");
   return (
     <div
       className={`flex flex-col min-h-screen ${
-        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
+        theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
       }`}
     >
       <NavBar />
       <div className="flex-grow flex flex-col">
         <TopSection />
+        <ToolsSection />
         <ImageSection
           imgPlacement={"right"}
           imgName={"ai_presenter_1"}

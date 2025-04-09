@@ -22,22 +22,13 @@ const ThemeButton = ({ passed_props }) => {
           onClick={handleThemeToggle}
           className={`w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-gray-600 peer-checked:after:bg-gray-200 after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-600`}
         ></div>
-        <span
-          className={`ml-2 text-sm font-medium  ${
-            theme.isDarkTheme ? "text-white" : "text-black"
-          }`}
-        >
-          {theme.isDarkTheme ? (
-            <>
-              <span className="hidden xl:inline">Light</span>
-              <span className="xl:hidden">Light</span>
-            </>
-          ) : (
-            <>
-              <span className="hidden xl:inline">Dark</span>
-              <span className="xl:hidden">Dark</span>
-            </>
-          )}
+        <span className={`ml-2 text-sm font-medium text-black dark:text-white`}>
+          <span className="hidden xl:inline">
+            {theme.isDarkTheme ? "Light mode" : "Dark mode"}
+          </span>
+          <span className="xl:hidden">
+            {theme.isDarkTheme ? "Light" : "Dark"}
+          </span>
         </span>
       </label>
     </div>

@@ -45,15 +45,16 @@
 
 /*Dark*/
 
-.dark-body {
-  background: #2c2a2a;
-}
-
+/* #232329 */
 .dark-primary-bg {
   background-color: #0c0c0e;
 }
 
 .dark-second-bg {
+  background-color: #1b1b20;
+}
+
+.dark-transparent-bg {
   background-color: #0c0c0e80;
 }
 
@@ -107,15 +108,15 @@
 
 /*Light*/
 
-.light-body {
-  background: #2c2a2a;
-}
-
 .light-primary-bg {
   background-color: #ffffff;
 }
 
 .light-second-bg {
+  background-color: #e2e2e2;
+}
+
+.light-transparent-bg {
   background-color: #ffffff80;
 }
 
@@ -141,6 +142,10 @@
 
 .light-logo-blue {
   background-color: #00182e;
+}
+
+.light-main-bg {
+  background-color: #20444D;
 }
 
 .light-hover-gray:hover {

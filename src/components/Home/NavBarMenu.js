@@ -32,8 +32,8 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
       ref={dropdownRef}
       className={`absolute flex items-center justify-center rounded-full right-8 w-28 my-2 h-8 text-md border border-gray-400 lg:hidden ${
         theme.isDarkTheme
-          ? "dark-second-bg text-white border-white hover:bg-gray-800"
-          : "light-second-bg text-black border-gray-600 hover:bg-gray-300"
+          ? "dark-transparent-bg text-white border-white hover:bg-gray-800"
+          : "light-transparent-bg text-black border-gray-600 hover:bg-gray-300"
       }`}
       onClick={handleButtonClick}
     >
@@ -44,14 +44,14 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
       {isDropdownOpen && showArrow && (
         <ul
           className={`absolute top-full bg-white border border-gray-400 rounded mt-1 ${
-            theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
+            theme.isDarkTheme ? "dark-transparent-bg" : "light-transparent-bg"
           }`}
         >
           {subpages.map((subpage) => (
             <li
               className={`flex items-center justify-center text-base w-32 h-10 ${
                 theme.isDarkTheme
-                  ? "dark-second-bg text-white hover:bg-gray-900"
+                  ? "dark-transparent-bg text-white hover:bg-gray-900"
                   : "light-second-bg text-black hover:bg-gray-300"
               }`}
             >
