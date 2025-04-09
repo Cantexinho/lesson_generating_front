@@ -12,22 +12,33 @@ module.exports = {
       transitionTimingFunction: {
         default: "ease-in-out",
       },
-      backgroundImage: (theme) => ({
-        futuristic_background: "url('./assets/images/minimalistic_3.png')",
-        random_city: "url('./assets/images/random_city_1.png')",
-      }),
-      width: {
-        116: "29rem",
-      },
+      // boxShadow: {
+      //   text: "2px 2px 8px rgba(0,0,0,0.7)",
+      // },
       colors: {
         login_color_blue: "#0D3D69",
         color_dark_blue: "#00182E",
         color_light_blue: "#0D406E",
       },
+      fontFamily: {
+        custom: ['"Roboto"', "sans-serif"],
+      },
     },
   },
+  safelist: ["grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4"],
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".text-shadow-light": {
+          "text-shadow": "2px 2px 8px rgba(0,0,0,0.7)",
+        },
+        ".text-shadow-dark": {
+          "text-shadow": "2px 2px 8px rgba(255,255,255,0.7)",
+        },
+      });
+    },
+  ],
 };
