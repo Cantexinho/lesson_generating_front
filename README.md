@@ -6,8 +6,12 @@ riot
 settings for languages + theme changer
 
 
-make cog white/black
-fix cog menu
-fir phone menu
+make cog white/black +
+fix cog menu +
+fix phone menu
+make hover scale instead of bg-color
 tell me what you want rework
 news section
+
+Future:
+cog menu new theme type

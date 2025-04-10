@@ -1,6 +1,7 @@
 import NavBarButton from "./NavBarButton";
 import NavBarMenu from "./NavBarMenu";
-import NavbarRight from "../Navigation/NavbarRight";
+import NarBarPlayground from "./NavBarPlayground";
+import NavBarSettings from "./NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { useState } from "react";
@@ -86,25 +87,19 @@ const NavBar = () => {
           </ul>
         </nav>
       </div>
-      {/*buttons*/}
-
-      {/* dark mode playground login*/}
-      <NavbarRight />
-      {/* dark mode playground*/}
-      {/* menu*/}
-      <NavBarMenu
-        label="Menu"
-        showArrow={true}
-        subpages={[
-          "Subscribe",
-          "Goal",
-          "API",
-          "Contact",
-          "Company",
-          "Playground",
-        ]}
-      ></NavBarMenu>
-      {/* menu*/}
+      <div className="flex items-center mx-4 ml-auto relative">
+        <NavBarSettings />
+        <div className="hidden lg:block">
+          <NarBarPlayground />
+        </div>
+        <div className="block lg:hidden">
+          <NavBarMenu
+            label="Menu"
+            showArrow={true}
+            subpages={["Goal", "Tools", "API", "Contact", "Playground"]}
+          />
+        </div>
+      </div>
     </div>
   );
 };
