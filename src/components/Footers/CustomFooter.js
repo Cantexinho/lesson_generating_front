@@ -1,23 +1,10 @@
 import start_now from "../../assets/images/start_now.png";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 
 const CustomFooter = () => {
-  const theme = useSelector(selectTheme);
   return (
-    <footer
-      className={`flex flex-col items-center justify-center w-full mt-20 border-t ${
-        theme.isDarkTheme
-          ? "dark-bg-gray_transparent  border-gray-600 "
-          : "bg-gray-100  border-gray-300 "
-      }`}
-    >
+    <footer className="flex flex-col items-center justify-center w-full mt-20 bg-primary dark:bg-primary-dark border-t border-gray-300 dark:border-gray-600">
       <div className="flex items-center justify-center w-full h-20">
-        <p
-          className={`text-lg font-semibold ${
-            theme.isDarkTheme ? "text-white" : "text-black"
-          }`}
-        >
+        <p className="text-lg font-semibold text-black dark:text-white">
           &copy; 2025 Legatus AI. All rights reserved.
         </p>
       </div>

@@ -16,9 +16,14 @@ module.exports = {
       //   text: "2px 2px 8px rgba(0,0,0,0.7)",
       // },
       colors: {
-        login_color_blue: "#0D3D69",
-        color_dark_blue: "#00182E",
-        color_light_blue: "#0D406E",
+        primary: "#ffffff",
+        "primary-dark": "#0c0c0e",
+        secondary: "#e2e2e2",
+        "secondary-dark": "#1b1b20",
+        "transparent-light": "#ffffff80",
+        "transparent-dark": "#0c0c0e80",
+        main: "#20444D",
+        "main-dark": "#C7A154",
       },
       fontFamily: {
         custom: ['"Roboto"', "sans-serif"],
@@ -32,10 +37,10 @@ module.exports = {
   plugins: [
     function ({ addUtilities }) {
       addUtilities({
-        ".text-shadow-light": {
+        ".text-shadow-dark": {
           "text-shadow": "2px 2px 8px rgba(0,0,0,0.7)",
         },
-        ".text-shadow-dark": {
+        ".text-shadow-light": {
           "text-shadow": "2px 2px 8px rgba(255,255,255,0.7)",
         },
       });

@@ -1,38 +1,18 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../redux/themeSlice";
+import CustomFooter from "../components/Footers/CustomFooter";
 
 const Support = () => {
-  const theme = useSelector(selectTheme);
   return (
-    <div
-      className={`flex flex-col h-screen items-center justify-center ${
-        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
-      }`}
-    >
+    <div className="flex flex-col h-screen items-center justify-center bg-secondary dark:bg-secondary-dark">
       <NavBar />
-      <div>
-        <form
-          className={`flex flex-col justify-center items-center w-[550px] mt-20 p-8 pb-4 rounded-xl shadow ${
-            theme.isDarkTheme
-              ? "dark-bg-gray_transparent"
-              : "light-bg-gray_transparent"
-          }`}
-        >
-          <label
-            className={`text-primary text-xl font-semibold mb-10 ${
-              theme.isDarkTheme ? "text-gray-300" : "text-black"
-            }`}
-          >
+      <div className="flex-grow flex flex-col items-center justify-center">
+        <form className="flex flex-col justify-center items-center w-[550px] mt-20 p-8 pb-4 rounded-xl shadow bg-transparent-light dark:bg-transparent-dark">
+          <label className="text-xl font-semibold mb-10 text-black dark:text-white">
             Need help? Submit a request!
           </label>
           <div className="mb-3 w-full">
-            <label
-              className={`text-primary  ${
-                theme.isDarkTheme ? "text-gray-300" : "text-black"
-              }`}
-            >
+            <label className="text-black dark:text-white">
               Your email address
             </label>
             <input
@@ -42,13 +22,7 @@ const Support = () => {
             />
           </div>
           <div className="mb-3 w-full">
-            <label
-              className={`text-primary ${
-                theme.isDarkTheme ? "text-gray-300" : "text-black"
-              }`}
-            >
-              Subject
-            </label>
+            <label className="text-black dark:text-white">Subject</label>
             <input
               id="subject"
               className="w-full p-1 mt-1 text-gray-900 outline-none border border-gray-400 namefield-bg-gray focus:outline-blue-700"
@@ -56,13 +30,7 @@ const Support = () => {
             />
           </div>
           <div className="mb-6 w-full">
-            <label
-              className={`text-primary ${
-                theme.isDarkTheme ? "text-gray-300" : "text-black"
-              }`}
-            >
-              Description
-            </label>
+            <label className="text-black dark:text-white">Description</label>
             <textarea
               id="description"
               className="flex items-top justify-left w-full p-1 mt-1 text-gray-900 h-44 outline-none border border-gray-400 namefield-bg-gray focus:outline-blue-700 resize-none"
@@ -74,6 +42,7 @@ const Support = () => {
           </button>
         </form>
       </div>
+      <CustomFooter />
     </div>
   );
 };

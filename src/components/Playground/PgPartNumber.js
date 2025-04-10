@@ -1,15 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 
 const PartNumberSelect = ({ selectedNumber, handleNumberChange }) => {
-  const theme = useSelector(selectTheme);
   return (
     <div className="flex flex-col mr-4 items-center justify-center">
       <label
-        className={`block text-gray-700 text-sm font-bold mb-2 ${
-          theme.isDarkTheme ? "text-white" : " text-black"
-        }`}
+        className="block text-sm font-bold mb-2 text-black dark:text-white"
         htmlFor="number"
       >
         <span className="hidden lg:inline">Select part number</span>
@@ -18,11 +13,7 @@ const PartNumberSelect = ({ selectedNumber, handleNumberChange }) => {
       <select
         value={selectedNumber}
         onChange={handleNumberChange}
-        className={`mx-4 h-10 w-full focus:outline-none focus:outline-blue-700 ${
-          theme.isDarkTheme
-            ? "text-white dark-transparent-bg border border-gray-800"
-            : "text-black light-transparent-bg border border-gray-300"
-        }`}
+        className="mx-4 h-10 w-full focus:outline-none focus:outline-blue-700 border text-black dark:text-white bg-transparent-light dark:bg-transparent-dark border-gray-300 dark:border-gray-800"
       >
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
           <option key={num} value={num}>

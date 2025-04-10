@@ -1,6 +1,3 @@
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
-
 const tools = [
   {
     text: "Lessong Generating",
@@ -18,19 +15,13 @@ const tools = [
 ];
 
 const ToolsSection = () => {
-  const theme = useSelector(selectTheme);
-
   return (
     <section className="py-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6 px-4">
         {tools.map((tool, index) => (
           <button
             key={index}
-            className={`flex h-56 overflow-hidden rounded-xl shadow-md transition-transform transform hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg ${
-              theme.isDarkTheme
-                ? "dark-primary-bg text-white"
-                : "light-primary-bg text-black"
-            }`}
+            className="flex h-56 overflow-hidden rounded-xl shadow-md transition-transform transform hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg text-black dark:text-white bg-primary dark:bg-primary-dark"
           >
             <div className="w-[40%] flex items-center px-6">
               <span className="text-xl font-semibold">{tool.text}</span>

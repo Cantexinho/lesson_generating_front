@@ -4,8 +4,6 @@ import PgNavBar from "../components/Playground/PgNavBar";
 import * as inputHandlers from "../utils/inputHandlers";
 import * as lessonHandlers from "../utils/lessonHandlers";
 import * as lessonDataOperations from "../utils/lessonDataOperations";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../redux/themeSlice";
 
 const Playground = () => {
   const [title, setTitle] = useState("");
@@ -16,8 +14,6 @@ const Playground = () => {
   const [loading, setLoading] = useState({});
   const [submitLoading, setSubmitLoading] = useState(false);
   const [lesson, setLesson] = useState();
-
-  const theme = useSelector(selectTheme);
 
   const handleTitleChangeSubmit = (e) => {
     inputHandlers.handleTitleChange(e, setTitle);
@@ -72,11 +68,7 @@ const Playground = () => {
   }, [parts]);
 
   return (
-    <div
-      className={`flex min-h-screen ${
-        theme.isDarkTheme ? "dark-transparent-bg" : "light-primary-bg"
-      }`}
-    >
+    <div className="flex min-h-screen bg-primary dark:bg-primary-dark">
       <PgNavBar
         pgMainState={pgMainState}
         handleNewLessonButton={handleNewLessonButton}

@@ -1,31 +1,19 @@
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
-
 const TitleSelect = ({
   title,
   handleTitleChange,
   passedProps,
   placeholderText,
 }) => {
-  const theme = useSelector(selectTheme);
   return (
     <div className={`${passedProps}`}>
-      <span
-        className={`text-2xl font-bold font-custom hidden md:inline ${
-          theme.isDarkTheme ? "text-white" : "text-black"
-        }`}
-      >
+      <span className="text-2xl font-bold font-custom hidden md:inline text-black dark:text-white">
         Enter title of lesson
       </span>
       <span className="text-2xl font-bold font-custom text-white md:hidden">
         Title
       </span>
       <input
-        className={`flex w-[400px] lg:w-[800px] text-xl font-custom p-4 mt-2 rounded-xl focus:outline-none h-18 ${
-          theme.isDarkTheme
-            ? "text-white dark-main-focus-outline dark-primary-bg border-b-2 border-gray-800"
-            : "text-black light-main-focus-outline light-primary-bg border-b-2  border-gray-300"
-        }`}
+        className="flex w-[400px] lg:w-[800px] text-xl font-custom p-4 mt-2 rounded-xl focus:outline-none h-18 text-black dark:text-white focus:outline-main dark:focus:outline-main-dark bg-primary dark:bg-primary-dark  border-gray-300 dark:border-gray-800"
         type="text"
         value={title}
         onChange={handleTitleChange}

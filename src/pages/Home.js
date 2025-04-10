@@ -4,17 +4,10 @@ import ImageSection from "../components/Sections/ImageSection";
 import CustomFooter from "../components/Footers/CustomFooter";
 import TopSection from "../components/Sections/TopSection";
 import ToolsSection from "../components/Sections/ToolsSection";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../redux/themeSlice";
 
 const Home = () => {
-  const theme = useSelector(selectTheme);
   return (
-    <div
-      className={`flex flex-col min-h-screen ${
-        theme.isDarkTheme ? "dark-second-bg" : "light-second-bg"
-      }`}
-    >
+    <div className="flex flex-col min-h-screen bg-secondary dark:bg-secondary-dark">
       <NavBar />
       <div className="flex-grow flex flex-col">
         <TopSection />

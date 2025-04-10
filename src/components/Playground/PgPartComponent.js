@@ -1,8 +1,6 @@
 import React from "react";
 import Spinner from "./Spinner";
 import * as crudService from "../../api/lessonCrudService";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 
 const PartComponent = ({
   parts,
@@ -13,30 +11,21 @@ const PartComponent = ({
   setParts,
   partHandlers,
 }) => {
-  const theme = useSelector(selectTheme);
   return (
     <div
       key={part.id}
       className="flex mb-4 w-full justify-between relative text-xs md:text-base"
     >
-      <div
-        className={`rounded-sm p-4 w-full relative ${
-          theme.isDarkTheme
-            ? "text-white dark-transparent-bg border border-gray-800"
-            : "text-black light-transparent-bg border border-gray-300"
-        }`}
-      >
+      <div className="rounded-sm p-4 w-full relative border text-black dark:text-white bg-transparent-light dark:bg-transparent-dark  border-gray-300 dark:border-gray-800">
         {loading[part.id] ? (
           <div className="flex justify-center items-center w-full">
             <Spinner />
           </div>
         ) : (
           <>
-            <h2
-              className={`mb-2 ${
-                theme.isDarkTheme ? "text-white" : "text-black"
-              }`}
-            >{`Part ${part.number}: ${part.name}`}</h2>
+            <h2 className="mb-2 text-black dark:text-white">
+              {`Part ${part.number}: ${part.name}`}
+            </h2>
             <p>{part.lesson_part_content}</p>
           </>
         )}

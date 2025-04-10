@@ -7,8 +7,10 @@ import Home from "./pages/Home";
 import PostLogin from "./pages/PostLogin";
 import Support from "./pages/Support";
 import Business from "./pages/Business";
-
+import { useSyncDarkMode } from "./hooks/useSyncDarkMode";
 function App() {
+  useSyncDarkMode();
+
   return (
     <Router>
       <Routes>
