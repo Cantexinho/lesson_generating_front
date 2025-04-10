@@ -17,7 +17,6 @@ const PgNavBar = ({
 
   const handleNavBarVisible = () => {
     setNavBarVisible(!navBarVisible);
-    console.log(navBarVisible);
   };
 
   const handleAccountBtnClick = () => {
