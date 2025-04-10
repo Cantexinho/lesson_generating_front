@@ -3,8 +3,6 @@ import * as partHandlers from "../../utils/partHandlers";
 import TitleSelect from "./PgTitle";
 import PartNumberSelect from "./PgPartNumber";
 import PartComponent from "./PgPartComponent";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 
 const PgMain = ({
   parts,
@@ -19,7 +17,6 @@ const PgMain = ({
   handleGenerateSubmit,
   handleDeleteLessonSubmit,
 }) => {
-  const theme = useSelector(selectTheme);
   return (
     <div className="flex flex-col flex-grow items-center justify-top ml-20 mr-20 md:ml-72">
       <form

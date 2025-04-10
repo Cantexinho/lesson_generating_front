@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
-import logo from "../assets/images/logo.png";
 
 const Register = (props) => {
   const [email, setEmail] = useState("");
@@ -78,46 +77,29 @@ const Register = (props) => {
   };
 
   return (
-    <div
-      className={`flex flex-col items-center justify-center min-h-screen w-screen ${
-        theme.isDarkTheme ? "dark-primary-bg" : "light-primary-bg"
-      }`}
-    >
+    <div className="flex flex-col items-center justify-center min-h-screen  w-screen bg-secondary dark:bg-secondary-dark">
       <a className="flex flex-col items-center justify-center" href="/">
         <img
           className="mt-2 w-28 h-28 rounded-2xl"
-          src={logo}
+          src={
+            theme.isDarkTheme
+              ? require("../assets/images/legatus-logo-white.png")
+              : require("../assets/images/legatus-logo-black.png")
+          }
           alt="Your Logo Alt Text"
         />
-        <p
-          className={`text-xl font-semibold mt-2 mb-4 ${
-            theme.isDarkTheme ? "text-white" : "text-black"
-          }`}
-        >
+        <p className="text-xl font-semibold mt-2 mb-4 text-black dark:text-white">
           Legatus AI
         </p>
       </a>
-      <form
-        className={`flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow ${
-          theme.isDarkTheme
-            ? "dark-transparent-bg border border-gray-700"
-            : "light-transparent-bg"
-        }`}
-      >
+      <form className="flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow bg-transparent-light dark:bg-transparent-dark dark:border dark:border-gray-700">
         <div className="mb-3 w-full">
-          <label
-            className={`text-primary  ${
-              theme.isDarkTheme ? "text-white" : "text-black"
-            }`}
-            htmlFor="email"
-          >
+          <label className="text-black dark:text-white" htmlFor="email">
             Email
           </label>
           <input
             id="email"
-            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600  ${
-              theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"
-            }`}
+            className="w-full p-1 mt-1 text-black outline-none focus:outline-blue-600"
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -127,19 +109,12 @@ const Register = (props) => {
           )}
         </div>
         <div className="mb-3 w-full">
-          <label
-            className={`text-primary  ${
-              theme.isDarkTheme ? "text-white" : "text-black"
-            }`}
-            htmlFor="username"
-          >
+          <label className="text-black dark:text-white" htmlFor="username">
             Username
           </label>
           <input
             id="username"
-            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
-              theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"
-            }`}
+            className="w-full p-1 mt-1 text-black outline-none focus:outline-blue-600"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -149,19 +124,12 @@ const Register = (props) => {
           )}
         </div>
         <div className="mb-3 w-full">
-          <label
-            className={`text-primary  ${
-              theme.isDarkTheme ? "text-white" : "text-black"
-            }`}
-            htmlFor="password"
-          >
+          <label className="text-black dark:text-white" htmlFor="password">
             Password
           </label>
           <input
             id="password"
-            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600  ${
-              theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"
-            }`}
+            className="w-full p-1 mt-1 text-black outline-none focus:outline-blue-600"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -171,19 +139,12 @@ const Register = (props) => {
           )}
         </div>
         <div className="mb-3 w-full">
-          <label
-            className={`text-primary  ${
-              theme.isDarkTheme ? "text-white" : "text-black"
-            }`}
-            htmlFor="password"
-          >
+          <label className="text-black dark:text-white" htmlFor="password">
             Repeat Password
           </label>
           <input
             id="repeat_password"
-            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
-              theme.isDarkTheme ? "dark-field-cl" : "light-field-cl"
-            }`}
+            className="w-full p-1 mt-1 text-black outline-none focus:outline-blue-600"
             type="password"
             value={passwordRepeat}
             onChange={(e) => setPasswordRepeat(e.target.value)}

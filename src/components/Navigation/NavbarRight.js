@@ -1,12 +1,9 @@
 import { faCog, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 import ThemeButton from "../Global/ThemeButton";
 
 function NavbarRight() {
-  const theme = useSelector(selectTheme);
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
@@ -41,13 +38,7 @@ function NavbarRight() {
       {/* Playground Button */}
       <nav className="flex">
         <ul className="mr-4 flex">
-          <li
-            className={`text-md px-6 py-1 border rounded-full ${
-              theme.isDarkTheme
-                ? "dark-transparent-bg text-white border-white hover:bg-gray-800"
-                : "light-transparent-bg text-black border-gray-600 hover:bg-gray-300"
-            }`}
-          >
+          <li className="text-md px-6 py-1 border rounded-full bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-gray-300 dark:hover:bg-gray-800">
             <a href="/login">
               <span className="hidden xl:inline font-semibold font-custom">
                 Go to Playground

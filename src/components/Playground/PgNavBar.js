@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import * as lessonDataOperations from "../../utils/lessonDataOperations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
-import { selectTheme } from "../../redux/themeSlice";
 import ThemeButton from "../Global/ThemeButton";
 
 const PgNavBar = ({
@@ -16,8 +14,6 @@ const PgNavBar = ({
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const [navBarVisible, setNavBarVisible] = useState(false);
-
-  const theme = useSelector(selectTheme);
 
   const handleNavBarVisible = () => {
     setNavBarVisible(!navBarVisible);
@@ -44,23 +40,21 @@ const PgNavBar = ({
         {navBarVisible ? (
           <FontAwesomeIcon
             icon={faTimes}
-            className="mt-2"
+            className="mt-2 text-black dark:text-white"
             size="xl"
-            style={{ color: theme.isDarkTheme ? "white" : "black" }}
           />
         ) : (
           <FontAwesomeIcon
             icon={faArrowRight}
-            className="mt-2"
+            className="mt-2 text-black dark:text-white"
             size="xl"
-            style={{ color: theme.isDarkTheme ? "white" : "black" }}
           />
         )}
       </button>
       <nav
-        className={`flex flex-col fixed justify-top items-center h-screen rounded overflow-y md:translate-x-0 transition-transform z-10 ${
-          theme.isDarkTheme ? "dark-navbar" : "light-navbar"
-        } ${navBarVisible ? "translate-x-0" : "-translate-x-full"}`}
+        className={`flex flex-col fixed justify-top items-center h-screen rounded overflow-y md:translate-x-0 transition-transform z-10 bg-secondary dark:bg-secondary-dark ${
+          navBarVisible ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex fixed flex-col items-center justify-center">
           <a className="flex flex-col items-center mt-4 mb-4" href="/home">
@@ -69,48 +63,28 @@ const PgNavBar = ({
               src={require("../../assets/images/logo.png")}
               alt="Logo"
             />
-            <p
-              className={` text-xl font-semibold flex-shrink-0 mx-2 ${
-                theme.isDarkTheme ? "text-white" : "text-black"
-              }`}
-            >
+            <p className="text-xl font-semibold flex-shrink-0 mx-2 text-black dark:text-white">
               Legatus AI
             </p>
           </a>
           <div className="flex justify-center space-x-1 mb-4">
             <button
-              className={`p-1 second-bg-gray ${
-                theme.isDarkTheme
-                  ? "dark-transparent-bg text-white hover:bg-gray-900 border border-gray-800 "
-                  : "light-transparent-bg text-black hover:bg-gray-300 border border-gray-300 "
-              }`}
+              className="p-1 second-bg-gray border bg-transparent-light dark:bg-transparent-dark text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-300 dark:border-gray-800"
               onClick={handleNewLessonButton}
             >
               New Lesson
             </button>
           </div>
         </div>
-        <div
-          className={`mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar mx-2 ${
-            theme.isDarkTheme
-              ? "dark-transparent-bg border border-gray-800"
-              : "light-transparent-bg border border-gray-200"
-          }`}
-        >
+        <div className="mt-40 mb-2 max-h-screen h-full overflow-y-auto scrollbar mx-2 bg-transparent-light dark:bg-transparent-dark border-gray-200 dark:border-gray-800">
           <ul className="flex flex-col items-center w-52">
             {lessons.map((lesson) => (
               <button
                 key={lesson.id}
-                className={`relative flex items-center justify-left pl-2 w-full h-12 text-sm rounded ${
+                className={`relative flex items-center justify-left pl-2 w-full h-12 text-sm rounded border-t border-b text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-300 dark:border-gray-700" ${
                   selectedLesson && selectedLesson.id === lesson.id
-                    ? theme.isDarkTheme
-                      ? "bg-gray-900"
-                      : "bg-gray-300"
+                    ? "bg-gray-300 dark:bg-gray-900"
                     : ""
-                } ${
-                  theme.isDarkTheme
-                    ? "text-white hover:bg-gray-900 border-t border-b border-gray-700"
-                    : "text-black hover:bg-gray-300 border-t border-b border-gray-300"
                 }`}
                 onClick={() => handleLessonSelect(lesson)}
               >
@@ -120,13 +94,9 @@ const PgNavBar = ({
           </ul>
         </div>
         <ThemeButton passed_props={"my-2 mb-3 ml-8"} />
-        <div className="flex justify-center w-52 space-x-1 mb-1 mt-auto">
+        <div className="flex justify-center w-52 space-x-1 mb-1 mt-auto ">
           <button
-            className={`p-2 w-full ${
-              theme.isDarkTheme
-                ? "text-white dark-primary-bg hover:bg-gray-900 border border-gray-700"
-                : "text-black light-transparent-bg hover:bg-gray-300 border border-gray-400"
-            }`}
+            className="p-2 w-full border text-black dark:text-white bg-transparent-light dark:bg-primary-dark hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-400 dark:border-gray-700"
             onClick={handleAccountBtnClick}
           >
             Log out
