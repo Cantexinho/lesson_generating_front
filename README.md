@@ -10,8 +10,8 @@ make cog white/black +
 fix cog menu +
 fix phone menu +
 
-make hover scale instead of bg-color
-tell me what you want rework
+make hover scale instead of bg-color +
+tell me what you want rework +
 news section
 
 constant text module
