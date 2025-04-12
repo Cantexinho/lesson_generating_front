@@ -26,7 +26,7 @@ const NavBarButton = ({ label, showArrow, subpages, navigateTo }) => {
   return (
     <li
       ref={dropdownRef}
-      className="relative z-10 flex items-center justify-center p-3 text-md text-black dark:text-white border-b-0 hover:border-b-2 hover:border-main dark:hover:border-main-dark"
+      className="relative z-10 flex items-center justify-center p-3 text-md text-black dark:text-white border-b-0 hover:border-b-2 hover:border-main dark:hover:border-main-dark cursor-pointer"
       onClick={handleButtonClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

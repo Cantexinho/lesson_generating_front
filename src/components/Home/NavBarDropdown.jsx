@@ -10,7 +10,7 @@ const NavBarDropdown = ({ subpages }) => {
             {items.map((subpage) => (
               <li
                 key={subpage}
-                className="flex items-center justify-center text-base h-8 rounded-md my-2 px-2 text-black dark:text-white hover:bg-secondary dark:hover:bg-secondary-dark"
+                className="flex items-center justify-center text-base h-8 rounded-md my-2 px-2 text-black dark:text-white hover:bg-transparent-light dark:hover:bg-transparent-dark"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}

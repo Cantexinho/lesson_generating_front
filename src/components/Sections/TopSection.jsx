@@ -1,6 +1,7 @@
-import TitleSelect from "../Playground/PgTitle";
+import LessonGenerationInput from "../Lessons/LessonGenerationInput";
+import { handleTitleChange } from "../../utils/inputHandlers";
 
-const TopSection = ({ title, handleTitleChangeSubmit }) => {
+const TopSection = () => {
   const bgImage = require(`../../assets/images/ai_rome_2.png`);
 
   return (
@@ -12,11 +13,11 @@ const TopSection = ({ title, handleTitleChangeSubmit }) => {
         backgroundPosition: "center",
       }}
     >
-      <TitleSelect
-        title={title}
-        handleTitleChange={handleTitleChangeSubmit}
-        passedProps="flex flex-col rounded-2xl w-full max-w-3xl min-h-96 m-4 justify-center items-center"
+      <LessonGenerationInput
+        handleTitleChange={handleTitleChange}
+        passedProps=""
         placeholderText={"Tell me what you want to learn"}
+        onSubmit={() => {}}
       />
     </section>
   );

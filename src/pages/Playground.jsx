@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import PgMain from "../components/Playground/PgMain";
-import PgNavBar from "../components/Playground/PgNavBar";
+import LessonMain from "../components/Lessons/LessonMain";
+import PgNavBar from "../components/Lessons/PgNavBar";
 import * as inputHandlers from "../utils/inputHandlers";
 import * as lessonHandlers from "../utils/lessonHandlers";
 import * as lessonDataOperations from "../utils/lessonDataOperations";
@@ -75,7 +75,7 @@ const Playground = () => {
         handleLessonSelect={handleLessonSelect}
         selectedLesson={lesson}
       />
-      <PgMain
+      <LessonMain
         parts={parts}
         setParts={setParts}
         title={title}

@@ -4,8 +4,7 @@ import NarBarPlayground from "./NavBarPlayground";
 import NavBarSettings from "./NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const theme = useSelector(selectTheme);
