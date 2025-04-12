@@ -4,7 +4,7 @@ import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import NavBarDropdown from "./NavBarDropdown";
 
-const NavBarButton = ({ label, showArrow, subpages, navigateTo }) => {
+const NavBarButton = ({ label, showArrow, subpages, navigateTo, scrolled }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -42,7 +42,8 @@ const NavBarButton = ({ label, showArrow, subpages, navigateTo }) => {
           size="xs"
         />
       )}
-      {isDropdownOpen && showArrow && <NavBarDropdown subpages={subpages} />}
+      {isDropdownOpen && showArrow && 
+      <NavBarDropdown subpages={subpages} scrolled={scrolled} />}
     </li>
   );
 };

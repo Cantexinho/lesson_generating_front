@@ -1,6 +1,6 @@
 import NavBarButton from "./NavBarButton";
 import NavBarMenu from "./NavBarMenu";
-import NarBarPlayground from "./NavBarPlayground";
+import NavBarPlayground from "./NavBarPlayground";
 import NavBarSettings from "./NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
@@ -18,6 +18,12 @@ const NavBar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const navbarPlaygroundProps = {
+    containerClasses: "lg:flex",
+    listClasses: "mr-4 flex",
+    itemClasses: "text-md px-6 py-1 border rounded-full bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-secondary dark:hover:bg-secondary-dark group"
+  };
 
   return (
     <div
@@ -55,33 +61,38 @@ const NavBar = () => {
               label="Goal"
               showArrow={false}
               navigateTo={"/goal"}
+              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="Tools"
               showArrow={true}
               subpages={{
-                col1: ["lesson-generator", "bg-remover", "image-observer"],
+                "Popular Tools": ["Lesson Generator", "BG Remover", "Image Observer"],
+                "New Releases": ["AI Writer", "Code Assistant", "Text Summarizer"]
               }}
-              navigateTo={"/company"}
+              navigateTo={"/tools"}
+              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="API"
               showArrow={true}
               subpages={{
-                col1: ["Home", "About", "Contact"],
-                col2: ["Services", "Blog", "FAQ"],
+                "Documentation": ["Getting Started", "API Reference", "Examples"],
+                "Resources": ["Pricing", "Usage Limits", "Support"]
               }}
               navigateTo={"/docs"}
+              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="Contact"
               showArrow={true}
               subpages={{
-                col1: ["Home", "About", "Contact"],
-                col2: ["Services", "Blog", "FAQ"],
-                col3: ["Services", "Blog", "FAQ"],
+                "Support": ["Help Center", "Tickets", "Community"],
+                "Business": ["Enterprise", "Partners", "Resellers"],
+                "Company": ["About Us", "Careers", "Press"]
               }}
-              navigateTo={"/support"}
+              navigateTo={"/contact"}
+              scrolled={scrolled}
             ></NavBarButton>
           </ul>
         </nav>
@@ -89,7 +100,7 @@ const NavBar = () => {
       <div className="flex items-center mx-4 ml-auto relative">
         <NavBarSettings />
         <div className="hidden lg:block">
-          <NarBarPlayground />
+          <NavBarPlayground {...navbarPlaygroundProps} />
         </div>
         <div className="block lg:hidden">
           <NavBarMenu
