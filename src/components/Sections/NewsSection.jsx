@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -6,61 +6,56 @@ import { useNavigate } from 'react-router-dom';
 const NewsSection = () => {
   const navigate = useNavigate();
   
-  // Sample news data
   const newsItems = [
     {
       id: 1,
       title: "New Research Breakthrough in Renewable Energy",
       content: "Scientists have discovered a revolutionary method to improve solar panel efficiency by 40%.",
       image: require("../../assets/images/futuristic_solar_panels.png"),
-      slug: "renewable-energy-breakthrough" // URL slug for the article
+      slug: "renewable-energy-breakthrough"
     },
     {
       id: 2,
       title: "Global Tech Conference Announces Dates",
       content: "The annual technology summit will be held virtually this year with keynote speakers from major tech companies.",
       image: require("../../assets/images/futuristic_virtual_technology_summit.png"),
-      slug: "tech-conference-dates" // URL slug for the article
+      slug: "tech-conference-dates"
     },
     {
       id: 3,
       title: "Health Officials Release New Dietary Guidelines",
       content: "Updated recommendations focus on plant-based nutrition and reduced processed food consumption.",
       image: require("../../assets/images/vibrant_plant_based_meal.png"),
-      slug: "new-dietary-guidelines" // URL slug for the article
+      slug: "new-dietary-guidelines"
     }
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Function to move to the next slide
-  const nextSlide = (e) => {
-    e.stopPropagation(); // Prevent click from bubbling to the container
+  
+  const nextSlide = useCallback((e) => {
+    if (e) e.stopPropagation(); // Prevent click from bubbling to the container
     setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-  };
+  }, [newsItems.length]);
 
-  // Function to move to the previous slide
-  const prevSlide = (e) => {
-    e.stopPropagation(); // Prevent click from bubbling to the container
+  const prevSlide = useCallback((e) => {
+    if (e) e.stopPropagation(); // Prevent click from bubbling to the container
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? newsItems.length - 1 : prevIndex - 1
     );
-  };
+  }, [newsItems.length]);
 
-  // Function to navigate to article page
   const goToArticle = () => {
     navigate(`/news/${newsItems[currentIndex].slug}`);
   };
 
-  // Auto-rotate slides every 5 seconds
+  // Auto-rotate slides every 5 seconds, reset timer when currentIndex changes
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
+      nextSlide();
     }, 5000);
     
-    // Clear interval on component unmount
     return () => clearInterval(interval);
-  }, [newsItems.length]);
+  }, [currentIndex, nextSlide]);
 
   return (
     <section className="flex items-center justify-center w-full py-5 md:py-10 bg-secondary dark:bg-secondary-dark">
@@ -68,7 +63,7 @@ const NewsSection = () => {
         {/* Left Arrow */}
         <button 
           onClick={prevSlide}
-          className="absolute w-12 h-12 left-6 z-10 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
+          className="absolute w-12 h-12 left-6 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
           aria-label="Previous slide"
         >
           <FontAwesomeIcon icon={faChevronLeft} size="lg" />
@@ -119,7 +114,7 @@ const NewsSection = () => {
         {/* Right Arrow */}
         <button 
           onClick={nextSlide}
-          className="absolute w-12 h-12 right-6 z-10 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
+          className="absolute w-12 h-12 right-6 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
           aria-label="Next slide"
         >
           <FontAwesomeIcon icon={faChevronRight} size="lg" />
