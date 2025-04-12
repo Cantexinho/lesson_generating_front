@@ -39,7 +39,7 @@ const NavBarSettings = ({ scrolled }) => {
           {languages.map((lang, index) => (
             <div
               key={index}
-              className="px-4 py-2 text-sm text-black dark:text-white hover:bg-transparent-light dark:hover:bg-transparent-dark rounded-lg cursor-pointer"
+              className="px-4 py-2 text-sm text-black dark:text-white hover:bg-secondary dark:hover:bg-secondary-dark rounded-lg cursor-pointer"
             >
               {lang.language}
             </div>
