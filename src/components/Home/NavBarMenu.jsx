@@ -4,6 +4,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import ThemeButton from "../Global/ThemeButton";
+import NavBarPlayground from "./NavBarPlayground";
 
 const NavBarMenu = ({ label, showArrow, subpages }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -43,6 +44,13 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
 
   const bgImage = require(`../../assets/images/ai_rome_1.png`);
 
+  const playgroundProps = {
+    containerClasses: "flex w-full justify-center",
+    listClasses: "flex w-full",
+    itemClasses: "w-full text-md px-8 py-3 border bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-secondary dark:hover:bg-secondary-dark group",
+    textClasses: "text-lg font-bold font-custom text-center mx-auto",
+    iconClasses: "ml-2 text-lg transition-transform duration-200 group-hover:translate-x-1"
+  };
 
   return (
     <div ref={menuRef} className="relative">
@@ -90,6 +98,11 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
             >
               <FontAwesomeIcon icon={faTimes} className="text-black dark:text-white" />
             </button>
+          </div>
+
+          {/* Playground Component - with custom styling */}
+          <div className="my-6 mx-4">
+            <NavBarPlayground {...playgroundProps} />
           </div>
           
           {/* Menu Items */}
