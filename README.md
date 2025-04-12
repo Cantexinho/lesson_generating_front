@@ -12,7 +12,7 @@ fix phone menu +
 
 make hover scale instead of bg-color +
 tell me what you want rework +
-news section
+news section +
 
 constant text module
 language support

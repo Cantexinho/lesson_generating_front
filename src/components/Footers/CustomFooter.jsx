@@ -2,7 +2,7 @@ import start_now from "../../assets/images/start_now.png";
 
 const CustomFooter = () => {
   return (
-    <footer className="flex flex-col items-center justify-center w-full mt-20 bg-primary dark:bg-primary-dark border-t border-gray-300 dark:border-gray-600">
+    <footer className="flex flex-col items-center justify-center w-full bg-primary dark:bg-primary-dark">
       <div className="flex items-center justify-center w-full h-20">
         <p className="text-lg font-semibold text-black dark:text-white">
           &copy; 2025 Legatus AI. All rights reserved.

@@ -16,7 +16,7 @@ const tools = [
 
 const ToolsSection = () => {
   return (
-    <section className="py-8">
+    <section className="py-16 bg-transparent-light dark:bg-transparent-dark">
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6 px-4">
         {tools.map((tool, index) => (
           <button
