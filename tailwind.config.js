@@ -12,6 +12,10 @@ module.exports = {
       transitionTimingFunction: {
         default: "ease-in-out",
       },
+      height: {
+        128: "32rem",
+        144: "36rem",
+      },
       // boxShadow: {
       //   text: "2px 2px 8px rgba(0,0,0,0.7)",
       // },
