@@ -98,7 +98,7 @@ const NavBar = () => {
         </nav>
       </div>
       <div className="flex items-center mx-4 ml-auto relative">
-        <NavBarSettings />
+        <NavBarSettings scrolled={scrolled}/>
         <div className="hidden lg:block">
           <NavBarPlayground {...navbarPlaygroundProps} />
         </div>
