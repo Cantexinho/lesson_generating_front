@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NewsSection = () => {
   const navigate = useNavigate();
@@ -12,21 +12,21 @@ const NewsSection = () => {
       id: 1,
       title: "New Research Breakthrough in Renewable Energy",
       content: "Scientists have discovered a revolutionary method to improve solar panel efficiency by 40%.",
-      image: require("../../assets/images/ai_rome_1.png"),
+      image: require("../../assets/images/futuristic_solar_panels.png"),
       slug: "renewable-energy-breakthrough" // URL slug for the article
     },
     {
       id: 2,
       title: "Global Tech Conference Announces Dates",
       content: "The annual technology summit will be held virtually this year with keynote speakers from major tech companies.",
-      image: require("../../assets/images/ai_rome_2.png"),
+      image: require("../../assets/images/futuristic_virtual_technology_summit.png"),
       slug: "tech-conference-dates" // URL slug for the article
     },
     {
       id: 3,
       title: "Health Officials Release New Dietary Guidelines",
       content: "Updated recommendations focus on plant-based nutrition and reduced processed food consumption.",
-      image: require("../../assets/images/random_city_1.png"),
+      image: require("../../assets/images/vibrant_plant_based_meal.png"),
       slug: "new-dietary-guidelines" // URL slug for the article
     }
   ];
@@ -60,7 +60,7 @@ const NewsSection = () => {
     
     // Clear interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [newsItems.length]);
 
   return (
     <section className="flex items-center justify-center w-full py-5 md:py-10 bg-secondary dark:bg-secondary-dark">

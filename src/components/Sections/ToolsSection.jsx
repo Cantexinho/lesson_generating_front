@@ -1,16 +1,16 @@
 const tools = [
   {
     text: "Lessong Generating",
-    image: require("../../assets/images/ai_rome_1.png"),
+    image: require("../../assets/images/lesson_web_interface.png"),
   },
   {
     text: "Background Removing",
-    image: require("../../assets/images/ai_learning.png"),
+    image: require("../../assets/images/bg_remover_web_interface.png"),
   },
-  { text: "Tool 3", image: require("../../assets/images/random_city_1.png") },
+  { text: "Image Observer", image: require("../../assets/images/image_observer_web_dashboard.png") },
   {
-    text: "Tool 4",
-    image: require("../../assets/images/futuristic_future.png"),
+    text: "AI Writer",
+    image: require("../../assets/images/writing_platform.png"),
   },
 ];
 
