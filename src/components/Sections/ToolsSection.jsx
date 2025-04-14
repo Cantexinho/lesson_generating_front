@@ -1,7 +1,7 @@
 const tools = [
   {
     text: "Lessong Generating",
-    image: require("../../assets/images/lesson_web_interface.png"),
+    image: require("../../assets/images/web_interface_lesson.png"),
   },
   {
     text: "Background Removing",
