@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/common/NavBar";
 import CustomFooter from "../components/common/CustomFooter";
 import { NEWSDATA } from "../constants/newsData";
@@ -7,18 +7,88 @@ import { NEWSDATA } from "../constants/newsData";
 const NewsPage = () => {
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const { page } = useParams();
+  
+  const currentPage = page ? parseInt(page) : 1;
+  const articlesPerPage = 6;
 
   useEffect(() => {
     // Simulating data fetching
     setTimeout(() => {
       setNewsItems(NEWSDATA);
+      setTotalPages(Math.ceil(NEWSDATA.length / articlesPerPage));
       setLoading(false);
     }, 800);
   }, []);
 
+  const getCurrentArticles = () => {
+    const startIndex = (currentPage - 1) * articlesPerPage;
+    const endIndex = startIndex + articlesPerPage;
+    return newsItems.slice(startIndex, endIndex);
+  };
+
   const handleArticleClick = (articleId) => {
-    navigate(`/news/${articleId}`);
+    navigate(`/news/${articleId}`, { state: { from: currentPage } });
+  };
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber === currentPage) return;
+    navigate(`/news/page/${pageNumber}`);
+    window.scrollTo(0, 0);
+  };
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    
+    buttons.push(
+      <button 
+        key="prev"
+        onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`px-3 py-2 rounded-md ${
+          currentPage === 1 
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600" 
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        }`}
+      >
+        Previous
+      </button>
+    );
+    
+    for (let i = 1; i <= totalPages; i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`px-3 py-2 rounded-md ${
+            i === currentPage 
+              ? "bg-blue-600 text-white" 
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+    
+    buttons.push(
+      <button 
+        key="next"
+        onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`px-3 py-2 rounded-md ${
+          currentPage === totalPages 
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600" 
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        }`}
+      >
+        Next
+      </button>
+    );
+    
+    return buttons;
   };
 
   return (
@@ -36,7 +106,6 @@ const NewsPage = () => {
         {/* News Feed Grid with primary background wrapper */}
         {!loading && (
           <div className="bg-primary dark:bg-primary-dark shadow-lg w-full">
-            {/* Content container for proper spacing */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               {/* Header */}
               <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
@@ -46,10 +115,13 @@ const NewsPage = () => {
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
                   Stay updated with the latest developments and announcements
                 </p>
+                <p className="text-gray-500 dark:text-gray-500 mt-1">
+                  Page {currentPage} of {totalPages}
+                </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {newsItems.map((newsItem) => (
+                {getCurrentArticles().map((newsItem) => (
                   <div
                     key={newsItem.id}
                     onClick={() => handleArticleClick(newsItem.id)}
@@ -102,21 +174,9 @@ const NewsPage = () => {
 
         {/* Pagination */}
         {!loading && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 flex justify-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 flex justify-center">
             <nav className="flex items-center space-x-2">
-              <button className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                Previous
-              </button>
-              <button className="px-3 py-2 rounded-md bg-blue-600 text-white">1</button>
-              <button className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                2
-              </button>
-              <button className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                3
-              </button>
-              <button className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                Next
-              </button>
+              {renderPaginationButtons()}
             </nav>
           </div>
         )}

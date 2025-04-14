@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login";
 import Playground from "./pages/Playground";
@@ -34,7 +35,8 @@ function App() {
       <Route exact path="/register" element={<Register />} />
       <Route exact path="/support" element={<Support />} />
       <Route exact path="/business" element={<Business />} />
-      <Route path="/news" element={<NewsPage />} />
+      <Route path="/news" element={<Navigate to="/news/page/1" replace />} />
+      <Route path="/news/page/:page" element={<NewsPage />} />
       <Route path="/news/:id" element={<ArticlePage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/" element={<Home />} />

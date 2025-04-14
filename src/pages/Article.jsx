@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../components/common/NavBar";
 import CustomFooter from "../components/common/CustomFooter";
 import { NEWSDATA } from "../constants/newsData";
@@ -7,26 +7,25 @@ import { NEWSDATA } from "../constants/newsData";
 const ArticlePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [article, setArticle] = useState(null);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const referrerPage = location.state?.from || 1;
+
   useEffect(() => {
-    // Fetch article data
     const fetchArticle = () => {
       setLoading(true);
-      // Simulate API fetch delay
       setTimeout(() => {
         const foundArticle = NEWSDATA.find(item => item.id.toString() === id);
         if (foundArticle) {
           setArticle(foundArticle);
-          // Get related articles (same category or excluding current article)
           const related = NEWSDATA
             .filter(item => item.id.toString() !== id)
             .filter(item => item.category === foundArticle.category)
             .slice(0, 2);
           
-          // If we don't have enough related articles by category, add some others
           if (related.length < 2) {
             const otherArticles = NEWSDATA
               .filter(item => item.id.toString() !== id)
@@ -38,8 +37,7 @@ const ArticlePage = () => {
             setRelatedArticles(related);
           }
         } else {
-          // Article not found
-          navigate("/news");
+          navigate("/news/page/1");
         }
         setLoading(false);
       }, 800);
@@ -48,8 +46,12 @@ const ArticlePage = () => {
     fetchArticle();
   }, [id, navigate]);
 
+  const handleBackToNewsFeed = () => {
+    navigate(`/news/page/${referrerPage}`);
+  };
+
   const handleRelatedArticleClick = (articleId) => {
-    navigate(`/news/${articleId}`);
+    navigate(`/news/${articleId}`, { state: { from: referrerPage } });
   };
 
   return (
@@ -70,7 +72,7 @@ const ArticlePage = () => {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center py-4">
                 <button 
-                  onClick={() => navigate('/news')} 
+                  onClick={handleBackToNewsFeed} 
                   className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
                   ← Back to News Feed
