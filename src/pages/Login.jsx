@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
+import { LOGO_TEXT } from "../constants/logoText";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
@@ -50,7 +51,7 @@ const Login = (props) => {
           alt="Your Logo Alt Text"
         />
         <p className="text-xl font-semibold mt-2 mb-4 text-black dark:text-white">
-          Legatus AI
+          {LOGO_TEXT.logo}
         </p>
       </a>
       <form className="flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow bg-transparent-light dark:bg-transparent-dark dark:border dark:border-gray-700">

@@ -1,0 +1,89 @@
+export const NEWSDATA = [
+  {
+    id: 1,
+    title: "New AI Algorithm Improves Accuracy in Image Recognition by 30%",
+    summary:
+      "Our team has developed a groundbreaking algorithm that significantly improves the accuracy of image recognition systems, particularly in low-light environments.",
+    content:
+      "Our research team has achieved a major breakthrough in AI image recognition technology. The newly developed algorithm demonstrates a 30% improvement in accuracy compared to current industry standards, especially in challenging low-light conditions. This advancement will enable more reliable facial recognition systems, autonomous vehicles with improved safety features, and enhanced medical imaging analysis.",
+    author: "Dr. Sarah Chen",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "Lead AI Researcher",
+    date: "2025-04-10T09:30:00",
+    category: "Technology",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 2,
+    title:
+      "Company Announces New Enterprise Plan with Advanced Security Features",
+    summary:
+      "Our latest enterprise plan includes enhanced encryption, multi-factor authentication, and comprehensive audit logs for businesses with stringent security requirements.",
+    content:
+      "Today, we're excited to announce our new Enterprise+ plan, designed specifically for organizations that require the highest level of security and compliance features. The plan includes end-to-end encryption for all data, advanced multi-factor authentication options, detailed access control systems, and comprehensive audit logs that meet the requirements of GDPR, HIPAA, and other regulatory frameworks.",
+    author: "Michael Rodriguez",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "Product Manager",
+    date: "2025-04-08T14:15:00",
+    category: "Product",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 3,
+    title: "Annual Developer Conference Scheduled for September 2025",
+    summary:
+      "Mark your calendars for our biggest event of the year. Early bird registration is now open with special workshop sessions available for premium ticket holders.",
+    content:
+      "We're thrilled to announce our annual Developer Conference will take place September 15-17, 2025 at the San Francisco Convention Center. This year's theme is 'Building the Intelligent Future,' with keynote presentations focusing on AI integration, cloud architecture, and secure development practices. Early bird registration is now open, with a 25% discount available until June 1st.",
+    author: "Jessica Lee",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "Events Director",
+    date: "2025-04-05T11:00:00",
+    category: "Events",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 4,
+    title: "Strategic Partnership Announced with Leading Cloud Provider",
+    summary:
+      "Our new collaboration will enable seamless integration between platforms and provide customers with enhanced performance and reliability.",
+    content:
+      "We're excited to announce a strategic partnership with CloudTech Solutions, one of the world's leading cloud infrastructure providers. This collaboration will enable our customers to benefit from enhanced performance, improved reliability, and seamless integration between our platforms. The partnership includes joint development of new features, optimized deployment options, and special pricing packages for users of both services.",
+    author: "Robert Johnson",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "Strategic Partnerships Lead",
+    date: "2025-04-03T16:45:00",
+    category: "Business",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 5,
+    title:
+      "New Mobile App Version Features Redesigned Interface and Performance Improvements",
+    summary:
+      "Version 3.0 of our mobile application introduces a cleaner, more intuitive interface along with significant performance optimizations for faster load times.",
+    content:
+      "Today we're rolling out version 3.0 of our mobile application for both iOS and Android platforms. This major update features a completely redesigned user interface based on extensive user feedback and usability testing. The new design offers a more intuitive navigation system, customizable dashboard, and improved accessibility features. Additionally, we've optimized performance across the board, resulting in 40% faster load times and reduced battery consumption.",
+    author: "Amanda Chen",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "Mobile Development Lead",
+    date: "2025-04-01T10:20:00",
+    category: "Product",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 6,
+    title:
+      "Company Opens New Office in Singapore to Support Asia-Pacific Expansion",
+    summary:
+      "Our new regional headquarters will better serve our growing customer base in the APAC region and supports our global expansion strategy.",
+    content:
+      "We're proud to announce the opening of our new Asia-Pacific headquarters in Singapore. This expansion represents a significant milestone in our global growth strategy and will allow us to better serve our rapidly growing customer base in the region. The new office will house sales, customer support, and technical teams dedicated to providing localized service and support for our APAC clients. We expect to hire more than 200 employees for the Singapore office by the end of 2025.",
+    author: "David Wong",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "VP of International Operations",
+    date: "2025-03-28T09:00:00",
+    category: "Company",
+    imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+];

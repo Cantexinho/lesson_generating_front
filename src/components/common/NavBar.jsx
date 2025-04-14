@@ -1,10 +1,11 @@
-import NavBarButton from "./NavBarButton";
-import NavBarMenu from "./NavBarMenu";
-import NavBarPlayground from "./NavBarPlayground";
-import NavBarSettings from "./NavBarSettings";
+import NavBarButton from "../navbar/NavBarButton";
+import NavBarMenu from "../navbar/NavBarMenu";
+import NavBarPlayground from "../navbar/NavBarPlayground";
+import NavBarSettings from "../navbar/NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { useState, useEffect } from "react";
+import { LOGO_TEXT } from "../../constants/logoText";
 
 const NavBar = () => {
   const theme = useSelector(selectTheme);
@@ -42,7 +43,7 @@ const NavBar = () => {
         <p
           className={`text-2xl font-semibold font-custom flex-shrink-0 text-black dark:text-white`}
         >
-          Legatus
+          {LOGO_TEXT.logo}
         </p>
       </a>
       {/*img*/}
@@ -86,6 +87,12 @@ const NavBar = () => {
                 "Company": ["About Us", "Careers", "Press"]
               }}
               navigateTo={"/contact"}
+              scrolled={scrolled}
+            ></NavBarButton>
+            <NavBarButton
+              label="News"
+              showArrow={false}
+              navigateTo={"/news"}
               scrolled={scrolled}
             ></NavBarButton>
           </ul>

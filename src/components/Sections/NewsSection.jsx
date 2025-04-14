@@ -2,43 +2,29 @@ import { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { NEWSDATA } from '../../constants/newsData';
 
 const NewsSection = () => {
   const navigate = useNavigate();
-  
-  const newsItems = [
-    {
-      id: 1,
-      title: "New Research Breakthrough in Renewable Energy",
-      content: "Scientists have discovered a revolutionary method to improve solar panel efficiency by 40%.",
-      image: require("../../assets/images/futuristic_solar_panels.png"),
-      slug: "renewable-energy-breakthrough"
-    },
-    {
-      id: 2,
-      title: "Global Tech Conference Announces Dates",
-      content: "The annual technology summit will be held virtually this year with keynote speakers from major tech companies.",
-      image: require("../../assets/images/futuristic_virtual_technology_summit.png"),
-      slug: "tech-conference-dates"
-    },
-    {
-      id: 3,
-      title: "Health Officials Release New Dietary Guidelines",
-      content: "Updated recommendations focus on plant-based nutrition and reduced processed food consumption.",
-      image: require("../../assets/images/vibrant_plant_based_meal.png"),
-      slug: "new-dietary-guidelines"
-    }
-  ];
+
+  // Limit to maximum of 3 articles from the top of NEWSDATA list
+  const newsItems = NEWSDATA.slice(0, 3).map(item => ({
+    id: item.id,
+    title: item.title,
+    content: item.summary,
+    image: item.imageUrl,
+    slug: item.id
+  }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
   
   const nextSlide = useCallback((e) => {
-    if (e) e.stopPropagation(); // Prevent click from bubbling to the container
+    if (e) e.stopPropagation();
     setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
   }, [newsItems.length]);
 
   const prevSlide = useCallback((e) => {
-    if (e) e.stopPropagation(); // Prevent click from bubbling to the container
+    if (e) e.stopPropagation();
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? newsItems.length - 1 : prevIndex - 1
     );
@@ -48,7 +34,6 @@ const NewsSection = () => {
     navigate(`/news/${newsItems[currentIndex].slug}`);
   };
 
-  // Auto-rotate slides every 5 seconds, reset timer when currentIndex changes
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
@@ -64,7 +49,7 @@ const NewsSection = () => {
           {/* Left Arrow */}
           <button 
             onClick={prevSlide}
-            className="absolute w-12 h-12 2xl:w-16 2xl:h-16 left-6 2xl:left-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none z-10"
+            className="absolute w-12 h-12 2xl:w-16 2xl:h-16 left-6 2xl:left-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
             aria-label="Previous slide"
           >
             <FontAwesomeIcon icon={faChevronLeft} size="lg" className="xl:text-lg 2xl:text-2xl" />
@@ -115,7 +100,7 @@ const NewsSection = () => {
           {/* Right Arrow */}
           <button 
             onClick={nextSlide}
-            className="absolute w-12 h-12 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 right-6 xl:right-6 2xl:right-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none z-10"
+            className="absolute w-12 h-12 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 right-6 xl:right-6 2xl:right-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
             aria-label="Next slide"
           >
             <FontAwesomeIcon icon={faChevronRight} size="lg" className="xl:text-lg 2xl:text-2xl" />

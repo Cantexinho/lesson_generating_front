@@ -26,8 +26,8 @@ module.exports = {
         "secondary-dark": "#1b1b20",
         "transparent-light": "#ffffff80",
         "transparent-dark": "#0c0c0e80",
-        main: "#20444D",
-        "main-dark": "#C7A154",
+        main: "#5E8677",
+        "main-dark": "#BC6F25",
       },
       fontFamily: {
         custom: ['"Roboto"', "sans-serif"],

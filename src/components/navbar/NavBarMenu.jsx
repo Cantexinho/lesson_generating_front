@@ -4,9 +4,9 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import ThemeButton from "../Global/ThemeButton";
-import NavBarPlayground from "./NavBarPlayground";
+import { LOGO_TEXT } from "../../constants/logoText";
 
-const NavBarMenu = ({ label, showArrow, subpages }) => {
+const NavBarMenu = ({ label, subpages }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -43,14 +43,6 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
   }, [isMenuOpen]);
 
   const bgImage = require(`../../assets/images/ai_rome_1.png`);
-
-  const playgroundProps = {
-    containerClasses: "flex w-full justify-center",
-    listClasses: "flex w-full",
-    itemClasses: "w-full text-md px-8 py-3 border bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-secondary dark:hover:bg-secondary-dark group",
-    textClasses: "text-lg font-bold font-custom text-center mx-auto",
-    iconClasses: "ml-2 text-lg transition-transform duration-200 group-hover:translate-x-1"
-  };
 
   return (
     <div ref={menuRef} className="relative">
@@ -89,7 +81,7 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
               <p
                 className="text-2xl font-semibold font-custom flex-shrink-0 text-black dark:text-white"
               >
-                Legatus
+                {LOGO_TEXT.logo}
               </p>
             </a>
             <button 

@@ -6,6 +6,7 @@ import { faTimes, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import ThemeButton from "../Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
+import { LOGO_TEXT } from "../../constants/logoText";
 
 const PgNavBar = ({
   pgMainState,
@@ -71,7 +72,7 @@ const PgNavBar = ({
               alt="Logo"
             />
             <p className="text-xl font-semibold flex-shrink-0 mx-2 text-black dark:text-white">
-              Legatus AI
+              {LOGO_TEXT.logo}
             </p>
           </a>
           <div className="flex justify-center space-x-1 mb-4">

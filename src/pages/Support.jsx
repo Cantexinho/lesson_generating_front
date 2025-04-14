@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "../components/Home/NavBar";
-import CustomFooter from "../components/Footers/CustomFooter";
+import NavBar from "../components/common/NavBar";
+import CustomFooter from "../components/common/CustomFooter";
 
 const Support = () => {
   return (
