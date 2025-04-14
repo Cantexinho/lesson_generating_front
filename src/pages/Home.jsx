@@ -1,6 +1,5 @@
 import React from "react";
 import NavBar from "../components/Home/NavBar";
-import ImageSection from "../components/Sections/ImageSection";
 import CustomFooter from "../components/Footers/CustomFooter";
 import TopSection from "../components/Sections/TopSection";
 import ToolsSection from "../components/Sections/ToolsSection";
@@ -23,7 +22,7 @@ const Home = () => {
 export default Home;
 
 
-{/* <ImageSection
+/* <ImageSection
 imgPlacement={"right"}
 imgName={"ai_presenter_1"}
 sectionProps={
@@ -58,4 +57,4 @@ sectionHeader={"Move to a new beginning!"}
 sectionText={
   "AI is transforming the way we access and utilize data and promises a future where the quest for information is not just quick but also exceptionally insightful."
 }
-/> */}
+/> */
