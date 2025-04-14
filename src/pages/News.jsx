@@ -15,7 +15,6 @@ const NewsPage = () => {
   const articlesPerPage = 6;
 
   useEffect(() => {
-    // Simulating data fetching
     setTimeout(() => {
       setNewsItems(NEWSDATA);
       setTotalPages(Math.ceil(NEWSDATA.length / articlesPerPage));
