@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
-import { LOGO_TEXT } from "../constants/logoNaming";
+import { LOGO_TEXT } from "../constants/logoText";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");

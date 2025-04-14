@@ -5,7 +5,7 @@ import NavBarSettings from "./NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { useState, useEffect } from "react";
-import { LOGO_TEXT } from "../../constants/logoNaming";
+import { LOGO_TEXT } from "../../constants/logoText";
 
 const NavBar = () => {
   const theme = useSelector(selectTheme);
