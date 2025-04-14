@@ -37,7 +37,7 @@ function App() {
       <Route exact path="/business" element={<Business />} />
       <Route path="/news" element={<Navigate to="/news/page/1" replace />} />
       <Route path="/news/page/:page" element={<NewsPage />} />
-      <Route path="/news/:id" element={<ArticlePage />} />
+      <Route path="/news/:slug" element={<ArticlePage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/" element={<Home />} />
       <Route path="/playground" element={<Playground />} />

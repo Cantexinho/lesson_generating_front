@@ -1,6 +1,7 @@
 export const NEWSDATA = [
   {
     id: 1,
+    slug: "new-ai-algorithm-improves-accuracy-in-image-recognition",
     title: "New AI Algorithm Improves Accuracy in Image Recognition by 30%",
     summary:
       "Our team has developed a groundbreaking algorithm that significantly improves the accuracy of image recognition systems, particularly in low-light environments.",
@@ -10,11 +11,24 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "Lead AI Researcher",
     date: "2025-04-10T09:30:00",
+    lastModified: "2025-04-12T10:00:00",
     category: "Technology",
     imageUrl: require("../assets/images/image_observer_web_dashboard.png"),
+    keywords: [
+      "AI",
+      "image recognition",
+      "algorithm",
+      "machine learning",
+      "low-light",
+      "accuracy",
+    ],
+    wordCount: 210,
+    isAccessibleForFree: true,
+    mainEntity: "Artificial Intelligence",
   },
   {
     id: 2,
+    slug: "company-announces-new-enterprise-plan-advanced-security",
     title:
       "Company Announces New Enterprise Plan with Advanced Security Features",
     summary:
@@ -25,11 +39,24 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "Product Manager",
     date: "2025-04-08T14:15:00",
+    lastModified: "2025-04-09T11:30:00",
     category: "Product",
     imageUrl: require("../assets/images/ai_rome_2.png"),
+    keywords: [
+      "enterprise plan",
+      "security",
+      "encryption",
+      "multi-factor authentication",
+      "audit logs",
+      "compliance",
+    ],
+    wordCount: 185,
+    isAccessibleForFree: true,
+    mainEntity: "Enterprise Software",
   },
   {
     id: 3,
+    slug: "annual-developer-conference-september-2025",
     title: "Annual Developer Conference Scheduled for September 2025",
     summary:
       "Mark your calendars for our biggest event of the year. Early bird registration is now open with special workshop sessions available for premium ticket holders.",
@@ -39,11 +66,24 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "Events Director",
     date: "2025-04-05T11:00:00",
+    lastModified: "2025-04-06T08:45:00",
     category: "Events",
     imageUrl: require("../assets/images/futuristic_virtual_technology_summit.png"),
+    keywords: [
+      "developer conference",
+      "technology",
+      "AI",
+      "cloud architecture",
+      "development practices",
+      "San Francisco",
+    ],
+    wordCount: 168,
+    isAccessibleForFree: true,
+    mainEntity: "Developer Conferences",
   },
   {
     id: 4,
+    slug: "strategic-partnership-leading-cloud-provider",
     title: "Strategic Partnership Announced with Leading Cloud Provider",
     summary:
       "Our new collaboration will enable seamless integration between platforms and provide customers with enhanced performance and reliability.",
@@ -53,11 +93,24 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "Strategic Partnerships Lead",
     date: "2025-04-03T16:45:00",
+    lastModified: "2025-04-04T14:00:00",
     category: "Business",
     imageUrl: require("../assets/images/futuristic_solar_panels.png"),
+    keywords: [
+      "strategic partnership",
+      "cloud provider",
+      "integration",
+      "performance",
+      "reliability",
+      "CloudTech Solutions",
+    ],
+    wordCount: 155,
+    isAccessibleForFree: true,
+    mainEntity: "Cloud Computing",
   },
   {
     id: 5,
+    slug: "new-mobile-app-version-redesigned-interface-performance",
     title:
       "New Mobile App Version Features Redesigned Interface and Performance Improvements",
     summary:
@@ -68,11 +121,25 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "Mobile Development Lead",
     date: "2025-04-01T10:20:00",
+    lastModified: "2025-04-02T09:15:00",
     category: "Product",
     imageUrl: require("../assets/images/bg_remover_web_interface.png"),
+    keywords: [
+      "mobile app",
+      "update",
+      "redesign",
+      "user interface",
+      "performance",
+      "iOS",
+      "Android",
+    ],
+    wordCount: 178,
+    isAccessibleForFree: true,
+    mainEntity: "Mobile Applications",
   },
   {
     id: 6,
+    slug: "company-opens-new-office-singapore-apac-expansion",
     title:
       "Company Opens New Office in Singapore to Support Asia-Pacific Expansion",
     summary:
@@ -83,11 +150,24 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "VP of International Operations",
     date: "2025-03-28T09:00:00",
+    lastModified: "2025-03-29T12:30:00",
     category: "Company",
     imageUrl: require("../assets/images/lesson_tree.png"),
+    keywords: [
+      "company expansion",
+      "new office",
+      "Singapore",
+      "Asia-Pacific",
+      "APAC",
+      "global strategy",
+    ],
+    wordCount: 165,
+    isAccessibleForFree: true,
+    mainEntity: "Business Expansion",
   },
   {
     id: 7,
+    slug: "company-opens-new-office-singapore-apac-expansion-duplicate",
     title:
       "Company Opens New Office in Singapore to Support Asia-Pacific Expansion",
     summary:
@@ -98,7 +178,19 @@ export const NEWSDATA = [
     authorImage: require("../assets/images/legatus_person.png"),
     authorTitle: "VP of International Operations",
     date: "2025-03-28T09:00:00",
+    lastModified: "2025-03-30T15:00:00",
     category: "Company",
     imageUrl: require("../assets/images/lesson_web_interface.png"),
+    keywords: [
+      "company expansion",
+      "new office",
+      "Singapore",
+      "Asia-Pacific",
+      "APAC",
+      "global strategy",
+    ],
+    wordCount: 165,
+    isAccessibleForFree: true,
+    mainEntity: "Business Expansion",
   },
 ];

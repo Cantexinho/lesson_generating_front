@@ -7,13 +7,12 @@ import { NEWSDATA } from '../../constants/newsData';
 const NewsSection = () => {
   const navigate = useNavigate();
 
-  // Limit to maximum of 3 articles from the top of NEWSDATA list
   const newsItems = NEWSDATA.slice(0, 3).map(item => ({
     id: item.id,
     title: item.title,
     content: item.summary,
     image: item.imageUrl,
-    slug: item.id
+    slug: item.slug
   }));
 
   const [currentIndex, setCurrentIndex] = useState(0);

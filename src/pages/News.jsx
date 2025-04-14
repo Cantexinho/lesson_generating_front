@@ -28,8 +28,8 @@ const NewsPage = () => {
     return newsItems.slice(startIndex, endIndex);
   };
 
-  const handleArticleClick = (articleId) => {
-    navigate(`/news/${articleId}`, { state: { from: currentPage } });
+  const handleArticleClick = (articleSlug) => {
+    navigate(`/news/${articleSlug}`, { state: { from: currentPage } });
   };
 
   const handlePageChange = (pageNumber) => {
@@ -94,7 +94,7 @@ const NewsPage = () => {
     <div className="flex flex-col min-h-screen bg-secondary dark:bg-secondary-dark">
       <NavBar />
       
-      <main className="flex-grow w-full pt-24 pb-12">
+      <main className="flex-grow w-full pt-16 pb-12">
         {/* Loading state */}
         {loading && (
           <div className="flex justify-center items-center h-64">
@@ -123,7 +123,7 @@ const NewsPage = () => {
                 {getCurrentArticles().map((newsItem) => (
                   <div
                     key={newsItem.id}
-                    onClick={() => handleArticleClick(newsItem.id)}
+                    onClick={() => handleArticleClick(newsItem.slug)}
                     className="bg-secondary dark:bg-secondary-dark rounded-lg shadow-lg overflow-hidden cursor-pointer transition-transform hover:scale-102 hover:shadow-xl"
                   >
                     {newsItem.imageUrl && (
