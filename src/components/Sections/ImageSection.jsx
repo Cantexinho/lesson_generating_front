@@ -1,8 +1,3 @@
-import ai_presenter_1 from "../../assets/images/ai_presenter_1.png";
-import futuristic_future from "../../assets/images/futuristic_future.png";
-import student_learning from "../../assets/images/student_learning.png";
-import ai_learning from "../../assets/images/ai_learning.png";
-
 const ImageSection = ({
   imgPlacement,
   imgName,
@@ -14,10 +9,6 @@ const ImageSection = ({
   const imgPlacementTwText = imgPlacement === "right" ? "order-2" : "";
 
   const imagePathMap = {
-    ai_presenter_1,
-    futuristic_future,
-    student_learning,
-    ai_learning,
   };
 
   const selectedImagePath = imagePathMap[imgName];

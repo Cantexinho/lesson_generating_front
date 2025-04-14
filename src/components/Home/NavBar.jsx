@@ -99,14 +99,15 @@ const NavBar = () => {
       </div>
       <div className="flex items-center mx-4 ml-auto relative">
         <NavBarSettings scrolled={scrolled}/>
+        {/* Self-contained NavBarPlayground component - no props needed */}
         <div className="hidden lg:block">
-          <NavBarPlayground {...navbarPlaygroundProps} />
+          <NavBarPlayground />
         </div>
         <div className="block lg:hidden">
           <NavBarMenu
             label="Menu"
             showArrow={true}
-            subpages={["Goal", "Tools", "API", "Contact", "Playground"]}
+            subpages={["Playground", "Goal", "Tools", "API", "Contact", "Playground"]}
           />
         </div>
       </div>

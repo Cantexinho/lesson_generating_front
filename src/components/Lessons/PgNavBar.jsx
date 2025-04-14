@@ -4,6 +4,8 @@ import * as lessonDataOperations from "../../utils/lessonDataOperations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import ThemeButton from "../Global/ThemeButton";
+import { useSelector } from "react-redux";
+import { selectTheme } from "../../redux/themeSlice";
 
 const PgNavBar = ({
   pgMainState,
@@ -14,6 +16,8 @@ const PgNavBar = ({
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const [navBarVisible, setNavBarVisible] = useState(false);
+
+  const theme = useSelector(selectTheme);
 
   const handleNavBarVisible = () => {
     setNavBarVisible(!navBarVisible);
@@ -59,7 +63,11 @@ const PgNavBar = ({
           <a className="flex flex-col items-center mt-4 mb-4" href="/home">
             <img
               className="w-14 h-14 rounded-2xl"
-              src={require("../../assets/images/logo.png")}
+              src={
+                theme.isDarkTheme
+                  ? require("../../assets/images/legatus-logo-white.png")
+                  : require("../../assets/images/legatus-logo-black.png")
+              }
               alt="Logo"
             />
             <p className="text-xl font-semibold flex-shrink-0 mx-2 text-black dark:text-white">
