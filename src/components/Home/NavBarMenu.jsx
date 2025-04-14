@@ -4,7 +4,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import ThemeButton from "../Global/ThemeButton";
-import NavBarPlayground from "./NavBarPlayground";
+import { LOGO_TEXT } from "../../constants/logoNaming";
 
 const NavBarMenu = ({ label, showArrow, subpages }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -89,7 +89,7 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
               <p
                 className="text-2xl font-semibold font-custom flex-shrink-0 text-black dark:text-white"
               >
-                Legatus
+                {LOGO_TEXT.logo}
               </p>
             </a>
             <button 

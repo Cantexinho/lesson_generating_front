@@ -1,11 +1,12 @@
 import start_now from "../../assets/images/start_now.png";
+import { LOGO_TEXT } from "../../constants/logoNaming";
 
 const CustomFooter = () => {
   return (
     <footer className="flex flex-col items-center justify-center w-full bg-primary dark:bg-primary-dark">
       <div className="flex items-center justify-center w-full h-20">
         <p className="text-lg font-semibold text-black dark:text-white">
-          &copy; 2025 Legatus AI. All rights reserved.
+          &copy; 2025 {LOGO_TEXT.logo}. All rights reserved.
         </p>
       </div>
       <button>

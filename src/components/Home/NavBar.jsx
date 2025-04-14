@@ -5,6 +5,7 @@ import NavBarSettings from "./NavBarSettings";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { useState, useEffect } from "react";
+import { LOGO_TEXT } from "../../constants/logoNaming";
 
 const NavBar = () => {
   const theme = useSelector(selectTheme);
@@ -42,7 +43,7 @@ const NavBar = () => {
         <p
           className={`text-2xl font-semibold font-custom flex-shrink-0 text-black dark:text-white`}
         >
-          Legatus
+          {LOGO_TEXT.logo}
         </p>
       </a>
       {/*img*/}
