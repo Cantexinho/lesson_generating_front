@@ -11,7 +11,7 @@ export const NEWSDATA = [
     authorTitle: "Lead AI Researcher",
     date: "2025-04-10T09:30:00",
     category: "Technology",
-    imageUrl: require("../assets/images/lesson_tree.png"),
+    imageUrl: require("../assets/images/image_observer_web_dashboard.png"),
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ export const NEWSDATA = [
     authorTitle: "Product Manager",
     date: "2025-04-08T14:15:00",
     category: "Product",
-    imageUrl: require("../assets/images/lesson_tree.png"),
+    imageUrl: require("../assets/images/ai_rome_2.png"),
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ export const NEWSDATA = [
     authorTitle: "Events Director",
     date: "2025-04-05T11:00:00",
     category: "Events",
-    imageUrl: require("../assets/images/lesson_tree.png"),
+    imageUrl: require("../assets/images/futuristic_virtual_technology_summit.png"),
   },
   {
     id: 4,
@@ -54,7 +54,7 @@ export const NEWSDATA = [
     authorTitle: "Strategic Partnerships Lead",
     date: "2025-04-03T16:45:00",
     category: "Business",
-    imageUrl: require("../assets/images/lesson_tree.png"),
+    imageUrl: require("../assets/images/futuristic_solar_panels.png"),
   },
   {
     id: 5,
@@ -69,7 +69,7 @@ export const NEWSDATA = [
     authorTitle: "Mobile Development Lead",
     date: "2025-04-01T10:20:00",
     category: "Product",
-    imageUrl: require("../assets/images/lesson_tree.png"),
+    imageUrl: require("../assets/images/bg_remover_web_interface.png"),
   },
   {
     id: 6,
@@ -85,5 +85,20 @@ export const NEWSDATA = [
     date: "2025-03-28T09:00:00",
     category: "Company",
     imageUrl: require("../assets/images/lesson_tree.png"),
+  },
+  {
+    id: 7,
+    title:
+      "Company Opens New Office in Singapore to Support Asia-Pacific Expansion",
+    summary:
+      "Our new regional headquarters will better serve our growing customer base in the APAC region and supports our global expansion strategy.",
+    content:
+      "We're proud to announce the opening of our new Asia-Pacific headquarters in Singapore. This expansion represents a significant milestone in our global growth strategy and will allow us to better serve our rapidly growing customer base in the region. The new office will house sales, customer support, and technical teams dedicated to providing localized service and support for our APAC clients. We expect to hire more than 200 employees for the Singapore office by the end of 2025.",
+    author: "David Wong",
+    authorImage: require("../assets/images/legatus_person.png"),
+    authorTitle: "VP of International Operations",
+    date: "2025-03-28T09:00:00",
+    category: "Company",
+    imageUrl: require("../assets/images/lesson_web_interface.png"),
   },
 ];
