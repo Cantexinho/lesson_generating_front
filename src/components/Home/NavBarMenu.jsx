@@ -99,12 +99,6 @@ const NavBarMenu = ({ label, showArrow, subpages }) => {
               <FontAwesomeIcon icon={faTimes} className="text-black dark:text-white" />
             </button>
           </div>
-
-          {/* Playground Component - with custom styling */}
-          <div className="my-6 mx-4">
-            <NavBarPlayground {...playgroundProps} />
-          </div>
-          
           {/* Menu Items */}
           <ul className="flex flex-col p-4 space-y-4 flex-grow">
             {subpages.map((subpage, index) => (

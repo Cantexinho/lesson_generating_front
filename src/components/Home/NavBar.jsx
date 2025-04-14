@@ -19,12 +19,6 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navbarPlaygroundProps = {
-    containerClasses: "lg:flex",
-    listClasses: "mr-4 flex",
-    itemClasses: "text-md px-6 py-1 border rounded-full bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-secondary dark:hover:bg-secondary-dark group"
-  };
-
   return (
     <div
       className={`flex items-top w-full h-16 fixed top-0 p-2 mb-2 z-10
@@ -99,14 +93,15 @@ const NavBar = () => {
       </div>
       <div className="flex items-center mx-4 ml-auto relative">
         <NavBarSettings scrolled={scrolled}/>
+        {/* Self-contained NavBarPlayground component - no props needed */}
         <div className="hidden lg:block">
-          <NavBarPlayground {...navbarPlaygroundProps} />
+          <NavBarPlayground />
         </div>
         <div className="block lg:hidden">
           <NavBarMenu
             label="Menu"
             showArrow={true}
-            subpages={["Goal", "Tools", "API", "Contact", "Playground"]}
+            subpages={["Playground", "Goal", "Tools", "API", "Contact", "Playground"]}
           />
         </div>
       </div>
