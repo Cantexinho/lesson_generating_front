@@ -2,7 +2,7 @@ import LessonGenerationInput from "../Lessons/LessonGenerationInput";
 import { handleTitleChange } from "../../utils/inputHandlers";
 
 const TopSection = () => {
-  const bgImage = require(`../../assets/images/web_interface_lesson.png`);
+  const bgImage = require(`../../assets/images/lesson_tree.png`);
 
   return (
     <section
