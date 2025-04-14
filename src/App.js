@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import PostLogin from "./pages/PostLogin";
 import Support from "./pages/Support";
 import Business from "./pages/Business";
+import NewsPage from "./pages/News";
+import ArticlePage from "./pages/Article";
 import { useSyncDarkMode } from "./hooks/useSyncDarkMode";
 import { trackPageView } from "./analytics";
 import { useEffect } from "react";
@@ -32,6 +34,8 @@ function App() {
       <Route exact path="/register" element={<Register />} />
       <Route exact path="/support" element={<Support />} />
       <Route exact path="/business" element={<Business />} />
+      <Route path="/news" element={<NewsPage />} />
+      <Route path="/news/:id" element={<ArticlePage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/" element={<Home />} />
       <Route path="/playground" element={<Playground />} />
