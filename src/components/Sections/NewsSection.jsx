@@ -64,7 +64,7 @@ const NewsSection = () => {
           {/* Left Arrow */}
           <button 
             onClick={prevSlide}
-            className="absolute w-12 h-12 2xl:w-16 2xl:h-16 left-6 2xl:left-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none z-10"
+            className="absolute w-12 h-12 2xl:w-16 2xl:h-16 left-6 2xl:left-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
             aria-label="Previous slide"
           >
             <FontAwesomeIcon icon={faChevronLeft} size="lg" className="xl:text-lg 2xl:text-2xl" />
@@ -115,7 +115,7 @@ const NewsSection = () => {
           {/* Right Arrow */}
           <button 
             onClick={nextSlide}
-            className="absolute w-12 h-12 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 right-6 xl:right-6 2xl:right-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none z-10"
+            className="absolute w-12 h-12 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 right-6 xl:right-6 2xl:right-0 p-3 text-primary-dark dark:text-primary bg-transparent-light hover:bg-primary dark:bg-transparent-dark dark:hover:bg-primary-dark rounded-full focus:outline-none"
             aria-label="Next slide"
           >
             <FontAwesomeIcon icon={faChevronRight} size="lg" className="xl:text-lg 2xl:text-2xl" />

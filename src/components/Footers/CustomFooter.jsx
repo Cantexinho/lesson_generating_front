@@ -1,5 +1,7 @@
 import { FOOTER_TEXT } from "../../constants/footerText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { selectTheme } from "../../redux/themeSlice";
+import { useSelector } from "react-redux";
 import { 
   faArrowRight, 
   faEnvelope, 
@@ -14,6 +16,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const CustomFooter = () => {
+  const theme = useSelector(selectTheme);
   return (
     <footer className="flex flex-col w-full bg-primary dark:bg-primary-dark py-16">
       {/* Main footer content */}
@@ -21,6 +24,15 @@ const CustomFooter = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo and copyright section */}
           <div className="flex flex-col">
+          <img
+          className="w-16 h-16 rounded-2xl"
+          src={
+            theme.isDarkTheme
+              ? require("../../assets/images/legatus-logo-white.png")
+              : require("../../assets/images/legatus-logo-black.png")
+          }
+          alt="Logo"
+        />
             <h3 className="text-xl font-bold text-black dark:text-white mb-4">
               {FOOTER_TEXT.logo}
             </h3>
