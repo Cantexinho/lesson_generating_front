@@ -6,7 +6,7 @@ const NavBarPlayground = () => {
     <nav className="flex">
       <div className="flex">
         <a 
-          href="/login" 
+          href="/playground" 
           className="flex items-center text-md px-6 py-1 border rounded-full bg-transparent-light dark:bg-transparent-dark text-black dark:text-white border-gray-600 dark:border-white hover:bg-secondary dark:hover:bg-secondary-dark group"
         >
           <span className="hidden xl:inline font-semibold font-custom">
