@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../components/common/NavBar";
 import CustomFooter from "../components/common/CustomFooter";
+import ShareMenu from "../components/news/articleShareMenu";
 import { NEWSDATA } from "../constants/newsData";
 import { Helmet } from 'react-helmet-async';
 
@@ -12,6 +13,7 @@ const ArticlePage = () => {
   const [article, setArticle] = useState(null);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   const referrerPage = location.state?.from || 1;
    
@@ -58,6 +60,10 @@ const ArticlePage = () => {
       console.warn("Related article has no slug, navigating by ID:", relatedArticle.id);
       navigate(`/news/${relatedArticle.id}`, { state: { from: referrerPage } });
     }
+  };
+
+  const handleShareClick = () => {
+    setShowShareMenu(true);
   };
 
   if (loading) {
@@ -130,7 +136,6 @@ const ArticlePage = () => {
   
   const paragraphs = article.content.split('\n\n');
 
-
   return (
     <div className="flex flex-col min-h-screen bg-secondary dark:bg-secondary-dark">
       <Helmet>
@@ -159,7 +164,13 @@ const ArticlePage = () => {
                 ← Back to News Feed
               </button>
               {/* Share button */}
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={handleShareClick}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                </svg>
                 Share Article
               </button>
             </div>
@@ -229,6 +240,12 @@ const ArticlePage = () => {
           </div>
         </div>
       </main>
+      {showShareMenu && (
+        <ShareMenu 
+          article={article} 
+          onClose={() => setShowShareMenu(false)} 
+        />
+      )}
 
       <CustomFooter />
     </div>
