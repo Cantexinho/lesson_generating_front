@@ -14,7 +14,7 @@ const ArticlePage = () => {
   const [loading, setLoading] = useState(true);
 
   const referrerPage = location.state?.from || 1;
-
+   
   useEffect(() => {
     const fetchArticle = () => {
       setLoading(true);
@@ -127,6 +127,9 @@ const ArticlePage = () => {
     "isAccessibleForFree": article?.isAccessibleForFree || true,
     "wordCount": article?.wordCount
   };
+  
+  const paragraphs = article.content.split('\n\n');
+
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary dark:bg-secondary-dark">
@@ -194,7 +197,9 @@ const ArticlePage = () => {
 
               <div className="prose max-w-none text-gray-800 dark:text-gray-200 leading-relaxed">
                 <p className="mb-8 text-lg">{article.summary}</p>
-                <p className="mb-6">{article.content}</p>
+                {paragraphs.map((text, i) => (
+                  <p className="mb-6" key={i}>{text}</p>
+                ))}
               </div>
 
               <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
