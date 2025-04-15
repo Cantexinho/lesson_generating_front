@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWandMagicSparkles, faGear, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const LessonGenerationInput = ({
+  title,
   handleTitleChange,
   passedProps,
   placeholderText,
   onSubmit,
 }) => {
-  const [title, setTitle] = useState('');
   const [format, setFormat] = useState('presentation');
   const [audience, setAudience] = useState('beginners');
   const [length, setLength] = useState('medium');
@@ -81,7 +81,7 @@ const LessonGenerationInput = ({
   }, [title]);
 
   const onTextareaChange = (e) => {
-    handleTitleChange(e, setTitle);
+    handleTitleChange(e);
   };
 
   return (

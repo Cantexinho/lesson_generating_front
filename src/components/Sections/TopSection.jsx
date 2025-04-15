@@ -1,8 +1,14 @@
+import React, { useState } from "react";
 import LessonGenerationInput from "../Lessons/LessonGenerationInput";
 import { handleTitleChange } from "../../utils/inputHandlers";
 
 const TopSection = () => {
+  const [title, setTitle] = useState("");
   const bgImage = require(`../../assets/images/lesson_tree.png`);
+
+  const handleTitleChangeSubmit = (e) => {
+    handleTitleChange(e, setTitle);
+  };
 
   return (
     <section
@@ -14,7 +20,7 @@ const TopSection = () => {
       }}
     >
       <LessonGenerationInput
-        handleTitleChange={handleTitleChange}
+        handleTitleChange={handleTitleChangeSubmit}
         passedProps=""
         placeholderText={"Tell me what you want to learn"}
         onSubmit={() => {}}

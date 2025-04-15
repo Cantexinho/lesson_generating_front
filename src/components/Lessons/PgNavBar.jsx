@@ -7,6 +7,7 @@ import ThemeButton from "../Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../redux/themeSlice";
 import { LOGO_TEXT } from "../../constants/logoText";
+import { authService } from "../../utils/authService";
 
 const PgNavBar = ({
   pgMainState,
@@ -17,6 +18,7 @@ const PgNavBar = ({
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const [navBarVisible, setNavBarVisible] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const theme = useSelector(selectTheme);
 
@@ -24,15 +26,27 @@ const PgNavBar = ({
     setNavBarVisible(!navBarVisible);
   };
 
-  const handleAccountBtnClick = () => {
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      
+      authService.logout();
+      
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await lessonDataOperations.fetchAllLessons(setLessons);
     };
     fetchData();
   }, [pgMainState]);
+  
   return (
     <div className="relative">
       <button
@@ -102,12 +116,15 @@ const PgNavBar = ({
           </ul>
         </div>
         <ThemeButton passed_props={"my-2 mb-3 ml-8"} />
-        <div className="flex justify-center w-52 space-x-1 mb-1 mt-auto ">
+        <div className="flex justify-center w-52 space-x-1 mb-1 mt-auto">
           <button
-            className="p-2 w-full border text-black dark:text-white bg-transparent-light dark:bg-primary-dark hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-400 dark:border-gray-700"
-            onClick={handleAccountBtnClick}
+            className={`p-2 w-full border text-black dark:text-white bg-transparent-light dark:bg-primary-dark hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-400 dark:border-gray-700 ${
+              isLoggingOut ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={handleLogout}
+            disabled={isLoggingOut}
           >
-            Log out
+            {isLoggingOut ? "Logging out..." : "Log out"}
           </button>
         </div>
       </nav>
