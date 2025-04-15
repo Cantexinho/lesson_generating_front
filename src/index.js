@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./redux/themeSlice";
-import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
+import { HelmetProvider } from "react-helmet-async";
 
 const store = configureStore({
   reducer: {
@@ -16,15 +16,11 @@ const store = configureStore({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      {" "}
-      {/* Wrap your app with HelmetProvider */}
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </HelmetProvider>
-  </React.StrictMode>
+  <HelmetProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </HelmetProvider>
 );
 
 reportWebVitals();

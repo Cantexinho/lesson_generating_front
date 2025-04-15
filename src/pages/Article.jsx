@@ -134,11 +134,6 @@ const ArticlePage = () => {
         <title>{`${article.title} - Your News Website`}</title>
         <meta name="description" content={metaDescription} />
         <meta name="keywords" content={metaKeywords} />
-        <meta property="og:title" content={article.title} />
-        <meta property="og:description" content={metaDescription} />
-        <meta property="og:url" content={articleUrl} />
-        <meta property="og:type" content="article" />
-        <meta property="og:image" content={imageUrl} />
         <meta name="author" content={article.author} />
         <link rel="canonical" href={articleUrl} />
         {article && (
