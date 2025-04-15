@@ -5,15 +5,13 @@ const LessonGenerationOptions = ({
   selectedValue, 
   onChange, 
   label,
-  width = "w-24" // Default width
+  width = "w-24"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   
-  // Find the selected option to display
   const selectedOption = options.find(option => option.value === selectedValue) || options[0];
   
-  // Handle clicking outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,12 +25,10 @@ const LessonGenerationOptions = ({
     };
   }, [dropdownRef]);
   
-  // Toggle dropdown
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
   
-  // Select an option and close dropdown
   const handleSelect = (option) => {
     onChange(option.value);
     setIsOpen(false);

@@ -15,7 +15,7 @@ const languages = [
   },
 ];
 
-const NavBarSettings = ({ scrolled }) => {
+const NavBarSettings = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
@@ -31,11 +31,7 @@ const NavBarSettings = ({ scrolled }) => {
       </button>
 
       {showDropdown && (
-        <div className={`absolute z-0 top-full left-1/2 transform -translate-x-1/2 border rounded-xl px-4 py-1 mt-2 min-w-max ${
-          scrolled
-            ? "bg-primary dark:bg-primary-dark"
-            : "bg-transparent-light dark:bg-transparent-dark"
-        } border-gray-200 dark:border-gray-600`}>
+        <div className="absolute z-0 top-full left-1/2 transform -translate-x-1/2 border rounded-xl px-4 py-1 mt-2 min-w-max bg-primary dark:bg-primary-dark border-gray-200 dark:border-gray-600">
           {languages.map((lang, index) => (
             <div
               key={index}

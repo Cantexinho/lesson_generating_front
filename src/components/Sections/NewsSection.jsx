@@ -7,13 +7,12 @@ import { NEWSDATA } from '../../constants/newsData';
 const NewsSection = () => {
   const navigate = useNavigate();
 
-  // Limit to maximum of 3 articles from the top of NEWSDATA list
   const newsItems = NEWSDATA.slice(0, 3).map(item => ({
     id: item.id,
     title: item.title,
     content: item.summary,
     image: item.imageUrl,
-    slug: item.id
+    slug: item.slug
   }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -86,7 +85,7 @@ const NewsSection = () => {
                       {newsItems.map((_, index) => (
                         <div 
                           key={index}
-                          className={`h-2 w-2 2xl:h-3 2xl:w-3 rounded-full ${index === currentIndex ? 'bg-main dark:bg-main-dark' : 'bg-secondary dark:bg-secondary-dark'}`}
+                          className={`h-2 w-2 rounded-full ${index === currentIndex ? 'bg-main dark:bg-main-dark' : 'bg-secondary dark:bg-secondary-dark'}`}
                         />
                       ))}
                     </div>
