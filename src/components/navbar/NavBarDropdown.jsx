@@ -1,14 +1,9 @@
-const NavBarDropdown = ({ subpages, scrolled }) => {
+const NavBarDropdown = ({ subpages }) => {
   const numCols = Object.keys(subpages).length;
 
   return (
     <div 
-      className={`absolute z-0 top-full left-0 border rounded-xl px-4 py-2 mt-3 min-w-max border-gray-200 dark:border-gray-600
-        ${
-          scrolled
-            ? "bg-primary dark:bg-primary-dark"
-            : "bg-transparent-light dark:bg-transparent-dark"
-        }`}
+      className="absolute z-0 top-full left-0 border rounded-xl px-4 py-2 mt-3 min-w-max border-gray-200 dark:border-gray-600 bg-primary dark:bg-primary-dark"
     >
       <div className="dropdown-hover-area" />
       <div className={`grid grid-cols-${numCols} gap-6`}>

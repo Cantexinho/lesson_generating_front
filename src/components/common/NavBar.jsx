@@ -22,7 +22,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`flex items-top w-full h-16 fixed top-0 p-2 mb-2 z-10
+      className={`flex items-top w-full h-16 fixed top-0 p-2 mb-2 z-10 hover:bg-primary dark:hover:bg-primary-dark transition-all duration-300 ease-in-out
         ${
           scrolled
             ? "bg-primary dark:bg-primary-dark"
@@ -56,7 +56,6 @@ const NavBar = () => {
               label="Goal"
               showArrow={false}
               navigateTo={"/goal"}
-              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="Tools"
@@ -66,7 +65,6 @@ const NavBar = () => {
                 "New Releases": ["AI Writer", "Code Assistant", "Text Summarizer"]
               }}
               navigateTo={"/tools"}
-              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="API"
@@ -76,7 +74,6 @@ const NavBar = () => {
                 "Resources": ["Pricing", "Usage Limits", "Support"]
               }}
               navigateTo={"/docs"}
-              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="Contact"
@@ -87,19 +84,17 @@ const NavBar = () => {
                 "Company": ["About Us", "Careers", "Press"]
               }}
               navigateTo={"/contact"}
-              scrolled={scrolled}
             ></NavBarButton>
             <NavBarButton
               label="News"
               showArrow={false}
               navigateTo={"/news"}
-              scrolled={scrolled}
             ></NavBarButton>
           </ul>
         </nav>
       </div>
       <div className="flex items-center mx-4 ml-auto relative">
-        <NavBarSettings scrolled={scrolled}/>
+        <NavBarSettings/>
         {/* Self-contained NavBarPlayground component - no props needed */}
         <div className="hidden lg:block">
           <NavBarPlayground />
