@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { GoogleLogin } from '@react-oauth/google';
 import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
@@ -12,16 +13,23 @@ const Login = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const theme = useSelector(selectTheme);
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check for registration success message
+  useEffect(() => {
+    if (location.state?.message) {
+      // You could display a success notification here
+      console.log(location.state.message);
+    }
+  }, [location]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    setLoginFailed(false);
-    setErrorMessage("");
-    
+    // Basic validation
     if (!username || !password) {
       setLoginFailed(true);
       setErrorMessage("Username and password are required");
@@ -39,6 +47,24 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    try {
+      await authService.googleLogin(credentialResponse);
+      navigate("/playground");
+    } catch (error) {
+      setLoginFailed(true);
+      setErrorMessage(error.message || "Google login failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleGoogleError = () => {
+    setLoginFailed(true);
+    setErrorMessage("Google login was canceled or failed");
   };
 
   const handleRegister = (e) => {
@@ -109,8 +135,27 @@ const Login = () => {
         >
           {isLoading ? "Logging in..." : "Log in"}
         </button>
+        
+        {/* Google Login Button */}
+        <div className="w-5/6 my-4 flex items-center">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="mx-4 text-sm text-gray-500">or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+        
+        <div className="w-5/6 flex justify-center mb-3">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap
+            theme={theme.isDarkTheme ? "filled_black" : "outline"}
+            text="signin_with"
+            shape="pill"
+          />
+        </div>
+        
         <button
-          className="flex-grow mt-5 transform transition-transform duration-100 ease-in-out py-1 text-base text-blue-600 hover:text-blue-800 active:scale-95 rounded"
+          className="flex-grow mt-4 transform transition-transform duration-100 ease-in-out py-1 text-base text-blue-600 hover:text-blue-800 active:scale-95 rounded"
           onClick={handleRegister}
           disabled={isLoading}
         >
