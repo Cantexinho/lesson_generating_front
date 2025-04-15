@@ -22,12 +22,12 @@ const NavBar = () => {
 
   return (
     <div
-      className={`flex items-top w-full h-16 fixed top-0 p-2 mb-2 z-10 hover:bg-primary dark:hover:bg-primary-dark transition-all duration-300 ease-in-out
+      className={`flex items-top w-full h-16 fixed top-0 p-2 mb-2 z-10
         ${
           scrolled
             ? "bg-primary dark:bg-primary-dark"
             : "bg-transparent-light dark:bg-transparent-dark"
-        }`}
+        } hover:bg-primary dark:hover:bg-primary-dark transition-colors duration-300 ease-in-out`}
     >
       {/*img*/}
       <a className="flex items-center lg:mx-12" href="/home">
