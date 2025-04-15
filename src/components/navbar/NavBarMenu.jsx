@@ -29,7 +29,6 @@ const NavBarMenu = ({ label, subpages }) => {
     };
   }, []);
 
-  // Prevent scrolling when menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
