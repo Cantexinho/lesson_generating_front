@@ -18,6 +18,7 @@ import ArticlePage from "./pages/Article";
 import { useSyncDarkMode } from "./hooks/useSyncDarkMode";
 import { trackPageView } from "./analytics";
 import { useEffect } from "react";
+import ProtectedRoute from "./auth/protectedRoute";
 
 function App() {
   const location = useLocation();
@@ -40,7 +41,10 @@ function App() {
       <Route path="/news/:slug" element={<ArticlePage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/" element={<Home />} />
-      <Route path="/playground" element={<Playground />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/playground" element={<Playground />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

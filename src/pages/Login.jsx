@@ -4,36 +4,44 @@ import ThemeButton from "../components/Global/ThemeButton";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../redux/themeSlice";
 import { LOGO_TEXT } from "../constants/logoText";
+import { authService } from "../utils/authService";
 
-const Login = (props) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useSelector(selectTheme);
-
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://127.0.0.1:8000/api/users/get", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-      navigate("/playground");
-    } else {
-      console.log("Failed to login");
+    
+    setLoginFailed(false);
+    setErrorMessage("");
+    
+    if (!username || !password) {
       setLoginFailed(true);
+      setErrorMessage("Username and password are required");
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      await authService.login(username, password);
+      navigate("/playground");
+    } catch (error) {
+      setLoginFailed(true);
+      setErrorMessage(error.message || "Failed to login");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
     navigate("/register");
   };
@@ -55,14 +63,19 @@ const Login = (props) => {
         </p>
       </a>
       <form className="flex flex-col justify-center items-center w-96 p-8 pb-4 rounded-xl shadow bg-transparent-light dark:bg-transparent-dark dark:border dark:border-gray-700">
+        {loginFailed && (
+          <div className="w-full p-2 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+            {errorMessage}
+          </div>
+        )}
         <div className="mb-3 w-full">
           <label className="text-black dark:text-white" htmlFor="username">
             Username
           </label>
           <input
             id="username"
-            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600${
-              loginFailed
+            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
+              loginFailed && !username
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
             }`}
@@ -77,8 +90,8 @@ const Login = (props) => {
           </label>
           <input
             id="password"
-            className={`w-full p-1 mt-1 text- outline-none focus:outline-blue-600${
-              loginFailed
+            className={`w-full p-1 mt-1 text-black outline-none focus:outline-blue-600 ${
+              loginFailed && !password
                 ? "border-b-2 border-red-600"
                 : "border-b-2 border-primary"
             }`}
@@ -88,16 +101,20 @@ const Login = (props) => {
           />
         </div>
         <button
-          className="flex-grow m-1 w-5/6 transform transition-transform duration-100 ease-in-out py-1 text-white bg-blue-700 hover:bg-blue-800 active:scale-95 rounded"
+          className={`flex-grow m-1 w-5/6 transform transition-transform duration-100 ease-in-out py-1 text-white bg-blue-700 hover:bg-blue-800 active:scale-95 rounded ${
+            isLoading ? "opacity-70 cursor-not-allowed" : ""
+          }`}
           onClick={handleLogin}
+          disabled={isLoading}
         >
-          Log in
+          {isLoading ? "Logging in..." : "Log in"}
         </button>
         <button
           className="flex-grow mt-5 transform transition-transform duration-100 ease-in-out py-1 text-base text-blue-600 hover:text-blue-800 active:scale-95 rounded"
           onClick={handleRegister}
+          disabled={isLoading}
         >
-          Don`t have and account? Sign up here!
+          Don't have an account? Sign up here!
         </button>
       </form>
       <ThemeButton passed_props={"mt-4"} />

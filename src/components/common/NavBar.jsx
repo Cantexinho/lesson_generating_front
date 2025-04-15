@@ -103,7 +103,7 @@ const NavBar = () => {
           <NavBarMenu
             label="Menu"
             showArrow={true}
-            subpages={["Playground", "Goal", "Tools", "API", "Contact", "Playground"]}
+            subpages={["Playground", "Goal", "Tools", "API", "Contact"]}
           />
         </div>
       </div>
