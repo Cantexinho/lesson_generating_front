@@ -56,7 +56,7 @@ const Register = () => {
     e.preventDefault();
 
     checkRegex(email, username, password);
-    const response = await fetch("http://127.0.0.1:8000/users/get", {
+    const response = await fetch("http://127.0.0.1:8000/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

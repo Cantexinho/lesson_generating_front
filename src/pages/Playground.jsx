@@ -67,6 +67,10 @@ const Playground = () => {
     setPgMainState(parts);
   }, [parts]);
 
+  useEffect(() => {
+    console.log(title);
+  }, [title]);
+
   return (
     <div className="flex min-h-screen bg-primary dark:bg-primary-dark">
       <PgNavBar
