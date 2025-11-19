@@ -14,3 +14,29 @@
         border: 3px solid #1b1b1b
     }
 }
+
+@layer base {
+    html {
+        background-color: #e2e2e2;
+    }
+    
+    html.dark {
+        background-color: #1b1b20;
+    }
+    
+    body {
+        background-color: #e2e2e2;
+        transition: background-color 0.2s ease;
+    }
+    
+    html.dark body {
+        background-color: #1b1b20;
+    }
+    
+    /* Disable transitions during theme changes */
+    html.theme-changing *,
+    html.theme-changing *::before,
+    html.theme-changing *::after {
+        transition: none !important;
+    }
+}

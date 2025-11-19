@@ -11,6 +11,32 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <script>
+      // Apply theme immediately before React renders to prevent flash
+      (function () {
+        try {
+          const storedTheme = localStorage.getItem("theme");
+          const isDark = storedTheme
+            ? JSON.parse(storedTheme).isDarkTheme
+            : false;
+
+          // Apply dark class
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+          }
+
+          // Set background colors immediately via inline styles (before CSS loads)
+          document.documentElement.style.backgroundColor = isDark
+            ? "#1b1b20"
+            : "#e2e2e2";
+          document.body.style.backgroundColor = isDark ? "#1b1b20" : "#e2e2e2";
+        } catch (e) {
+          // Fallback to light theme if localStorage fails
+          document.documentElement.style.backgroundColor = "#e2e2e2";
+          document.body.style.backgroundColor = "#e2e2e2";
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
