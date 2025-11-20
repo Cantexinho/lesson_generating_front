@@ -47,6 +47,7 @@ const Playground = () => {
     resetConversations,
     createConversationFromSelection,
     selectConversation,
+    removeConversation,
     startGeneralConversation,
     sendMessage,
   } = useLessonConversations({ lesson, lessonId, parts });
@@ -108,6 +109,30 @@ const Playground = () => {
     setSelectionDetails(null);
     setSelectionPosition(null);
   }, [parts]);
+
+  useEffect(() => {
+    if (
+      !selectionDetails ||
+      typeof document === "undefined" ||
+      typeof window === "undefined"
+    ) {
+      return undefined;
+    }
+
+    const handleGlobalMouseDown = (event) => {
+      const popover = document.querySelector("[data-selection-actions]");
+      if (popover && popover.contains(event.target)) {
+        return;
+      }
+      setSelectionDetails(null);
+      setSelectionPosition(null);
+    };
+
+    document.addEventListener("mousedown", handleGlobalMouseDown);
+    return () => {
+      document.removeEventListener("mousedown", handleGlobalMouseDown);
+    };
+  }, [selectionDetails]);
 
   useEffect(() => {
     if (
@@ -174,7 +199,7 @@ const Playground = () => {
       return;
     }
 
-    setChatInput(selectionDetails.text);
+    setChatInput("");
     setSelectionDetails(null);
     setSelectionPosition(null);
   };
@@ -277,6 +302,7 @@ const Playground = () => {
             activeThreadId={activeConversationId}
             onSelectThread={handleHighlightSelect}
             onAddGeneralThread={startGeneralConversation}
+            onCloseThread={removeConversation}
             messages={activeConversationMessages}
             inputValue={chatInput}
             onInputChange={handleChatInputChange}
