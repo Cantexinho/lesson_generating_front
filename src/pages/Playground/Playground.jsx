@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import LessonGenerationInput from "features/lessons/components/LessonGenerationInput";
-import LessonNumber from "features/lessons/components/LessonNumber";
 import LessonMain from "features/lessons/components/LessonMain";
 import PgNavBar from "features/lessons/components/PgNavBar";
 import ChatPanel from "features/lessons/components/ChatPanel";
@@ -20,6 +19,7 @@ const SELECTION_ACTIONS = [
 const MIN_CHAT_WIDTH = 320;
 const MAX_CHAT_WIDTH = 860;
 const DEFAULT_CHAT_WIDTH = 420;
+const NAV_WIDTH = 240;
 
 const Playground = () => {
   const [title, setTitle] = useState("");
@@ -45,7 +45,15 @@ const Playground = () => {
   const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
   const [chatWidth, setChatWidth] = useState(DEFAULT_CHAT_WIDTH);
   const [isResizingChat, setIsResizingChat] = useState(false);
-  const lessonViewportWidth = `max(calc(100vw - ${MIN_CHAT_WIDTH}px), 320px)`;
+  const [isNavVisible, setIsNavVisible] = useState(false);
+
+  const lessonViewportStyle = useMemo(() => {
+    const navOffset = isNavVisible ? NAV_WIDTH : 0;
+    return {
+      marginLeft: navOffset ? `${navOffset}px` : 0,
+      width: `max(calc(100vw - ${navOffset}px - ${MIN_CHAT_WIDTH}px), 320px)`,
+    };
+  }, [isNavVisible]);
 
   const handleTitleChangeSubmit = (e) => {
     inputHandlers.handleTitleChange(e, setTitle);
@@ -249,14 +257,16 @@ const Playground = () => {
   return (
     <div className="relative min-h-screen w-full bg-primary dark:bg-primary-dark">
       <PgNavBar
+        navVisible={isNavVisible}
+        onToggleNav={() => setIsNavVisible((prev) => !prev)}
         pgMainState={pgMainState}
         handleNewLessonButton={handleNewLessonButton}
         handleLessonSelect={handleLessonSelect}
         selectedLesson={lesson}
       />
       <div
-        className="min-h-screen bg-primary p-8 dark:bg-secondary-dark"
-        style={{ width: lessonViewportWidth }}
+        className="min-h-screen bg-primary p-8 dark:bg-secondary-dark transition-[margin,width] flex justify-center"
+        style={lessonViewportStyle}
       >
         <LessonMain
           parts={parts}

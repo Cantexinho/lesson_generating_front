@@ -1,93 +1,64 @@
-export const fetchLessonByName = async (title) => {
-  const response = await fetch(
-    `http://127.0.0.1:8000/api/lesson?name=${encodeURIComponent(title)}`
-  );
+import { MOCK_LESSONS, createMockLesson } from "../data/mockLessons";
+
+const LESSON_API_BASE = "http://127.0.0.1:8000/api";
+const LESSON_TEXT_API = "http://127.0.0.1:8001/api";
+
+const useStaticLessons =
+  !process.env.REACT_APP_USE_STATIC_LESSONS ||
+  process.env.REACT_APP_USE_STATIC_LESSONS !== "false";
+
+const fetchJson = async (url, options) => {
+  const response = await fetch(url, options);
   return response.json();
 };
 
-export const fetchLessonById = async (id) => {
-  const response = await fetch(
-    `http://127.0.0.1:8000/api/lesson?id=${encodeURIComponent(id)}`
-  );
-  return response.json();
-};
-
-export const fetchAllLessons = async () => {
-  const response = await fetch(`http://127.0.0.1:8000/api/all_lessons`);
-  return response.json();
-};
-
-export const fetchLessonParts = async (id) => {
-  const response = await fetch(
-    `http://127.0.0.1:8000/api/lesson/${encodeURIComponent(id)}/parts`
-  );
-  return response.json();
-};
-
-export const generateLessonText = async (title, selectedNumber) => {
-  const response = await fetch(
-    `http://127.0.0.1:8001/api/lesson/text/generate`,
-    {
+const realApi = {
+  fetchLessonByName: (title) =>
+    fetchJson(
+      `${LESSON_API_BASE}/lesson?name=${encodeURIComponent(title || "")}`
+    ),
+  fetchLessonById: (id) =>
+    fetchJson(`${LESSON_API_BASE}/lesson?id=${encodeURIComponent(id || "")}`),
+  fetchAllLessons: () => fetchJson(`${LESSON_API_BASE}/all_lessons`),
+  fetchLessonParts: (id) =>
+    fetchJson(
+      `${LESSON_API_BASE}/lesson/${encodeURIComponent(id || "")}/parts`
+    ),
+  generateLessonText: (title, selectedNumber) =>
+    fetchJson(`${LESSON_TEXT_API}/lesson/text/generate`, {
       method: "POST",
       body: JSON.stringify({
         lesson_name: title,
         part_number: selectedNumber,
       }),
       headers: { "Content-Type": "application/json" },
-    }
-  );
-
-  return response.json();
-};
-
-export const createLesson = async (name) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/name`, {
-    method: "POST",
-    body: JSON.stringify({
-      name: name,
     }),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  return response.json();
-};
-
-export const splitLessonText = async (content) => {
-  const response = await fetch(`http://127.0.0.1:8001/api/lesson/text/split`, {
-    method: "POST",
-    body: JSON.stringify({
-      lesson_text: content,
+  createLesson: (name) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/name`, {
+      method: "POST",
+      body: JSON.stringify({ name }),
+      headers: { "Content-Type": "application/json" },
     }),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  return response.json();
-};
-
-export const postSplitLesson = async (splitLessonsData) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/parts/`, {
-    method: "POST",
-    body: JSON.stringify(splitLessonsData),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  return response.json();
-};
-
-export const postLessonText = async (content) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/text/`, {
-    method: "POST",
-    body: JSON.stringify({ content: content }),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  return response.json();
-};
-
-export const regeneratePart = async (title, part) => {
-  const response = await fetch(
-    `http://127.0.0.1:8001/api/lesson/part/regenerate`,
-    {
+  splitLessonText: (content) =>
+    fetchJson(`${LESSON_TEXT_API}/lesson/text/split`, {
+      method: "POST",
+      body: JSON.stringify({ lesson_text: content }),
+      headers: { "Content-Type": "application/json" },
+    }),
+  postSplitLesson: (splitLessonsData) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/parts/`, {
+      method: "POST",
+      body: JSON.stringify(splitLessonsData),
+      headers: { "Content-Type": "application/json" },
+    }),
+  postLessonText: (content) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/text/`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+      headers: { "Content-Type": "application/json" },
+    }),
+  regeneratePart: (title, part) =>
+    fetchJson(`${LESSON_TEXT_API}/lesson/part/regenerate`, {
       method: "POST",
       body: JSON.stringify({
         lesson_name: title,
@@ -95,64 +66,256 @@ export const regeneratePart = async (title, part) => {
         part_content: part.lesson_part_content,
       }),
       headers: { "Content-Type": "application/json" },
+    }),
+  fetchLessonPart: (partID) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/${encodeURIComponent(partID)}/part`),
+  updateLessonPart: (newPart) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/part/`, {
+      method: "PUT",
+      body: JSON.stringify({
+        id: newPart.id,
+        number: newPart.number,
+        name: newPart.name,
+        lesson_part_content: newPart.lesson_part_content,
+        lesson_id: newPart.lesson_id,
+      }),
+      headers: { "Content-Type": "application/json" },
+    }),
+  extendPart: (title, part) =>
+    fetchJson(`${LESSON_TEXT_API}/lesson/part/extend`, {
+      method: "POST",
+      body: JSON.stringify({
+        lesson_name: title,
+        part_name: part.name,
+        part_content: part.lesson_part_content,
+      }),
+      headers: { "Content-Type": "application/json" },
+    }),
+  deletePart: (partId) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/part/`, {
+      method: "DELETE",
+      body: JSON.stringify({ part_id: partId }),
+      headers: { "Content-Type": "application/json" },
+    }),
+  deleteLesson: (lessonId) =>
+    fetchJson(`${LESSON_API_BASE}/lesson/`, {
+      method: "DELETE",
+      body: JSON.stringify({ lesson_id: lessonId }),
+      headers: { "Content-Type": "application/json" },
+    }),
+};
+
+const mockApi = (() => {
+  const deepClone = (value) => JSON.parse(JSON.stringify(value));
+  const normalizeTitle = (value) =>
+    (value && value.trim()) || "Untitled Lesson";
+  const randomId = (prefix) =>
+    `${prefix}-${Math.random().toString(36).slice(2, 10)}-${Date.now()}`;
+
+  let lessons = deepClone(MOCK_LESSONS);
+  const pendingLessonsByName = new Map();
+
+  const cloneBasicLesson = (lesson) => ({
+    id: lesson.id,
+    name: lesson.name,
+  });
+
+  const findLessonIndex = (lessonId) =>
+    lessons.findIndex((lesson) => lesson.id === lessonId);
+
+  const getLessonById = (lessonId) => {
+    const index = findLessonIndex(lessonId);
+    return index === -1 ? null : lessons[index];
+  };
+
+  const findLessonByName = (title) => {
+    if (!title) return null;
+    const normalized = title.trim().toLowerCase();
+    return (
+      lessons.find((lesson) => lesson.name.toLowerCase() === normalized) || null
+    );
+  };
+
+  const findPartLocation = (partId) => {
+    for (let lessonIndex = 0; lessonIndex < lessons.length; lessonIndex += 1) {
+      const partIndex = lessons[lessonIndex].parts.findIndex(
+        (part) => part.id === partId
+      );
+      if (partIndex !== -1) {
+        return { lessonIndex, partIndex };
+      }
     }
-  );
-  return response.json();
-};
+    return null;
+  };
 
-export const fetchLessonPart = async (partID) => {
-  const response = await fetch(
-    `http://127.0.0.1:8000/api/lesson/${encodeURIComponent(partID)}/part`
-  );
-  return response.json();
-};
-
-export const updateLessonPart = async (newPart) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/part/`, {
-    method: "PUT",
-    body: JSON.stringify({
-      id: newPart.id,
-      number: newPart.number,
-      name: newPart.name,
-      lesson_part_content: newPart.lesson_part_content,
-      lesson_id: newPart.lesson_id,
-    }),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
-
-export const extendPart = async (title, part) => {
-  const response = await fetch(`http://127.0.0.1:8001/api/lesson/part/extend`, {
-    method: "POST",
-    body: JSON.stringify({
-      lesson_name: title,
-      part_name: part.name,
-      part_content: part.lesson_part_content,
-    }),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
-
-export const deletePart = async (partId) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/part/`, {
-    method: "DELETE",
-    body: JSON.stringify({
-      part_id: partId,
-    }),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
-
-export const deleteLesson = async (lessonId) => {
-  const response = await fetch(`http://127.0.0.1:8000/api/lesson/`, {
-    method: "DELETE",
-    body: JSON.stringify({
+  const normalizeParts = (lessonId, parts) =>
+    parts.map((part, index) => ({
+      id: part.id || `${lessonId}-part-${index + 1}`,
       lesson_id: lessonId,
-    }),
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
+      number: part.number || index + 1,
+      name: part.name || `Part ${index + 1}`,
+      lesson_part_content: part.lesson_part_content || part.content || "",
+    }));
+
+  const recordPendingLesson = (lesson) => {
+    pendingLessonsByName.set(lesson.name, deepClone(lesson));
+  };
+
+  const takePendingLesson = (name) => {
+    const pending = pendingLessonsByName.get(name);
+    if (pending) {
+      pendingLessonsByName.delete(name);
+    }
+    return pending || null;
+  };
+
+  const encodeLessonContent = (lesson) =>
+    JSON.stringify({ lessonId: lesson.id, parts: lesson.parts });
+
+  return {
+    fetchLessonByName: async (title) => {
+      const lesson = findLessonByName(title);
+      return lesson ? deepClone(cloneBasicLesson(lesson)) : null;
+    },
+    fetchLessonById: async (id) => {
+      const lesson = getLessonById(id);
+      return lesson ? deepClone(cloneBasicLesson(lesson)) : null;
+    },
+    fetchAllLessons: async () =>
+      lessons.map((lesson) => deepClone(cloneBasicLesson(lesson))),
+    fetchLessonParts: async (id) => {
+      const lesson = getLessonById(id);
+      return lesson ? deepClone(lesson.parts) : [];
+    },
+    generateLessonText: async (title, selectedNumber) => {
+      const lesson = createMockLesson(title, selectedNumber);
+      recordPendingLesson(lesson);
+      return {
+        lesson_name: lesson.name,
+        content: encodeLessonContent(lesson),
+      };
+    },
+    createLesson: async (name) => {
+      const normalizedName = normalizeTitle(name);
+      const pending = pendingLessonsByName.get(normalizedName);
+      const lessonRecord = pending
+        ? { id: pending.id, name: pending.name, parts: [] }
+        : { id: randomId("lesson"), name: normalizedName, parts: [] };
+
+      const existingIndex = findLessonIndex(lessonRecord.id);
+      if (existingIndex === -1) {
+        lessons = [...lessons, lessonRecord];
+      } else {
+        lessons[existingIndex] = {
+          ...lessons[existingIndex],
+          name: lessonRecord.name,
+        };
+      }
+
+      return deepClone(cloneBasicLesson(lessonRecord));
+    },
+    splitLessonText: async (content) => {
+      if (!content) {
+        return [];
+      }
+      try {
+        const parsed = JSON.parse(content);
+        if (parsed && Array.isArray(parsed.parts)) {
+          return deepClone(parsed.parts);
+        }
+      } catch (error) {
+        return [];
+      }
+      return [];
+    },
+    postSplitLesson: async (splitLessonsData) => {
+      if (!Array.isArray(splitLessonsData) || splitLessonsData.length === 0) {
+        return [];
+      }
+
+      const lessonId = splitLessonsData[0].lesson_id;
+      const lessonIndex = findLessonIndex(lessonId);
+      if (lessonIndex === -1) {
+        return [];
+      }
+
+      const normalized = normalizeParts(lessonId, splitLessonsData);
+      lessons[lessonIndex] = {
+        ...lessons[lessonIndex],
+        parts: normalized,
+      };
+
+      takePendingLesson(lessons[lessonIndex].name);
+      return deepClone(normalized);
+    },
+    postLessonText: async () => ({ ok: true }),
+    fetchLessonPart: async (partId) => {
+      const location = findPartLocation(partId);
+      if (!location) {
+        return {
+          id: partId,
+          lesson_id: null,
+          number: 1,
+          name: "Unknown Part",
+          lesson_part_content: "",
+        };
+      }
+      return deepClone(lessons[location.lessonIndex].parts[location.partIndex]);
+    },
+    updateLessonPart: async (newPart) => {
+      const location = findPartLocation(newPart.id);
+      if (!location) {
+        return deepClone(newPart);
+      }
+      const lesson = lessons[location.lessonIndex];
+      const updatedPart = {
+        ...lesson.parts[location.partIndex],
+        ...newPart,
+      };
+      lesson.parts[location.partIndex] = updatedPart;
+      return deepClone(updatedPart);
+    },
+    regeneratePart: async (title, part) => {
+      const baseContent = part?.lesson_part_content || "";
+      return `${baseContent}\n\n[Regenerated based on ${title || "lesson"}]`;
+    },
+    extendPart: async (title, part) => {
+      const baseContent = part?.lesson_part_content || "";
+      return `${baseContent}\n\n[Extended with additional detail about ${
+        title || "lesson"
+      }]`;
+    },
+    deletePart: async (partId) => {
+      const location = findPartLocation(partId);
+      if (!location) {
+        return { success: false };
+      }
+      const lesson = lessons[location.lessonIndex];
+      lesson.parts.splice(location.partIndex, 1);
+      lesson.parts = normalizeParts(lesson.id, lesson.parts);
+      return { success: true };
+    },
+    deleteLesson: async (lessonId) => {
+      lessons = lessons.filter((lesson) => lesson.id !== lessonId);
+      return { success: true };
+    },
+  };
+})();
+
+const api = useStaticLessons ? mockApi : realApi;
+
+export const fetchLessonByName = api.fetchLessonByName;
+export const fetchLessonById = api.fetchLessonById;
+export const fetchAllLessons = api.fetchAllLessons;
+export const fetchLessonParts = api.fetchLessonParts;
+export const generateLessonText = api.generateLessonText;
+export const createLesson = api.createLesson;
+export const splitLessonText = api.splitLessonText;
+export const postSplitLesson = api.postSplitLesson;
+export const postLessonText = api.postLessonText;
+export const regeneratePart = api.regeneratePart;
+export const fetchLessonPart = api.fetchLessonPart;
+export const updateLessonPart = api.updateLessonPart;
+export const extendPart = api.extendPart;
+export const deletePart = api.deletePart;
+export const deleteLesson = api.deleteLesson;
