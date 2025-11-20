@@ -6,6 +6,7 @@ import ChatPanel from "features/lessons/components/ChatPanel";
 import SelectionActions from "features/lessons/components/SelectionActions";
 import * as inputHandlers from "features/lessons/utils/inputHandlers";
 import * as lessonDataOperations from "features/lessons/utils/lessonDataOperations";
+import useLessonConversations from "features/lessons/hooks/useLessonConversations";
 
 const SELECTION_ACTIONS = [
   { id: "ask", label: "Ask" },
@@ -28,22 +29,33 @@ const Playground = () => {
   const [loading, setLoading] = useState({});
   const [submitLoading, setSubmitLoading] = useState(false);
   const [lesson, setLesson] = useState();
-  const [chatMessages, setChatMessages] = useState([
-    {
-      id: "assistant-welcome",
-      role: "assistant",
-      text: "Select text inside the lesson on the right to start a conversation.",
-    },
-  ]);
   const [chatInput, setChatInput] = useState("");
-  const [pendingActionPayload, setPendingActionPayload] = useState(null);
   const [selectionDetails, setSelectionDetails] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
-  const [isSending, setIsSending] = useState(false);
   const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
   const [chatWidth, setChatWidth] = useState(DEFAULT_CHAT_WIDTH);
   const [isResizingChat, setIsResizingChat] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(false);
+
+  const {
+    conversations,
+    activeConversationId,
+    activeConversationMessages,
+    activePendingAction,
+    highlightsBySection,
+    isSending,
+    resetConversations,
+    createConversationFromSelection,
+    selectConversation,
+    sendMessage,
+  } = useLessonConversations({ lesson, lessonId, parts });
+
+  const resetConversationState = useCallback(() => {
+    resetConversations();
+    setChatInput("");
+    setSelectionDetails(null);
+    setSelectionPosition(null);
+  }, [resetConversations]);
 
   const lessonViewportStyle = useMemo(() => {
     const navOffset = isNavVisible ? NAV_WIDTH : 0;
@@ -58,6 +70,7 @@ const Playground = () => {
   };
 
   const handleLessonSelect = async (selectedLesson) => {
+    resetConversationState();
     setLesson(selectedLesson);
     setTitle(selectedLesson.name);
     setLessonId(selectedLesson.id);
@@ -78,6 +91,7 @@ const Playground = () => {
 
     setTitle("");
     setParts([]);
+    resetConversationState();
     setIsLessonModalOpen(true);
   };
 
@@ -154,19 +168,41 @@ const Playground = () => {
       return;
     }
 
-    const actionPayload = {
-      lesson_id: lesson?.id || lessonId || null,
-      section_id: selectionDetails.sectionId,
-      section_title: selectionDetails.sectionTitle,
-      action: actionId,
-      text: selectionDetails.text,
-    };
+    const result = createConversationFromSelection(selectionDetails, actionId);
+    if (!result) {
+      return;
+    }
 
-    setPendingActionPayload(actionPayload);
     setChatInput(selectionDetails.text);
     setSelectionDetails(null);
     setSelectionPosition(null);
   };
+
+  const handleHighlightSelect = useCallback(
+    (conversationId) => {
+      if (!conversationId) {
+        return;
+      }
+
+      selectConversation(conversationId);
+
+      if (typeof document === "undefined") {
+        return;
+      }
+
+      const target = document.querySelector(
+        `[data-highlight-id="${conversationId}"]`
+      );
+
+      if (target && "scrollIntoView" in target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    },
+    [selectConversation]
+  );
 
   const startChatResize = (event) => {
     event.preventDefault();
@@ -185,37 +221,10 @@ const Playground = () => {
       return;
     }
 
-    const actionMeta = pendingActionPayload || undefined;
-    setPendingActionPayload(null);
-
-    const userMessage = {
-      id: `user-${Date.now()}`,
-      role: "user",
-      text: trimmed,
-      meta: actionMeta,
-    };
-
-    setChatMessages((prev) => [...prev, userMessage]);
-    setChatInput("");
-    setIsSending(true);
-
-    console.log("Chat request payload", {
-      prompt: trimmed,
-      ...(actionMeta || {}),
-    });
-
-    const assistantReply = {
-      id: `assistant-${Date.now()}`,
-      role: "assistant",
-      text:
-        "🚧 Chat service integration is coming soon. Your request was captured for processing.",
-      meta: actionMeta,
-    };
-
-    setTimeout(() => {
-      setChatMessages((prev) => [...prev, assistantReply]);
-      setIsSending(false);
-    }, 450);
+    const didSend = sendMessage(trimmed);
+    if (didSend) {
+      setChatInput("");
+    }
   };
 
   return (
@@ -240,6 +249,8 @@ const Playground = () => {
           setLoading={setLoading}
           submitLoading={submitLoading}
           onTextSelection={handleTextSelection}
+          highlights={highlightsBySection}
+          onHighlightSelect={handleHighlightSelect}
         />
       </div>
       <div
@@ -257,12 +268,15 @@ const Playground = () => {
             aria-label="Resize lesson chat"
           />
           <ChatPanel
-            messages={chatMessages}
+            threads={conversations}
+            activeThreadId={activeConversationId}
+            onSelectThread={handleHighlightSelect}
+            messages={activeConversationMessages}
             inputValue={chatInput}
             onInputChange={handleChatInputChange}
             onSubmit={handleChatSubmit}
             isSubmitting={isSending}
-            pendingAction={pendingActionPayload}
+            pendingAction={activePendingAction}
           />
         </div>
       </div>
