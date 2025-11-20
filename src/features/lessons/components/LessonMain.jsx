@@ -11,6 +11,8 @@ const LessonMain = ({
   setLoading,
   submitLoading,
   onTextSelection,
+  highlights,
+  onHighlightSelect,
 }) => {
   const handleLessonMouseUp = useCallback(() => {
     if (!onTextSelection || typeof window === "undefined") {
@@ -61,11 +63,36 @@ const LessonMain = ({
 
     const sectionId = sectionElement.getAttribute("data-lesson-section");
     const sectionTitle = sectionElement.getAttribute("data-section-title");
+    const contentElement =
+      sectionElement.querySelector("[data-section-content]");
+
+    let offsets = null;
+
+    if (
+      contentElement &&
+      contentElement.contains(range.startContainer) &&
+      contentElement.contains(range.endContainer)
+    ) {
+      try {
+        const preSelectionRange = range.cloneRange();
+        preSelectionRange.selectNodeContents(contentElement);
+        preSelectionRange.setEnd(range.startContainer, range.startOffset);
+        const start = preSelectionRange.toString().length;
+        const length = range.toString().length;
+        offsets = {
+          start,
+          end: start + length,
+        };
+      } catch (error) {
+        offsets = null;
+      }
+    }
 
     onTextSelection({
       text: selectedText,
       sectionId,
       sectionTitle,
+      offsets,
       rect: {
         top: rect.top + window.scrollY,
         left: rect.left + rect.width / 2 + window.scrollX,
@@ -93,6 +120,8 @@ const LessonMain = ({
               key={part.id}
               part={part}
               loading={loading}
+              highlights={highlights?.[part.id] || []}
+              onHighlightSelect={onHighlightSelect}
             />
           ))
         )}
