@@ -18,6 +18,7 @@ export const AppRoutes = memo(() => {
       <Route path="/login" element={<Login />} />
       <Route path="/post_login" element={<PostLogin />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/playground" element={<Playground />} />
       <Route element={<Layout />}>
         <Route path="/support" element={<Support />} />
         <Route path="/business" element={<Business />} />
@@ -26,7 +27,6 @@ export const AppRoutes = memo(() => {
         <Route path="/news/:slug" element={<ArticlePage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Home />} />
-        <Route path="/playground" element={<Playground />} />
       </Route>
       {/* <Route element={<ProtectedRoute />}>
       </Route> */}
