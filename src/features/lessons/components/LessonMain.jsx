@@ -75,7 +75,7 @@ const LessonMain = ({
 
   return (
     <div
-      className="flex h-full w-full flex-col gap-4 px-6 py-8"
+      className="flex h-full w-full flex-col gap-4 px-14 py-8"
       onMouseUp={handleLessonMouseUp}
     >
       {submitLoading ? (
