@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as lessonDataOperations from "../utils/lessonDataOperations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft, faRightFromBracket, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
@@ -14,17 +14,14 @@ const PgNavBar = ({
   handleNewLessonButton,
   handleLessonSelect,
   selectedLesson,
+  navVisible,
+  onToggleNav,
 }) => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
-  const [navBarVisible, setNavBarVisible] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const theme = useSelector(selectTheme);
-
-  const handleNavBarVisible = () => {
-    setNavBarVisible(!navBarVisible);
-  };
 
   const handleLogout = async () => {
     try {
@@ -49,10 +46,10 @@ const PgNavBar = ({
   
   return (
     <div className="relative">
-      {!navBarVisible && (
+      {!navVisible && (
         <button
           className="fixed left-4 top-4 z-30 rounded-full bg-secondary p-2 text-black shadow-lg transition-all hover:bg-gray-200 dark:bg-primary-dark dark:text-white dark:hover:bg-gray-800"
-          onClick={handleNavBarVisible}
+          onClick={onToggleNav}
           aria-label="Show lesson library"
         >
           <FontAwesomeIcon icon={faArrowRight} className="h-5 w-5" size="xl" />
@@ -60,22 +57,22 @@ const PgNavBar = ({
       )}
       <nav
         className={`fixed left-0 top-0 z-20 flex h-screen w-60 flex-col items-center overflow-y-auto border-r border-gray-200 bg-secondary shadow-xl transition-transform dark:border-gray-800 dark:bg-primary-dark ${
-          navBarVisible ? "translate-x-0" : "-translate-x-full"
+          navVisible ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="relative flex w-full flex-col items-center">
-          {navBarVisible && (
+        <div className="relative flex w-full flex-col items-center px-4 pt-8">
+          {navVisible && (
             <button
               type="button"
-              className="absolute right-4 top-4 rounded-full bg-secondary p-2 text-black shadow-lg transition hover:bg-gray-200 dark:bg-primary-dark dark:text-white dark:hover:bg-gray-800"
-              onClick={handleNavBarVisible}
+              className="absolute right-2 top-2 rounded-full bg-secondary p-2 text-black shadow-lg transition hover:bg-gray-200 dark:bg-primary-dark dark:text-white dark:hover:bg-gray-800"
+              onClick={onToggleNav}
               aria-label="Hide lesson library"
             >
               <FontAwesomeIcon icon={faArrowLeft} className="h-5 w-5" size="xl" />
             </button>
           )}
           <div className="flex flex-col items-center justify-center w-full">
-          <a className="flex flex-col items-center mt-4 mb-4" href="/home">
+          <a className="flex flex-col items-center mb-4" href="/home">
             <img
               className="w-14 h-14 rounded-2xl"
               src={
@@ -100,16 +97,17 @@ const PgNavBar = ({
             </div>
           </div>
         </div>
-        <div className="mt-40 mb-2 h-full max-h-screen overflow-y-auto scrollbar mx-2 bg-transparent-light dark:bg-transparent-dark border-gray-200 dark:border-gray-800">
-          <ul className="flex flex-col items-center w-full">
+        <div className="flex w-full flex-1 flex-col">
+          <ul className="flex w-full flex-1 flex-col overflow-y-auto">
             {lessons.map((lesson) => (
               <button
                 key={lesson.id}
-                className={`relative flex items-center justify-left pl-2 w-full h-12 text-sm rounded border-t border-b text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-900 border-gray-300 dark:border-gray-700" ${
+                className={`flex w-full items-center justify-start px-4 text-sm font-medium text-black transition hover:bg-gray-300 dark:text-white dark:hover:bg-gray-900 ${
                   selectedLesson && selectedLesson.id === lesson.id
                     ? "bg-gray-300 dark:bg-gray-900"
                     : ""
                 }`}
+                style={{ minHeight: "3rem" }}
                 onClick={() => handleLessonSelect(lesson)}
               >
                 {lesson.name}

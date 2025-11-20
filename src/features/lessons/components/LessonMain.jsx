@@ -74,32 +74,29 @@ const LessonMain = ({
   }, [onTextSelection]);
 
   return (
-    <div
-      className="flex h-full w-full flex-col gap-4 px-14 py-8"
-      onMouseUp={handleLessonMouseUp}
-    >
-      {submitLoading ? (
-        <div className="flex h-full w-full items-center justify-center">
-          <Spinner />
-        </div>
-      ) : parts.length === 0 ? (
-        <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-          Generate a lesson to see its content here.
-        </div>
-      ) : (
-        parts.map((part) => (
-          <LessonPart
-            key={part.id}
-            parts={parts}
-            part={part}
-            loading={loading}
-            title={title}
-            setLoading={setLoading}
-            setParts={setParts}
-            partHandlers={partHandlers}
-          />
-        ))
-      )}
+    <div className="flex h-full w-full justify-center overflow-y-auto">
+      <div
+        className="flex w-full max-w-5xl flex-col gap-4 px-8 py-8"
+        onMouseUp={handleLessonMouseUp}
+      >
+        {submitLoading ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Spinner />
+          </div>
+        ) : parts.length === 0 ? (
+          <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+            Generate a lesson to see its content here.
+          </div>
+        ) : (
+          parts.map((part) => (
+            <LessonPart
+              key={part.id}
+              part={part}
+              loading={loading}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
