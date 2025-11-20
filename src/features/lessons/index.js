@@ -7,7 +7,6 @@ export { default as PgNavBar } from "./components/PgNavBar";
 export { default as Spinner } from "./components/Spinner";
 
 // Export utils
-export * as lessonHandlers from "./utils/lessonHandlers";
 export * as lessonDataOperations from "./utils/lessonDataOperations";
 export * as inputHandlers from "./utils/inputHandlers";
 export * as partHandlers from "./utils/partHandlers";

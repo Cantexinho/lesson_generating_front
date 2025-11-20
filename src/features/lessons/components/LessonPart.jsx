@@ -8,7 +8,7 @@ const LessonPart = ({
   return (
     <div
       key={part.id}
-      className="flex mb-2 w-full justify-between relative text-xs md:text-base"
+      className="flex w-full justify-between relative text-xs md:text-base"
       data-lesson-section={part.id}
       data-section-title={`Part ${part.number}: ${part.name}`}
     >

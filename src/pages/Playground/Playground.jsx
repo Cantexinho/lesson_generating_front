@@ -5,7 +5,6 @@ import PgNavBar from "features/lessons/components/PgNavBar";
 import ChatPanel from "features/lessons/components/ChatPanel";
 import SelectionActions from "features/lessons/components/SelectionActions";
 import * as inputHandlers from "features/lessons/utils/inputHandlers";
-import * as lessonHandlers from "features/lessons/utils/lessonHandlers";
 import * as lessonDataOperations from "features/lessons/utils/lessonDataOperations";
 
 const SELECTION_ACTIONS = [
@@ -18,7 +17,7 @@ const SELECTION_ACTIONS = [
 
 const MIN_CHAT_WIDTH = 320;
 const MAX_CHAT_WIDTH = 860;
-const DEFAULT_CHAT_WIDTH = 420;
+const DEFAULT_CHAT_WIDTH = MIN_CHAT_WIDTH;
 const NAV_WIDTH = 240;
 
 const Playground = () => {
@@ -26,7 +25,6 @@ const Playground = () => {
   const [lessonId, setLessonId] = useState();
   const [parts, setParts] = useState([]);
   const [pgMainState, setPgMainState] = useState([]);
-  const [selectedNumber, setSelectedNumber] = useState(1);
   const [loading, setLoading] = useState({});
   const [submitLoading, setSubmitLoading] = useState(false);
   const [lesson, setLesson] = useState();
@@ -59,10 +57,6 @@ const Playground = () => {
     inputHandlers.handleTitleChange(e, setTitle);
   };
 
-  const handleNumberChangeSubmit = (e) => {
-    inputHandlers.handleNumberChange(e, setSelectedNumber);
-  };
-
   const handleLessonSelect = async (selectedLesson) => {
     setLesson(selectedLesson);
     setTitle(selectedLesson.name);
@@ -76,26 +70,6 @@ const Playground = () => {
 
     fetchData();
   }, [lesson]);
-
-  const handleGenerateSubmit = async (e) => {
-    e.preventDefault();
-    await lessonDataOperations.handleGenerate(
-      title,
-      selectedNumber,
-      setSubmitLoading,
-      setParts
-    );
-  };
-
-  const handleDeleteLessonSubmit = async (e) => {
-    e.preventDefault();
-    await lessonHandlers.handleDeleteLesson(
-      title,
-      lessonId,
-      setSubmitLoading,
-      setParts
-    );
-  };
 
   const handleNewLessonButton = (e) => {
     if (e && e.preventDefault) {
@@ -197,16 +171,6 @@ const Playground = () => {
   const startChatResize = (event) => {
     event.preventDefault();
     setIsResizingChat(true);
-  };
-
-  const handleModalGenerate = async (event) => {
-    await handleGenerateSubmit(event);
-    closeLessonModal();
-  };
-
-  const handleModalDelete = async (event) => {
-    await handleDeleteLessonSubmit(event);
-    closeLessonModal();
   };
 
   const handleChatInputChange = (event) => {
