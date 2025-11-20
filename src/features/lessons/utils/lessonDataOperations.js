@@ -1,15 +1,10 @@
 import * as crudService from "../services/lessonCrudService";
 
-export const handleGenerate = async (
-  title,
-  selectedNumber,
-  setSubmitLoading,
-  setParts
-) => {
+export const handleGenerate = async (title, setSubmitLoading, setParts) => {
   setSubmitLoading(true);
 
   try {
-    const lessonData = await fetchLessonData(title, selectedNumber);
+    const lessonData = await fetchLessonData(title);
     if (!lessonData) return;
 
     const parts = await handleLessonData(lessonData);
