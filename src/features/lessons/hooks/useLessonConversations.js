@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+const GENERAL_CONVERSATION_ID = "conversation-general";
+const GENERAL_CONVERSATION_PREFIX = "conversation-general";
+const GENERAL_SNIPPET = "General lesson chat";
+
 const buildConversationMeta = (conversation) => {
   if (!conversation) {
     return undefined;
@@ -13,18 +17,34 @@ const buildConversationMeta = (conversation) => {
   };
 };
 
+const buildGeneralConversation = (id = GENERAL_CONVERSATION_ID) => ({
+  id,
+  action: "general",
+  sectionId: null,
+  sectionTitle: "Whole lesson",
+  snippet: GENERAL_SNIPPET,
+});
+
 const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
-  const [conversations, setConversations] = useState([]);
-  const [activeConversationId, setActiveConversationId] = useState(null);
-  const [messagesByConversation, setMessagesByConversation] = useState({});
+  const [conversations, setConversations] = useState(() => [
+    buildGeneralConversation(),
+  ]);
+  const [activeConversationId, setActiveConversationId] = useState(
+    GENERAL_CONVERSATION_ID
+  );
+  const [messagesByConversation, setMessagesByConversation] = useState(() => ({
+    [GENERAL_CONVERSATION_ID]: [],
+  }));
   const [pendingActionPayload, setPendingActionPayload] = useState(null);
   const [highlightsBySection, setHighlightsBySection] = useState({});
   const [isSending, setIsSending] = useState(false);
 
   const resetConversations = useCallback(() => {
-    setConversations([]);
-    setActiveConversationId(null);
-    setMessagesByConversation({});
+    setConversations([buildGeneralConversation()]);
+    setActiveConversationId(GENERAL_CONVERSATION_ID);
+    setMessagesByConversation({
+      [GENERAL_CONVERSATION_ID]: [],
+    });
     setPendingActionPayload(null);
     setHighlightsBySection({});
     setIsSending(false);
@@ -84,18 +104,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
 
       setMessagesByConversation((prev) => ({
         ...prev,
-        [conversationId]: [
-          {
-            id: `assistant-${timestamp}-welcome`,
-            role: "assistant",
-            text: "Select or type a question about this highlighted text.",
-            meta: {
-              action: actionId,
-              section_id: selectionDetails.sectionId,
-              section_title: selectionDetails.sectionTitle,
-            },
-          },
-        ],
+        [conversationId]: [],
       }));
 
       if (selectionDetails.sectionId && selectionDetails.offsets) {
@@ -127,6 +136,20 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     },
     [lesson, lessonId]
   );
+
+  const startGeneralConversation = useCallback(() => {
+    const conversationId = `${GENERAL_CONVERSATION_PREFIX}-${Date.now()}`;
+    const thread = buildGeneralConversation(conversationId);
+
+    setConversations((prev) => [...prev, thread]);
+    setMessagesByConversation((prev) => ({
+      ...prev,
+      [conversationId]: [],
+    }));
+    setActiveConversationId(conversationId);
+
+    return conversationId;
+  }, []);
 
   const sendMessage = useCallback(
     (rawText) => {
@@ -226,6 +249,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     resetConversations,
     createConversationFromSelection,
     selectConversation,
+    startGeneralConversation,
     sendMessage,
   };
 };

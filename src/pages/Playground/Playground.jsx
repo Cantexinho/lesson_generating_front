@@ -47,6 +47,7 @@ const Playground = () => {
     resetConversations,
     createConversationFromSelection,
     selectConversation,
+    startGeneralConversation,
     sendMessage,
   } = useLessonConversations({ lesson, lessonId, parts });
 
@@ -186,7 +187,11 @@ const Playground = () => {
 
       selectConversation(conversationId);
 
-      if (typeof document === "undefined") {
+      const thread = conversations.find(
+        (item) => item.id === conversationId && item.sectionId
+      );
+
+      if (!thread?.sectionId || typeof document === "undefined") {
         return;
       }
 
@@ -201,7 +206,7 @@ const Playground = () => {
         });
       }
     },
-    [selectConversation]
+    [selectConversation, conversations]
   );
 
   const startChatResize = (event) => {
@@ -271,6 +276,7 @@ const Playground = () => {
             threads={conversations}
             activeThreadId={activeConversationId}
             onSelectThread={handleHighlightSelect}
+            onAddGeneralThread={startGeneralConversation}
             messages={activeConversationMessages}
             inputValue={chatInput}
             onInputChange={handleChatInputChange}

@@ -6,6 +6,7 @@ const ChatPanel = ({
   threads = [],
   activeThreadId,
   onSelectThread,
+  onAddGeneralThread,
   messages = [],
   inputValue,
   onInputChange,
@@ -13,6 +14,7 @@ const ChatPanel = ({
   isSubmitting,
   pendingAction,
 }) => {
+  const orderedThreads = [...threads].slice().reverse();
   const activeThread = threads.find((thread) => thread.id === activeThreadId);
   const hasActiveThread = Boolean(activeThread);
 
@@ -65,30 +67,19 @@ const ChatPanel = ({
             No saved highlights yet. Select lesson text to start.
           </p>
         ) : (
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {threads.map((thread) => renderTab(thread))}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <button
+              type="button"
+              onClick={() => onAddGeneralThread?.()}
+              className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-dashed border-gray-400 text-lg text-gray-600 transition hover:border-blue-500 hover:text-blue-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-blue-400 dark:hover:text-blue-300"
+              aria-label="Start a new general chat"
+            >
+              +
+            </button>
+            {orderedThreads.map((thread) => renderTab(thread))}
           </div>
         )}
       </div>
-
-      {activeThread && (
-        <div className="border-b border-gray-100 px-4 py-3 text-xs dark:border-gray-800">
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {activeThread.sectionTitle || "Selected highlight"}
-          </p>
-          <p
-            className="mt-1 text-gray-600 dark:text-gray-300"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            "{activeThread.snippet}"
-          </p>
-        </div>
-      )}
 
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {!hasActiveThread ? (
