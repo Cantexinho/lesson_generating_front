@@ -15,6 +15,8 @@ const LessonPart = ({
     <div
       key={part.id}
       className="flex mb-4 w-full justify-between relative text-xs md:text-base"
+      data-lesson-section={part.id}
+      data-section-title={`Part ${part.number}: ${part.name}`}
     >
       <div className="rounded-sm p-4 w-full relative border text-black dark:text-white bg-transparent-light dark:bg-transparent-dark  border-gray-300 dark:border-gray-800">
         {loading[part.id] ? (
