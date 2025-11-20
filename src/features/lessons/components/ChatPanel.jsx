@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,6 +7,7 @@ const ChatPanel = ({
   activeThreadId,
   onSelectThread,
   onAddGeneralThread,
+  onCloseThread,
   messages = [],
   inputValue,
   onInputChange,
@@ -14,35 +15,83 @@ const ChatPanel = ({
   isSubmitting,
   pendingAction,
 }) => {
+  const tabsContainerRef = useRef(null);
   const orderedThreads = [...threads].slice().reverse();
   const activeThread = threads.find((thread) => thread.id === activeThreadId);
   const hasActiveThread = Boolean(activeThread);
 
   const renderTab = (thread) => {
+    const snippetText = thread.snippet || "";
+    const snippetPreview =
+      snippetText.length > 120
+        ? `${snippetText.slice(0, 117).trimEnd()}…`
+        : snippetText;
     const isActive = thread.id === activeThreadId;
     return (
       <button
         key={thread.id}
         type="button"
         onClick={() => onSelectThread?.(thread.id)}
-        className={`min-w-[180px] rounded-2xl border px-3 py-2 text-left text-xs transition ${
+        data-thread-tab={thread.id}
+        className={`flex h-20 w-44 flex-none overflow-hidden rounded-2xl border px-3 py-2 text-left text-xs transition ${
           isActive
             ? "border-blue-500 bg-blue-50 text-blue-900 dark:border-blue-500/60 dark:bg-blue-500/10 dark:text-blue-100"
             : "border-gray-200 bg-white text-gray-700 hover:border-blue-300 dark:border-gray-800 dark:bg-secondary-dark dark:text-gray-200 dark:hover:border-blue-500/60"
         }`}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-wide">
-          {thread.action}
-        </p>
-        <p className="text-[11px] font-semibold text-gray-900 dark:text-white">
-          {thread.sectionTitle || "Lesson section"}
-        </p>
-        <p className="mt-1 text-[11px] text-gray-600 dark:text-gray-300 truncate">
-          {thread.snippet}
-        </p>
+        <div className="flex h-full w-full items-start gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-wide">
+              {thread.action}
+            </p>
+            <p className="text-[11px] font-semibold text-gray-900 dark:text-white">
+              {thread.sectionTitle || "Lesson section"}
+            </p>
+            <p
+              className="mt-1 text-[11px] text-gray-600 dark:text-gray-300"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {snippetPreview}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onCloseThread?.(thread.id);
+            }}
+            className="flex-none text-lg leading-none text-gray-500 transition hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
+            aria-label={`Close conversation ${thread.sectionTitle || ""}`}
+          >
+            ×
+          </button>
+        </div>
       </button>
     );
   };
+
+  useEffect(() => {
+    if (!activeThreadId || !tabsContainerRef.current) {
+      return;
+    }
+
+    const tabNode = tabsContainerRef.current.querySelector(
+      `[data-thread-tab="${activeThreadId}"]`
+    );
+
+    if (tabNode && tabNode.scrollIntoView) {
+      tabNode.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [activeThreadId, threads]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
@@ -67,7 +116,10 @@ const ChatPanel = ({
             No saved highlights yet. Select lesson text to start.
           </p>
         ) : (
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <div
+            className="flex items-center gap-2 overflow-x-auto pb-1"
+            ref={tabsContainerRef}
+          >
             <button
               type="button"
               onClick={() => onAddGeneralThread?.()}
@@ -88,8 +140,7 @@ const ChatPanel = ({
           </div>
         ) : messages.length === 0 ? (
           <div className="rounded-lg border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-            No messages yet for this highlight. Use the input below to ask a
-            question.
+            No messages yet. Use the input below to ask a question.
           </div>
         ) : (
           <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">

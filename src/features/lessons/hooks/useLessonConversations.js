@@ -151,6 +151,84 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     return conversationId;
   }, []);
 
+  const removeConversation = useCallback((conversationId) => {
+    if (!conversationId) {
+      return;
+    }
+
+    setConversations((prevConversations) => {
+      const removedConversation = prevConversations.find(
+        (conv) => conv.id === conversationId
+      );
+      const remainingConversations = prevConversations.filter(
+        (conv) => conv.id !== conversationId
+      );
+      const hasRemaining = remainingConversations.length > 0;
+      const fallbackThread = buildGeneralConversation();
+      const nextConversations = hasRemaining
+        ? remainingConversations
+        : [fallbackThread];
+
+      setMessagesByConversation((prevMessages) => {
+        if (!prevMessages[conversationId]) {
+          return hasRemaining
+            ? prevMessages
+            : { [GENERAL_CONVERSATION_ID]: [] };
+        }
+
+        const nextMessages = { ...prevMessages };
+        delete nextMessages[conversationId];
+        if (!hasRemaining) {
+          return { [GENERAL_CONVERSATION_ID]: [] };
+        }
+        return nextMessages;
+      });
+
+      if (removedConversation?.sectionId) {
+        setHighlightsBySection((prevHighlights) => {
+          const existingHighlights =
+            prevHighlights[removedConversation.sectionId];
+          if (!existingHighlights) {
+            return prevHighlights;
+          }
+
+          const updatedHighlights = existingHighlights.filter(
+            (highlight) => highlight.id !== conversationId
+          );
+
+          if (!updatedHighlights.length) {
+            const { [removedConversation.sectionId]: _, ...rest } =
+              prevHighlights;
+            return rest;
+          }
+
+          return {
+            ...prevHighlights,
+            [removedConversation.sectionId]: updatedHighlights,
+          };
+        });
+      }
+
+      setPendingActionPayload((prevPending) =>
+        prevPending?.threadId === conversationId ? null : prevPending
+      );
+
+      setActiveConversationId((currentActiveId) => {
+        if (currentActiveId !== conversationId) {
+          return currentActiveId;
+        }
+
+        if (hasRemaining) {
+          return remainingConversations[remainingConversations.length - 1].id;
+        }
+
+        return fallbackThread.id;
+      });
+
+      return nextConversations;
+    });
+  }, []);
+
   const sendMessage = useCallback(
     (rawText) => {
       const trimmed = rawText.trim();
@@ -217,6 +295,21 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         setIsSending(false);
       }, 450);
 
+      setConversations((prev) => {
+        const index = prev.findIndex(
+          (conversation) => conversation.id === targetConversationId
+        );
+
+        if (index === -1) {
+          return prev;
+        }
+
+        const reordered = [...prev];
+        const [selected] = reordered.splice(index, 1);
+        reordered.push(selected);
+        return reordered;
+      });
+
       return true;
     },
     [activeConversationId, conversations, pendingActionPayload]
@@ -249,6 +342,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     resetConversations,
     createConversationFromSelection,
     selectConversation,
+    removeConversation,
     startGeneralConversation,
     sendMessage,
   };

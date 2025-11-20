@@ -7,6 +7,7 @@ const SelectionActions = ({ visible, position, actions, onAction }) => {
 
   return (
     <div
+      data-selection-actions
       className="pointer-events-auto fixed z-40"
       style={{
         top: position.top,
