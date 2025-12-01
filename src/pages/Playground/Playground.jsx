@@ -43,6 +43,7 @@ const Playground = () => {
     activeConversationId,
     activeConversationMessages,
     activePendingAction,
+    activePendingReference,
     highlightsBySection,
     isSending,
     resetConversations,
@@ -219,6 +220,13 @@ const Playground = () => {
       return;
     }
 
+    if (typeof window !== "undefined") {
+      const selection = window.getSelection();
+      if (selection && selection.removeAllRanges) {
+        selection.removeAllRanges();
+      }
+    }
+
     setChatInput("");
     setSelectionDetails(null);
     setSelectionPosition(null);
@@ -357,6 +365,7 @@ const Playground = () => {
             onSubmit={handleChatSubmit}
             isSubmitting={isSending}
             pendingAction={activePendingAction}
+            pendingReference={activePendingReference}
             onPreviewThread={handleThreadPreview}
             onClearPreview={clearThreadPreview}
           />

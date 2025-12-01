@@ -12,37 +12,37 @@ const HIGHLIGHT_STYLE_MAP = {
     active:
       "bg-yellow-100 text-black border border-yellow-400/80 dark:bg-yellow-500/20 dark:text-white dark:border-yellow-400/70",
     preview:
-      "bg-yellow-50 text-black border border-yellow-300 dark:bg-yellow-500/10 dark:text-white dark:border-yellow-400/40",
+      "bg-yellow-50 text-black border border-yellow-300/80 dark:bg-yellow-500/10 dark:text-white dark:border-yellow-400/40",
   },
   explain: {
     active:
       "bg-green-100 text-black border border-green-400/80 dark:bg-green-500/20 dark:text-white dark:border-green-400/70",
     preview:
-      "bg-green-50 text-black border border-green-300 dark:bg-green-500/10 dark:text-white dark:border-green-400/40",
+      "bg-green-50 text-black border border-green-300/80 dark:bg-green-500/10 dark:text-white dark:border-green-400/40",
   },
   expand: {
     active:
       "bg-blue-100 text-black border border-blue-400/80 dark:bg-blue-500/20 dark:text-white dark:border-blue-400/70",
     preview:
-      "bg-blue-50 text-black border border-blue-300 dark:bg-blue-500/10 dark:text-white dark:border-blue-400/40",
+      "bg-blue-50 text-black border border-blue-300/80 dark:bg-blue-500/10 dark:text-white dark:border-blue-400/40",
   },
   simplify: {
     active:
       "bg-purple-100 text-black border border-purple-400/80 dark:bg-purple-500/20 dark:text-white dark:border-purple-400/70",
     preview:
-      "bg-purple-50 text-black border border-purple-300 dark:bg-purple-500/10 dark:text-white dark:border-purple-400/40",
+      "bg-purple-50 text-black border border-purple-300/80 dark:bg-purple-500/10 dark:text-white dark:border-purple-400/40",
   },
   exercises: {
     active:
       "bg-orange-100 text-black border border-orange-400/80 dark:bg-orange-500/20 dark:text-white dark:border-orange-400/70",
     preview:
-      "bg-orange-50 text-black border border-orange-300 dark:bg-orange-500/10 dark:text-white dark:border-orange-400/40",
+      "bg-orange-50 text-black border border-orange-300/80 dark:bg-orange-500/10 dark:text-white dark:border-orange-400/40",
   },
   default: {
     active:
       "bg-blue-100 text-black border border-blue-400/80 dark:bg-blue-500/20 dark:text-white dark:border-blue-400/70",
     preview:
-      "bg-blue-50 text-black border border-blue-300 dark:bg-blue-500/10 dark:text-white dark:border-blue-400/40",
+      "bg-blue-50 text-black border border-blue-300/80 dark:bg-blue-500/10 dark:text-white dark:border-blue-400/40",
   },
 };
 
@@ -185,6 +185,10 @@ const buildContentPieces = (content, highlights, highlightLookup) => {
         highlightIds,
         highlightLookup
       );
+      const idSet = new Set(currentBlock.blockHighlightIds);
+      currentBlock.blockHighlightCount = idSet.size;
+      currentBlock.primaryHighlightId =
+        currentBlock.blockHighlightIds[0] || null;
       delete currentBlock.highlightSet;
       pieces.push(currentBlock);
       currentBlock = null;
@@ -499,9 +503,7 @@ const LessonPart = ({
 
     const resolveEmphasizedId = () => {
       const previewIsActive =
-        previewHighlightId &&
-        previewHighlightId !== activeHighlightId &&
-        candidateIds.includes(previewHighlightId);
+        previewHighlightId && candidateIds.includes(previewHighlightId);
       if (previewIsActive) {
         return previewHighlightId;
       }
@@ -510,10 +512,6 @@ const LessonPart = ({
         activeHighlightId && candidateIds.includes(activeHighlightId);
       if (activeIsPresent) {
         return activeHighlightId;
-      }
-
-      if (!previewHighlightId && !activeHighlightId) {
-        return segment.primaryHighlightId || candidateIds[0] || null;
       }
 
       return null;
@@ -577,13 +575,11 @@ const LessonPart = ({
       if (continuesFromPrev) {
         segmentStyle.borderTopLeftRadius = 0;
         segmentStyle.borderBottomLeftRadius = 0;
-        segmentStyle.paddingLeft = 0;
         segmentStyle.borderLeftWidth = 0;
       }
       if (continuesIntoNext) {
         segmentStyle.borderTopRightRadius = 0;
         segmentStyle.borderBottomRightRadius = 0;
-        segmentStyle.paddingRight = 0;
         segmentStyle.borderRightWidth = 0;
       }
     }
@@ -596,7 +592,7 @@ const LessonPart = ({
         data-highlight-block={block.id}
         className={`relative inline ${
           hasHighlights ? "cursor-pointer focus:outline-none" : ""
-        } ${highlightClass ? `${highlightClass} rounded-sm px-0.5` : ""} ${
+        } ${highlightClass ? `${highlightClass} rounded-sm` : ""} ${
           shouldEmphasize && !isPreviewVariant ? "shadow-inner" : ""
         }`}
         style={Object.keys(segmentStyle).length ? segmentStyle : undefined}
@@ -617,7 +613,8 @@ const LessonPart = ({
       );
     }
 
-    const showBadge = piece.peakOverlap > 1;
+    const actionCount = piece.blockHighlightCount || 0;
+    const showBadge = actionCount > 0;
 
       const blockHighlightIds = piece.blockHighlightIds || [];
       const blockPrimaryHighlightId = blockHighlightIds[0] || null;
@@ -630,17 +627,17 @@ const LessonPart = ({
         <span
           key={piece.id}
           data-annotation-block={piece.id}
-          className={`relative inline-block ${
+          className={`relative inline ${
             shouldShowUnderline ? "idle-underline" : ""
           }`}
           style={shouldShowUnderline ? UNION_UNDERLINE_STYLE : undefined}
         >
         {showBadge && (
           <span
-            className="absolute -top-3 left-0 rounded-full bg-slate-900 px-1.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow dark:bg-slate-200 dark:text-slate-900"
-            aria-label={`${piece.peakOverlap} annotations in this block`}
+            className="absolute -top-3 left-0 rounded-full bg-slate-900 px-1 text-[9px] font-semibold uppercase tracking-wide text-white shadow dark:bg-slate-200 dark:text-slate-900"
+            aria-label={`${actionCount} actions in this block`}
           >
-            {piece.peakOverlap}
+            {actionCount}
           </span>
         )}
         {piece.segments.map((segment, index) =>
