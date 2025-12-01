@@ -36,6 +36,7 @@ const Playground = () => {
   const [chatWidth, setChatWidth] = useState(DEFAULT_CHAT_WIDTH);
   const [isResizingChat, setIsResizingChat] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(false);
+  const [previewHighlightId, setPreviewHighlightId] = useState(null);
 
   const {
     conversations,
@@ -52,12 +53,31 @@ const Playground = () => {
     sendMessage,
   } = useLessonConversations({ lesson, lessonId, parts });
 
+  const activeHighlightId = useMemo(() => {
+    const activeThread = conversations.find(
+      (thread) => thread.id === activeConversationId
+    );
+    if (!activeThread?.sectionId) {
+      return null;
+    }
+    return activeThread.id;
+  }, [conversations, activeConversationId]);
+
   const resetConversationState = useCallback(() => {
     resetConversations();
     setChatInput("");
     setSelectionDetails(null);
     setSelectionPosition(null);
-  }, [resetConversations]);
+    setPreviewHighlightId(null);
+  }, [resetConversations, setPreviewHighlightId]);
+  useEffect(() => {
+    if (
+      previewHighlightId &&
+      !conversations.some((thread) => thread.id === previewHighlightId)
+    ) {
+      setPreviewHighlightId(null);
+    }
+  }, [previewHighlightId, conversations, setPreviewHighlightId]);
 
   const lessonViewportStyle = useMemo(() => {
     const navOffset = isNavVisible ? NAV_WIDTH : 0;
@@ -211,6 +231,7 @@ const Playground = () => {
       }
 
       selectConversation(conversationId);
+      setPreviewHighlightId(null);
 
       const thread = conversations.find(
         (item) => item.id === conversationId && item.sectionId
@@ -221,18 +242,43 @@ const Playground = () => {
       }
 
       const target = document.querySelector(
-        `[data-highlight-id="${conversationId}"]`
+        `[data-highlight-anchor="${conversationId}"]`
       );
+      const fallbackTarget =
+        target ||
+        document.querySelector(
+          `[data-highlight-segment="true"][data-highlight-ids~="${conversationId}"]`
+        );
 
-      if (target && "scrollIntoView" in target) {
-        target.scrollIntoView({
+      if (fallbackTarget && "scrollIntoView" in fallbackTarget) {
+        fallbackTarget.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
       }
     },
-    [selectConversation, conversations]
+    [selectConversation, conversations, setPreviewHighlightId]
   );
+
+  const handleThreadPreview = useCallback(
+    (threadId) => {
+      if (!threadId) {
+        setPreviewHighlightId(null);
+        return;
+      }
+      const thread = conversations.find((item) => item.id === threadId);
+      if (!thread?.sectionId) {
+        setPreviewHighlightId(null);
+        return;
+      }
+      setPreviewHighlightId(thread.id);
+    },
+    [conversations, setPreviewHighlightId]
+  );
+
+  const clearThreadPreview = useCallback(() => {
+    setPreviewHighlightId(null);
+  }, [setPreviewHighlightId]);
 
   const startChatResize = (event) => {
     event.preventDefault();
@@ -281,6 +327,8 @@ const Playground = () => {
           onTextSelection={handleTextSelection}
           highlights={highlightsBySection}
           onHighlightSelect={handleHighlightSelect}
+          activeHighlightId={activeHighlightId}
+          previewHighlightId={previewHighlightId}
         />
       </div>
       <div
@@ -309,6 +357,8 @@ const Playground = () => {
             onSubmit={handleChatSubmit}
             isSubmitting={isSending}
             pendingAction={activePendingAction}
+            onPreviewThread={handleThreadPreview}
+            onClearPreview={clearThreadPreview}
           />
         </div>
       </div>

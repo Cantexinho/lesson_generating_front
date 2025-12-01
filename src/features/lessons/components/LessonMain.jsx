@@ -13,6 +13,8 @@ const LessonMain = ({
   onTextSelection,
   highlights,
   onHighlightSelect,
+  activeHighlightId,
+  previewHighlightId,
 }) => {
   const handleLessonMouseUp = useCallback(() => {
     if (!onTextSelection || typeof window === "undefined") {
@@ -122,6 +124,8 @@ const LessonMain = ({
               loading={loading}
               highlights={highlights?.[part.id] || []}
               onHighlightSelect={onHighlightSelect}
+              activeHighlightId={activeHighlightId}
+              previewHighlightId={previewHighlightId}
             />
           ))
         )}

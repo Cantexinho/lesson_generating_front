@@ -4,6 +4,63 @@ const GENERAL_CONVERSATION_ID = "conversation-general";
 const GENERAL_CONVERSATION_PREFIX = "conversation-general";
 const GENERAL_SNIPPET = "General lesson chat";
 
+const alignOffsetsToSectionContent = (parts, selectionDetails) => {
+  if (
+    !selectionDetails?.sectionId ||
+    !selectionDetails.text ||
+    !selectionDetails.offsets
+  ) {
+    return selectionDetails?.offsets || null;
+  }
+
+  const section = parts.find(
+    (part) => String(part.id) === String(selectionDetails.sectionId)
+  );
+  const sectionContent = section?.lesson_part_content || "";
+
+  if (!sectionContent) {
+    return selectionDetails.offsets;
+  }
+
+  const targetText = selectionDetails.text;
+
+  if (!targetText.length) {
+    return selectionDetails.offsets;
+  }
+
+  const approxStart = selectionDetails.offsets.start ?? 0;
+  const approxEnd =
+    selectionDetails.offsets.end ?? approxStart + targetText.length;
+  const windowRadius = Math.max(8, Math.ceil(targetText.length * 0.5));
+  const windowStart = Math.max(0, approxStart - windowRadius);
+  const windowEnd = Math.min(sectionContent.length, approxEnd + windowRadius);
+  const windowText = sectionContent.slice(windowStart, windowEnd);
+
+  let matchIndex = windowText.indexOf(targetText);
+
+  if (matchIndex === -1) {
+    return selectionDetails.offsets;
+  }
+
+  let bestStart = windowStart + matchIndex;
+  let bestDistance = Math.abs(bestStart - approxStart);
+
+  while (matchIndex !== -1) {
+    const candidateStart = windowStart + matchIndex;
+    const candidateDistance = Math.abs(candidateStart - approxStart);
+    if (candidateDistance < bestDistance) {
+      bestStart = candidateStart;
+      bestDistance = candidateDistance;
+    }
+    matchIndex = windowText.indexOf(targetText, matchIndex + 1);
+  }
+
+  return {
+    start: bestStart,
+    end: bestStart + targetText.length,
+  };
+};
+
 const buildConversationMeta = (conversation) => {
   if (!conversation) {
     return undefined;
@@ -107,7 +164,12 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         [conversationId]: [],
       }));
 
-      if (selectionDetails.sectionId && selectionDetails.offsets) {
+      const alignedOffsets = alignOffsetsToSectionContent(
+        parts,
+        selectionDetails
+      );
+
+      if (selectionDetails.sectionId && alignedOffsets) {
         setHighlightsBySection((prev) => {
           const sectionHighlights = prev[selectionDetails.sectionId] || [];
           return {
@@ -117,9 +179,10 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
               {
                 id: conversationId,
                 action: actionId,
-                start: selectionDetails.offsets.start,
-                end: selectionDetails.offsets.end,
+                start: alignedOffsets.start,
+                end: alignedOffsets.end,
                 text: selectionDetails.text,
+                sectionTitle: selectionDetails.sectionTitle || null,
               },
             ],
           };
@@ -134,7 +197,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         actionPayload,
       };
     },
-    [lesson, lessonId]
+    [lesson, lessonId, parts]
   );
 
   const startGeneralConversation = useCallback(() => {
