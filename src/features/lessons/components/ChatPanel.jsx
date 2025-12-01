@@ -1,6 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+
+const MIN_REFERENCE_HEIGHT = 32;
+const REFERENCE_BUFFER = 12;
+const REFERENCE_SLACK = 32;
 
 const ChatPanel = ({
   threads = [],
@@ -14,13 +18,28 @@ const ChatPanel = ({
   onSubmit,
   isSubmitting,
   pendingAction,
+  pendingReference,
   onPreviewThread,
   onClearPreview,
 }) => {
   const tabsContainerRef = useRef(null);
+  const referenceContentRef = useRef(null);
+  const [referenceHeight, setReferenceHeight] = useState(
+    MIN_REFERENCE_HEIGHT
+  );
+  const [referenceMaxHeight, setReferenceMaxHeight] = useState(
+    MIN_REFERENCE_HEIGHT
+  );
+  const [chatInputHeight, setChatInputHeight] = useState(120);
+  const [isResizingReference, setIsResizingReference] = useState(false);
+  const [isResizingChatInput, setIsResizingChatInput] = useState(false);
   const orderedThreads = [...threads].slice().reverse();
   const activeThread = threads.find((thread) => thread.id === activeThreadId);
   const hasActiveThread = Boolean(activeThread);
+
+  const clamp = useCallback((value, min, max) => {
+    return Math.min(Math.max(value, min), max);
+  }, []);
 
   const renderTab = (thread) => {
     const snippetText = thread.snippet || "";
@@ -113,6 +132,91 @@ const ChatPanel = ({
     }
   };
 
+  useEffect(() => {
+    if (!isResizingReference && !isResizingChatInput) {
+      return undefined;
+    }
+
+    const handleMouseMove = (event) => {
+      if (isResizingReference) {
+        setReferenceHeight((prev) =>
+          clamp(
+            prev - event.movementY,
+            MIN_REFERENCE_HEIGHT,
+            referenceMaxHeight
+          )
+        );
+      }
+      if (isResizingChatInput) {
+        setChatInputHeight((prev) =>
+          clamp(prev - event.movementY, 80, 260)
+        );
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingReference(false);
+      setIsResizingChatInput(false);
+      if (document.body) {
+        document.body.style.userSelect = "";
+        document.body.style.cursor = "";
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    if (document.body) {
+      document.body.style.userSelect = "none";
+      document.body.style.cursor = "row-resize";
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      if (document.body) {
+        document.body.style.userSelect = "";
+        document.body.style.cursor = "";
+      }
+    };
+  }, [isResizingReference, isResizingChatInput, clamp, referenceMaxHeight]);
+
+  useEffect(() => {
+    if (!pendingReference || messages.length > 0) {
+      setReferenceMaxHeight(MIN_REFERENCE_HEIGHT);
+      setReferenceHeight(MIN_REFERENCE_HEIGHT);
+      return;
+    }
+
+    const node = referenceContentRef.current;
+    if (!node) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      const measured = node.scrollHeight + REFERENCE_BUFFER;
+      const nextMax = Math.max(
+        MIN_REFERENCE_HEIGHT,
+        measured + REFERENCE_SLACK
+      );
+      setReferenceMaxHeight(nextMax);
+      setReferenceHeight(nextMax);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [pendingReference, messages]);
+
+  const startReferenceResize = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsResizingReference(true);
+  };
+
+  const startChatInputResize = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsResizingChatInput(true);
+  };
+
   return (
     <div className="flex h-full min-h-screen w-full flex-col border-l border-gray-200 bg-secondary dark:border-gray-800 dark:bg-primary-dark">
       <div className="border-b border-primary p-4 dark:border-gray-800">
@@ -201,28 +305,61 @@ const ChatPanel = ({
       </div>
 
       <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-        {pendingAction && (
-          <div className="mb-3 rounded-lg border border-blue-200 bg-blue-50 p-2 text-xs text-blue-900 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-100">
-            Preparing to{" "}
-            <span className="font-semibold uppercase">
-              {pendingAction.action}
-            </span>{" "}
-            on section #{pendingAction.section_id || "?"}
+        {pendingReference && messages.length === 0 && (
+          <div className="relative">
+            <div
+              className="absolute -top-1 left-1/2 z-10 h-1 w-16 -translate-x-1/2 cursor-row-resize rounded-full bg-gray-300 dark:bg-gray-600"
+              onMouseDown={startReferenceResize}
+              role="separator"
+              aria-orientation="horizontal"
+              aria-label="Resize referencing note"
+            />
+            <div
+              className="mb-3 rounded-lg border border-dashed border-gray-400 bg-white/60 p-2 pb-4 text-xs text-gray-700 shadow-sm dark:border-gray-600 dark:bg-secondary-dark/80 dark:text-gray-200"
+              style={{
+                height: `${referenceHeight}px`,
+                minHeight: `${MIN_REFERENCE_HEIGHT}px`,
+                maxHeight: `${referenceMaxHeight}px`,
+                overflowY: "auto",
+              }}
+            >
+              <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                Referencing
+              </p>
+              <p
+                ref={referenceContentRef}
+                className="whitespace-pre-line break-words"
+              >
+                {pendingReference}
+              </p>
+            </div>
           </div>
         )}
         <form onSubmit={onSubmit} className="space-y-2">
-          <textarea
-            disabled={!hasActiveThread}
-            value={inputValue}
-            onChange={onInputChange}
-            onKeyDown={handleKeyDown}
-            className="h-24 w-full resize-none rounded-xl border border-gray-300 bg-primary p-3 text-sm text-black placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-gray-700 dark:bg-secondary-dark dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-500/40"
-            placeholder={
-              hasActiveThread
-                ? "Ask a question about this highlight..."
-                : "Select lesson text to start chatting..."
-            }
-          />
+          <div className="relative">
+            <div
+              className="absolute -top-1 left-1/2 z-10 h-1 w-16 -translate-x-1/2 cursor-row-resize rounded-full bg-gray-300 dark:bg-gray-600"
+              onMouseDown={startChatInputResize}
+              role="separator"
+              aria-orientation="horizontal"
+              aria-label="Resize chat input"
+            />
+            <textarea
+              disabled={!hasActiveThread}
+              value={inputValue}
+              onChange={onInputChange}
+              onKeyDown={handleKeyDown}
+              style={{
+                height: `${chatInputHeight}px`,
+              }}
+              className="w-full resize-none rounded-xl border border-gray-300 bg-primary p-3 text-sm text-black placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-gray-700 dark:bg-secondary-dark dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-500/40"
+              placeholder={
+                hasActiveThread
+                  ? "Ask a question about this highlight..."
+                  : "Select lesson text to start chatting..."
+              }
+            />
+          </div>
           <button
             type="submit"
             disabled={!inputValue.trim() || isSubmitting || !hasActiveThread}

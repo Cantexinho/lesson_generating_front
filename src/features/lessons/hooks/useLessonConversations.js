@@ -93,6 +93,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     [GENERAL_CONVERSATION_ID]: [],
   }));
   const [pendingActionPayload, setPendingActionPayload] = useState(null);
+  const [pendingReferences, setPendingReferences] = useState({});
   const [highlightsBySection, setHighlightsBySection] = useState({});
   const [isSending, setIsSending] = useState(false);
 
@@ -103,6 +104,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       [GENERAL_CONVERSATION_ID]: [],
     });
     setPendingActionPayload(null);
+    setPendingReferences({});
     setHighlightsBySection({});
     setIsSending(false);
   }, []);
@@ -163,6 +165,13 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         ...prev,
         [conversationId]: [],
       }));
+      const referenceText = (selectionDetails.text || "").trim();
+      if (referenceText) {
+        setPendingReferences((prev) => ({
+          ...prev,
+          [conversationId]: referenceText,
+        }));
+      }
 
       const alignedOffsets = alignOffsetsToSectionContent(
         parts,
@@ -275,6 +284,14 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       setPendingActionPayload((prevPending) =>
         prevPending?.threadId === conversationId ? null : prevPending
       );
+      setPendingReferences((prev) => {
+        if (!prev[conversationId]) {
+          return prev;
+        }
+        const next = { ...prev };
+        delete next[conversationId];
+        return next;
+      });
 
       setActiveConversationId((currentActiveId) => {
         if (currentActiveId !== conversationId) {
@@ -373,6 +390,15 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         return reordered;
       });
 
+      setPendingReferences((prev) => {
+        if (!prev[targetConversationId]) {
+          return prev;
+        }
+        const next = { ...prev };
+        delete next[targetConversationId];
+        return next;
+      });
+
       return true;
     },
     [activeConversationId, conversations, pendingActionPayload]
@@ -395,11 +421,20 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       : null;
   }, [pendingActionPayload, activeConversationId]);
 
+  const activePendingReference = useMemo(() => {
+    if (!activeConversationId) {
+      return null;
+    }
+    return pendingReferences[activeConversationId] || null;
+  }, [pendingReferences, activeConversationId]);
+
   return {
     conversations,
     activeConversationId,
     activeConversationMessages,
     activePendingAction,
+    activePendingReference,
+    pendingReferences,
     highlightsBySection,
     isSending,
     resetConversations,
