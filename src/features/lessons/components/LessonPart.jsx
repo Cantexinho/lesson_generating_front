@@ -52,6 +52,13 @@ const getHighlightClasses = (action, variant) => {
 };
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const UNION_UNDERLINE_STYLE = {
+  textDecorationLine: "underline",
+  textDecorationStyle: "dotted",
+  textDecorationColor: "rgba(59, 130, 246, 0.7)",
+  textDecorationThickness: "1.5px",
+  textUnderlineOffset: "0.24em",
+};
 
 const normalizeHighlights = (contentLength, highlights = []) =>
   highlights
@@ -421,19 +428,29 @@ const LessonPart = ({
       }
 
       const blockHighlightIds = blockContext?.blockHighlightIds;
-      const orderedIds =
+      const blockOrderedIds =
         (blockHighlightIds && blockHighlightIds.length
           ? blockHighlightIds
           : segment.orderedHighlightIds) || segment.highlightIds;
-      const validHighlightIds = orderedIds.filter((id) => highlightLookup[id]);
+      const segmentOrderedIds =
+        segment.orderedHighlightIds && segment.orderedHighlightIds.length
+          ? segment.orderedHighlightIds
+          : segment.highlightIds;
+
+      const validHighlightIds = blockOrderedIds.filter(
+        (id) => highlightLookup[id]
+      );
 
       if (!validHighlightIds.length) {
         return;
       }
 
-      const initialHighlightId = validHighlightIds.includes(activeHighlightId)
+      const hasActiveOnSegment =
+        activeHighlightId && segmentOrderedIds.includes(activeHighlightId);
+      const initialHighlightId = hasActiveOnSegment
         ? activeHighlightId
-        : validHighlightIds[0];
+        : segmentOrderedIds.find((id) => validHighlightIds.includes(id)) ||
+          validHighlightIds[0];
 
       if (initialHighlightId && initialHighlightId !== activeHighlightId) {
         onHighlightSelect?.(initialHighlightId);
@@ -602,12 +619,22 @@ const LessonPart = ({
 
     const showBadge = piece.peakOverlap > 1;
 
-    return (
-      <span
-        key={piece.id}
-        data-annotation-block={piece.id}
-        className="relative inline-block underline decoration-blue-400/70 decoration-dotted decoration-2 underline-offset-2"
-      >
+      const blockHighlightIds = piece.blockHighlightIds || [];
+      const blockPrimaryHighlightId = blockHighlightIds[0] || null;
+      const selectedHighlightId = previewHighlightId || activeHighlightId || null;
+      const shouldShowUnderline =
+        Boolean(blockPrimaryHighlightId) &&
+        selectedHighlightId !== blockPrimaryHighlightId;
+
+      return (
+        <span
+          key={piece.id}
+          data-annotation-block={piece.id}
+          className={`relative inline-block ${
+            shouldShowUnderline ? "idle-underline" : ""
+          }`}
+          style={shouldShowUnderline ? UNION_UNDERLINE_STYLE : undefined}
+        >
         {showBadge && (
           <span
             className="absolute -top-3 left-0 rounded-full bg-slate-900 px-1.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow dark:bg-slate-200 dark:text-slate-900"
