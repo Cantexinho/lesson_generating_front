@@ -14,6 +14,8 @@ const ChatPanel = ({
   onSubmit,
   isSubmitting,
   pendingAction,
+  onPreviewThread,
+  onClearPreview,
 }) => {
   const tabsContainerRef = useRef(null);
   const orderedThreads = [...threads].slice().reverse();
@@ -32,6 +34,18 @@ const ChatPanel = ({
         key={thread.id}
         type="button"
         onClick={() => onSelectThread?.(thread.id)}
+        onMouseEnter={() => {
+          if (thread.sectionId) {
+            onPreviewThread?.(thread.id);
+          }
+        }}
+        onMouseLeave={() => onClearPreview?.()}
+        onFocus={() => {
+          if (thread.sectionId) {
+            onPreviewThread?.(thread.id);
+          }
+        }}
+        onBlur={() => onClearPreview?.()}
         data-thread-tab={thread.id}
         className={`flex h-20 w-44 flex-none overflow-hidden rounded-2xl border px-3 py-2 text-left text-xs transition ${
           isActive
