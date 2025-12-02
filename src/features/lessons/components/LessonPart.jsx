@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { createPortal } from "react-dom";
 import Spinner from "./Spinner";
 
 const HIGHLIGHT_STYLE_MAP = {
@@ -279,6 +280,36 @@ const LessonPart = ({
       .filter(Boolean);
   }, [popoverState, highlightLookup]);
 
+  const computePopoverMetrics = useCallback((rect, highlightCount) => {
+    const viewportWidth =
+      typeof window !== "undefined"
+        ? window.innerWidth || document.documentElement.clientWidth || 0
+        : 0;
+    const viewportHeight =
+      typeof window !== "undefined"
+        ? window.innerHeight || document.documentElement.clientHeight || 0
+        : 0;
+    const baseHeight =
+      highlightCount > 4
+        ? 320
+        : Math.max(120, highlightCount * 64 + 40);
+    const rawLeft = rect.left + rect.width / 2;
+    const clampedLeft = viewportWidth
+      ? clamp(rawLeft, 24, viewportWidth - 24)
+      : rawLeft;
+    const desiredTop = rect.bottom + 8;
+    const top =
+      viewportHeight && desiredTop + baseHeight > viewportHeight - 16
+        ? Math.max(16, rect.top - 8 - baseHeight)
+        : desiredTop;
+    return {
+      top,
+      left: clampedLeft,
+      height: baseHeight,
+      isScrollable: highlightCount > 4,
+    };
+  }, []);
+
   const closePopover = useCallback(() => {
     setPopoverState(null);
   }, []);
@@ -340,6 +371,45 @@ const LessonPart = ({
       );
     }
   }, [activeHighlightId, popoverState, popoverHighlights, closePopover]);
+
+  useEffect(() => {
+    if (
+      !popoverState?.targetElement ||
+      typeof window === "undefined" ||
+      typeof document === "undefined"
+    ) {
+      return undefined;
+    }
+
+    const reposition = () => {
+      setPopoverState((prev) => {
+        if (!prev?.targetElement) {
+          return prev;
+        }
+        const rect = prev.targetElement.getBoundingClientRect();
+        const metrics = computePopoverMetrics(
+          rect,
+          prev.highlightIds.length
+        );
+        return {
+          ...prev,
+          position: {
+            top: metrics.top,
+            left: metrics.left,
+          },
+          popoverHeight: metrics.height,
+          isScrollable: metrics.isScrollable,
+        };
+      });
+    };
+
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
+    };
+  }, [popoverState, computePopoverMetrics]);
 
   const handlePopoverSelect = useCallback(
     (highlightId) => {
@@ -421,15 +491,10 @@ const LessonPart = ({
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
+    event.preventDefault();
+    event.stopPropagation();
 
-      const wrapperRect = contentWrapperRef.current?.getBoundingClientRect();
-      const targetRect = event.currentTarget.getBoundingClientRect();
-
-      if (!wrapperRect) {
-        return;
-      }
+    const targetRect = event.currentTarget.getBoundingClientRect();
 
       const blockHighlightIds = blockContext?.blockHighlightIds;
       const blockOrderedIds =
@@ -460,26 +525,30 @@ const LessonPart = ({
         onHighlightSelect?.(initialHighlightId);
       }
 
-      const rawLeft =
-        targetRect.left + targetRect.width / 2 - wrapperRect.left;
-      const clampedLeft = clamp(
-        rawLeft,
-        16,
-        Math.max((wrapperRect.width || 0) - 16, 16)
-      );
-      const top = targetRect.bottom - wrapperRect.top + 8;
+    const metrics = computePopoverMetrics(
+      targetRect,
+      validHighlightIds.length
+    );
 
       setPopoverState({
         blockKey: segment.blockId,
         highlightIds: validHighlightIds,
         activeHighlightId: initialHighlightId,
-        position: {
-          top,
-          left: clampedLeft,
-        },
+      position: {
+        top: metrics.top,
+        left: metrics.left,
+      },
+      popoverHeight: metrics.height,
+      isScrollable: metrics.isScrollable,
+      targetElement: event.currentTarget,
       });
     },
-    [activeHighlightId, highlightLookup, onHighlightSelect]
+    [
+      activeHighlightId,
+      highlightLookup,
+      onHighlightSelect,
+      computePopoverMetrics,
+    ]
   );
 
   const renderSegmentAnchors = (segmentStart) => {
@@ -614,7 +683,7 @@ const LessonPart = ({
     }
 
     const actionCount = piece.blockHighlightCount || 0;
-    const showBadge = actionCount > 0;
+    const showBadge = actionCount > 1;
 
       const blockHighlightIds = piece.blockHighlightIds || [];
       const blockPrimaryHighlightId = blockHighlightIds[0] || null;
@@ -627,14 +696,14 @@ const LessonPart = ({
         <span
           key={piece.id}
           data-annotation-block={piece.id}
-          className={`relative inline ${
+          className={`group relative inline ${
             shouldShowUnderline ? "idle-underline" : ""
           }`}
           style={shouldShowUnderline ? UNION_UNDERLINE_STYLE : undefined}
         >
         {showBadge && (
           <span
-            className="absolute -top-3 left-0 rounded-full bg-slate-900 px-1 text-[9px] font-semibold uppercase tracking-wide text-white shadow dark:bg-slate-200 dark:text-slate-900"
+              className="pointer-events-none absolute -top-3 left-0 rounded-full bg-slate-900 px-1 text-[9px] font-semibold uppercase tracking-wide text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-slate-200 dark:text-slate-900"
             aria-label={`${actionCount} actions in this block`}
           >
             {actionCount}
@@ -653,48 +722,27 @@ const LessonPart = ({
   const resolvedPopoverIndex =
     popoverActiveIndex === -1 ? 0 : popoverActiveIndex;
 
-  return (
-    <div
-      className="relative flex w-full justify-between text-xs md:text-base"
-      data-lesson-section={part.id}
-      data-section-title={`Part ${part.number}: ${part.name}`}
-    >
-      <div
-        className="relative w-full border border-gray-300 bg-secondary p-4 text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
-        ref={contentWrapperRef}
-      >
-        {loading[part.id] ? (
-          <div className="flex w-full items-center justify-center">
-            <Spinner />
-          </div>
-        ) : (
-          <>
-            <h2 className="mb-2 text-black dark:text-white">
-              {`Part ${part.number}: ${part.name}`}
-            </h2>
-            <p
-              data-section-content
-              data-section-id={part.id}
-              className="whitespace-pre-wrap leading-relaxed"
-            >
-              {pieces.length
-                ? pieces.map((piece) => renderPiece(piece))
-                : content}
-            </p>
-          </>
-        )}
+  const popoverTarget =
+    typeof document !== "undefined" ? document.body : null;
 
-        {popoverState && popoverHighlights.length > 0 && (
+  const popoverNode =
+    popoverTarget && popoverState && popoverHighlights.length > 0
+      ? createPortal(
           <div
             ref={popoverRef}
             role="dialog"
             tabIndex={-1}
             aria-label="Annotation options"
-            className="absolute z-10 w-64 max-w-[90vw] rounded-xl border border-gray-200 bg-white p-3 text-xs shadow-2xl focus:outline-none dark:border-gray-700 dark:bg-secondary-dark"
+            className="fixed z-50 w-64 max-w-[90vw] rounded-xl border border-gray-200 bg-white p-3 text-xs shadow-2xl focus:outline-none dark:border-gray-700 dark:bg-secondary-dark"
             style={{
               top: popoverState.position.top,
               left: popoverState.position.left,
               transform: "translate(-50%, 0)",
+              height: popoverState.isScrollable
+                ? `${popoverState.popoverHeight}px`
+                : "auto",
+              maxHeight: `${popoverState.popoverHeight || 320}px`,
+              overflowY: popoverState.isScrollable ? "auto" : "visible",
             }}
             onKeyDown={handlePopoverKeyDown}
           >
@@ -752,9 +800,44 @@ const LessonPart = ({
                 );
               })}
             </ul>
+          </div>,
+          popoverTarget
+        )
+      : null;
+
+  return (
+    <div
+      className="relative flex w-full justify-between text-xs md:text-base"
+      data-lesson-section={part.id}
+      data-section-title={`Part ${part.number}: ${part.name}`}
+    >
+      <div
+        className="relative w-full border border-gray-300 bg-secondary p-4 text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
+        ref={contentWrapperRef}
+      >
+        {loading[part.id] ? (
+          <div className="flex w-full items-center justify-center">
+            <Spinner />
           </div>
+        ) : (
+          <>
+            <h2 className="mb-2 text-black dark:text-white">
+              {`Part ${part.number}: ${part.name}`}
+            </h2>
+            <p
+              data-section-content
+              data-section-id={part.id}
+              className="whitespace-pre-wrap leading-relaxed"
+            >
+              {pieces.length
+                ? pieces.map((piece) => renderPiece(piece))
+                : content}
+            </p>
+          </>
         )}
+
       </div>
+      {popoverNode}
     </div>
   );
 };
