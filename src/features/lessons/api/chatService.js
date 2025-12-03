@@ -1,4 +1,4 @@
-const DEFAULT_CHAT_ENDPOINT = "/api/lesson-chat";
+const DEFAULT_CHAT_ENDPOINT = "http://localhost:8000/completion";
 
 const getChatEndpoint = () =>
   process.env.REACT_APP_LESSON_CHAT_URL || DEFAULT_CHAT_ENDPOINT;

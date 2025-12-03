@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import LessonGenerationInput from "features/lessons/components/LessonGenerationInput";
+import LessonSetupModal from "features/lessons/components/LessonSetupModal";
 import LessonMain from "features/lessons/components/LessonMain";
 import PgNavBar from "features/lessons/components/PgNavBar";
 import ChatPanel from "features/lessons/components/ChatPanel";
 import SelectionActions from "features/lessons/components/SelectionActions";
 import * as inputHandlers from "features/lessons/utils/inputHandlers";
 import * as lessonDataOperations from "features/lessons/utils/lessonDataOperations";
+import {
+  extractTextFromPdf,
+  buildLessonPartsFromText,
+} from "features/lessons/utils/pdfImport";
 import useLessonConversations from "features/lessons/hooks/useLessonConversations";
 
 const SELECTION_ACTIONS = [
@@ -100,6 +104,10 @@ const Playground = () => {
   };
 
   useEffect(() => {
+    if (!lesson?.id) {
+      return;
+    }
+
     const fetchData = async () => {
       await lessonDataOperations.fetchSingleLesson(lesson, setParts);
     };
@@ -121,6 +129,51 @@ const Playground = () => {
   const closeLessonModal = () => {
     setIsLessonModalOpen(false);
   };
+
+  const handleLessonPdfImport = useCallback(
+    async (file) => {
+      if (!file) {
+        return;
+      }
+
+      setSubmitLoading(true);
+
+      try {
+        const pdfText = await extractTextFromPdf(file);
+        if (!pdfText) {
+          throw new Error(
+            "No readable text found. Try another PDF or check the file."
+          );
+        }
+
+        const generatedParts = buildLessonPartsFromText(pdfText);
+        if (!generatedParts.length) {
+          throw new Error(
+            "Could not create lesson sections from that PDF. Please try a different file."
+          );
+        }
+
+        resetConversationState();
+        setLoading({});
+        setLesson(undefined);
+        setLessonId(undefined);
+        setParts(generatedParts);
+        setTitle(file.name.replace(/\.pdf$/i, ""));
+        setIsLessonModalOpen(false);
+      } catch (error) {
+        console.error("Failed to import lesson from PDF", error);
+        if (typeof window !== "undefined") {
+          window.alert(
+            error?.message ||
+              "Unable to read that PDF. Please verify the file and try again."
+          );
+        }
+      } finally {
+        setSubmitLoading(false);
+      }
+    },
+    [resetConversationState]
+  );
 
   useEffect(() => {
     setPgMainState(parts);
@@ -378,33 +431,13 @@ const Playground = () => {
         onAction={handleSelectionAction}
       />
 
-      {isLessonModalOpen && (
-        <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4"
-          onClick={closeLessonModal}
-        >
-          <div
-            className="relative mx-auto flex w-full max-w-3xl items-start gap-3 rounded-2xl bg-secondary p-4 shadow-2xl dark:bg-secondary-dark sm:p-3"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <LessonGenerationInput
-              title={title}
-              handleTitleChange={handleTitleChangeSubmit}
-              passedProps="w-full flex-1 max-w-none"
-              placeholderText="Describe lesson to generate..."
-              onSubmit={null}
-            />
-            <button
-              type="button"
-              onClick={closeLessonModal}
-              className="shrink-0 self-start text-2xl font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              aria-label="Close"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
+      <LessonSetupModal
+        isOpen={isLessonModalOpen}
+        title={title}
+        onTitleChange={handleTitleChangeSubmit}
+        onClose={closeLessonModal}
+        onImportPdf={handleLessonPdfImport}
+      />
     </div>
   );
 };

@@ -28,16 +28,25 @@ const ChatThreadTab = ({
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSelect();
+    }
+  };
+
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       data-thread-tab={thread.id}
       onClick={handleSelect}
+      onKeyDown={handleKeyDown}
       onMouseEnter={handlePreview}
       onMouseLeave={() => onClearPreview?.()}
       onFocus={handlePreview}
       onBlur={() => onClearPreview?.()}
-      className={`flex h-20 w-44 flex-none overflow-hidden rounded-2xl border px-3 py-2 text-left text-xs transition ${
+      className={`flex h-20 w-44 flex-none overflow-hidden rounded-2xl border px-3 py-2 text-left text-xs transition focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 ${
         isActive
           ? "border-blue-500 bg-blue-50 text-blue-900 dark:border-blue-500/60 dark:bg-blue-500/10 dark:text-blue-100"
           : "border-gray-200 bg-white text-gray-700 hover:border-blue-300 dark:border-gray-800 dark:bg-secondary-dark dark:text-gray-200 dark:hover:border-blue-500/60"
@@ -75,7 +84,7 @@ const ChatThreadTab = ({
           ×
         </button>
       </div>
-    </button>
+    </div>
   );
 };
 
