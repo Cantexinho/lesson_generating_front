@@ -379,7 +379,8 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       const requestLessonId =
         actionMeta?.lesson_id || lesson?.id || lessonId || null;
       const requestPayload = {
-        prompt: trimmed,
+        user_input: trimmed,
+        reference_text: actionMeta?.text || null,
         conversation_id: targetConversationId,
         lesson_id: requestLessonId,
         section_id: actionMeta?.section_id || null,
