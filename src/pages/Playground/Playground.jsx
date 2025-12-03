@@ -305,7 +305,7 @@ const Playground = () => {
       return;
     }
 
-    const didSend = sendMessage(trimmed);
+    const didSend = await sendMessage(trimmed);
     if (didSend) {
       setChatInput("");
     }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { sendLessonChat } from "../api/chatService";
 
 const GENERAL_CONVERSATION_ID = "conversation-general";
 const GENERAL_CONVERSATION_PREFIX = "conversation-general";
@@ -310,7 +311,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
   }, []);
 
   const sendMessage = useCallback(
-    (rawText) => {
+    async (rawText) => {
       const trimmed = rawText.trim();
 
       if (!trimmed || !activeConversationId) {
@@ -333,8 +334,8 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         setPendingActionPayload(null);
       }
 
-      const timestamp = Date.now();
       const targetConversationId = activeConversationId;
+      const timestamp = Date.now();
       const userMessage = {
         id: `user-${timestamp}`,
         role: "user",
@@ -350,30 +351,6 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         ],
       }));
       setIsSending(true);
-
-      console.log("Chat request payload", {
-        prompt: trimmed,
-        ...(actionMeta || {}),
-        conversation_id: targetConversationId,
-      });
-
-      const assistantReply = {
-        id: `assistant-${timestamp}`,
-        role: "assistant",
-        text: "🚧 Chat service integration is coming soon. Your request was captured for processing.",
-        meta: actionMeta,
-      };
-
-      setTimeout(() => {
-        setMessagesByConversation((prev) => ({
-          ...prev,
-          [targetConversationId]: [
-            ...(prev[targetConversationId] || []),
-            assistantReply,
-          ],
-        }));
-        setIsSending(false);
-      }, 450);
 
       setConversations((prev) => {
         const index = prev.findIndex(
@@ -399,9 +376,62 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         return next;
       });
 
+      const requestLessonId =
+        actionMeta?.lesson_id || lesson?.id || lessonId || null;
+      const requestPayload = {
+        prompt: trimmed,
+        conversation_id: targetConversationId,
+        lesson_id: requestLessonId,
+        section_id: actionMeta?.section_id || null,
+        highlighted_action_id: actionMeta?.action || null,
+      };
+
+      const appendAssistantMessage = (messageText, metaOverride) => {
+        const assistantTimestamp = Date.now();
+        const assistantMessage = {
+          id: `assistant-${assistantTimestamp}`,
+          role: "assistant",
+          text: messageText,
+          meta: metaOverride || actionMeta,
+        };
+        setMessagesByConversation((prev) => ({
+          ...prev,
+          [targetConversationId]: [
+            ...(prev[targetConversationId] || []),
+            assistantMessage,
+          ],
+        }));
+      };
+
+      try {
+        const response = await sendLessonChat(requestPayload);
+        const responseText =
+          response?.message || response?.text || response?.reply || "";
+        const assistantText =
+          responseText ||
+          "The lesson chat service responded without additional details.";
+        const mergedMeta = response?.meta
+          ? { ...actionMeta, ...response.meta }
+          : actionMeta;
+        appendAssistantMessage(assistantText, mergedMeta);
+      } catch (error) {
+        const fallbackMessage =
+          error?.message ||
+          "We could not reach the lesson chat service. Please try again.";
+        appendAssistantMessage(`⚠️ ${fallbackMessage}`);
+      } finally {
+        setIsSending(false);
+      }
+
       return true;
     },
-    [activeConversationId, conversations, pendingActionPayload]
+    [
+      activeConversationId,
+      conversations,
+      pendingActionPayload,
+      lesson,
+      lessonId,
+    ]
   );
 
   const activeConversationMessages = useMemo(() => {
