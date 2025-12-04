@@ -4,9 +4,8 @@ const loadPdfJs = async () => {
   if (!pdfjsLibPromise) {
     pdfjsLibPromise = import("pdfjs-dist/legacy/build/pdf").then((pdfjsLib) => {
       if (pdfjsLib.GlobalWorkerOptions) {
-        // CRA needs the worker referenced via URL so bundler can inline it.
         pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-          "pdf.worker.min.mjs",
+          "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
           import.meta.url
         ).toString();
       }
@@ -18,21 +17,26 @@ const loadPdfJs = async () => {
   return pdfjsLibPromise;
 };
 
-export const extractTextFromPdf = async (file) => {
+export const extractPdfContent = async (file) => {
   if (!file) {
-    return "";
+    return {
+      rawText: "",
+      pageCount: 0,
+      totalCharacters: 0,
+      pages: [],
+      metadata: {},
+    };
   }
 
   const pdfjsLib = await loadPdfJs();
   const data = await file.arrayBuffer();
   const pdfDocument = await pdfjsLib.getDocument({ data }).promise;
 
+  const pages = [];
+  const pageCount = pdfDocument.numPages;
   let combinedText = "";
-  for (
-    let pageNumber = 1;
-    pageNumber <= pdfDocument.numPages;
-    pageNumber += 1
-  ) {
+
+  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
     const page = await pdfDocument.getPage(pageNumber);
     const textContent = await page.getTextContent();
     const pageText = textContent.items
@@ -41,12 +45,37 @@ export const extractTextFromPdf = async (file) => {
       .replace(/\s+/g, " ")
       .trim();
 
-    if (pageText) {
-      combinedText += `${pageText}\n\n`;
+    const normalizedText = pageText.trim();
+    pages.push({
+      pageNumber,
+      charCount: normalizedText.length,
+      text: normalizedText,
+    });
+
+    if (normalizedText) {
+      combinedText += `${normalizedText}\n\n`;
     }
   }
 
-  return combinedText.trim();
+  const rawText = combinedText.trim();
+
+  return {
+    rawText,
+    pageCount,
+    totalCharacters: rawText.length,
+    pages,
+    metadata: {
+      fileName: file.name,
+      fileSizeBytes: file.size,
+      mimeType: file.type || "application/pdf",
+      extractedAt: new Date().toISOString(),
+    },
+  };
+};
+
+export const extractTextFromPdf = async (file) => {
+  const data = await extractPdfContent(file);
+  return data.rawText;
 };
 
 const SECTION_CHAR_TARGET = 1200;
@@ -95,4 +124,31 @@ export const buildLessonPartsFromText = (text) => {
     name: `Imported Section ${index + 1}`,
     lesson_part_content: content,
   }));
+};
+
+export const buildPdfImportRequest = (file, pdfContent) => {
+  if (!pdfContent) {
+    return null;
+  }
+
+  const fallbackName = file?.name || "Imported lesson";
+  const standardPayload = {
+    fileName: fallbackName,
+    fileSizeBytes: file?.size ?? null,
+    mimeType: file?.type || "application/pdf",
+    pageCount: pdfContent.pageCount,
+    totalCharacters: pdfContent.totalCharacters,
+    fullText: pdfContent.rawText,
+    pages: pdfContent.pages,
+    textPreview: pdfContent.rawText.slice(0, 2000),
+    metadata: {
+      ...pdfContent.metadata,
+      averageCharsPerPage:
+        pdfContent.pageCount > 0
+          ? Math.round(pdfContent.totalCharacters / pdfContent.pageCount)
+          : 0,
+    },
+  };
+
+  return standardPayload;
 };

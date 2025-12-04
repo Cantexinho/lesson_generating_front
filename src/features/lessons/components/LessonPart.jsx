@@ -314,7 +314,7 @@ const LessonPart = ({
     <div
       className="relative flex w-full justify-between text-xs md:text-base"
       data-lesson-section={part.id}
-      data-section-title={`Part ${part.number}: ${part.name}`}
+      data-section-title={part.name}
     >
       <div
         className="relative w-full border border-gray-300 bg-secondary p-4 text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
@@ -326,9 +326,12 @@ const LessonPart = ({
           </div>
         ) : (
           <>
-            <h2 className="mb-2 text-black dark:text-white">
-              {`Part ${part.number}: ${part.name}`}
-            </h2>
+            <div className="mb-3">
+              <h2 className="text-lg font-semibold text-black dark:text-white">
+                {part.name}
+              </h2>
+              <div className="mt-1 h-px w-full bg-gray-300 dark:bg-gray-700" />
+            </div>
             <p
               data-section-content
               data-section-id={part.id}

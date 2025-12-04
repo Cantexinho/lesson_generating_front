@@ -26,14 +26,40 @@
           }
 
           // Set background colors immediately via inline styles (before CSS loads)
-          document.documentElement.style.backgroundColor = isDark
-            ? "#1b1b20"
-            : "#e2e2e2";
-          document.body.style.backgroundColor = isDark ? "#1b1b20" : "#e2e2e2";
+          const rootColor = isDark ? "#1b1b20" : "#e2e2e2";
+          document.documentElement.style.backgroundColor = rootColor;
+
+          const applyBodyBackground = () => {
+            if (document.body) {
+              document.body.style.backgroundColor = rootColor;
+            }
+          };
+
+          if (document.body) {
+            applyBodyBackground();
+          } else {
+            document.addEventListener(
+              "DOMContentLoaded",
+              () => applyBodyBackground(),
+              { once: true }
+            );
+          }
         } catch (e) {
           // Fallback to light theme if localStorage fails
           document.documentElement.style.backgroundColor = "#e2e2e2";
-          document.body.style.backgroundColor = "#e2e2e2";
+          if (document.body) {
+            document.body.style.backgroundColor = "#e2e2e2";
+          } else {
+            document.addEventListener(
+              "DOMContentLoaded",
+              () => {
+                if (document.body) {
+                  document.body.style.backgroundColor = "#e2e2e2";
+                }
+              },
+              { once: true }
+            );
+          }
         }
       })();
     </script>
