@@ -1,11 +1,9 @@
 import { MOCK_LESSONS, createMockLesson } from "../data/mockLessons";
 
-const LESSON_API_BASE = "http://127.0.0.1:8000/api";
-const LESSON_TEXT_API = "http://127.0.0.1:8001/api";
+const LESSON_API_BASE = "http://localhost:8000";
+const LESSON_TEXT_API = "http://localhost:8000";
 
-const useStaticLessons =
-  !process.env.REACT_APP_USE_STATIC_LESSONS ||
-  process.env.REACT_APP_USE_STATIC_LESSONS !== "false";
+const useStaticLessons = process.env.REACT_APP_USE_STATIC_LESSONS === "true";
 
 const fetchJson = async (url, options) => {
   const response = await fetch(url, options);
@@ -18,18 +16,29 @@ const realApi = {
       `${LESSON_API_BASE}/lesson?name=${encodeURIComponent(title || "")}`
     ),
   fetchLessonById: (id) =>
-    fetchJson(`${LESSON_API_BASE}/lesson?id=${encodeURIComponent(id || "")}`),
-  fetchAllLessons: () => fetchJson(`${LESSON_API_BASE}/all_lessons`),
+    fetchJson(`${LESSON_API_BASE}/lessons/${encodeURIComponent(id || "")}`),
+  fetchAllLessons: () => fetchJson(`${LESSON_API_BASE}/lessons/titles`),
   fetchLessonParts: (id) =>
     fetchJson(
       `${LESSON_API_BASE}/lesson/${encodeURIComponent(id || "")}/parts`
     ),
-  generateLessonText: (title, selectedNumber) =>
+  generateLessonText: ({
+    userInput,
+    format,
+    audience,
+    length,
+    language,
+    model,
+  }) =>
     fetchJson(`${LESSON_TEXT_API}/lesson/text/generate`, {
       method: "POST",
       body: JSON.stringify({
-        lesson_name: title,
-        part_number: selectedNumber,
+        user_input: userInput ?? "",
+        format,
+        audience,
+        length,
+        language: language ?? "english",
+        model,
       }),
       headers: { "Content-Type": "application/json" },
     }),
@@ -187,12 +196,34 @@ const mockApi = (() => {
       const lesson = getLessonById(id);
       return lesson ? deepClone(lesson.parts) : [];
     },
-    generateLessonText: async (title, selectedNumber) => {
-      const lesson = createMockLesson(title, selectedNumber);
+    generateLessonText: async (generationRequest = {}) => {
+      const {
+        userInput,
+        length,
+        language: requestedLanguage,
+      } = generationRequest;
+      const determinePartCount = (lengthPreset) => {
+        switch (lengthPreset) {
+          case "detailed":
+            return 6;
+          case "long":
+            return 5;
+          case "medium":
+            return 4;
+          default:
+            return 3;
+        }
+      };
+      const partCount = determinePartCount(length);
+      const lesson = {
+        ...createMockLesson(userInput, partCount),
+        language: requestedLanguage || "english",
+      };
       recordPendingLesson(lesson);
       return {
         lesson_name: lesson.name,
         content: encodeLessonContent(lesson),
+        language: lesson.language,
       };
     },
     createLesson: async (name) => {

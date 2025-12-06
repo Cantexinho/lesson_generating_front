@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 export const authService = {
   login: async (username, password) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/login", {
+      const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const authService = {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/refresh", {
+      const response = await fetch("http://localhost:8000/refresh", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export const authService = {
     try {
       const decodedUser = jwtDecode(credentialResponse.credential);
 
-      const response = await fetch("http://127.0.0.1:8000/api/google-login", {
+      const response = await fetch("http://localhost:8000/google-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
