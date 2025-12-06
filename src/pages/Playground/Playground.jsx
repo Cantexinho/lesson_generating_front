@@ -6,11 +6,8 @@ import ChatPanel from "features/lessons/components/ChatPanel";
 import SelectionActions from "features/lessons/components/SelectionActions";
 import * as inputHandlers from "features/lessons/utils/inputHandlers";
 import * as lessonDataOperations from "features/lessons/utils/lessonDataOperations";
-import {
-  extractPdfContent,
-  buildPdfImportRequest,
-} from "features/lessons/utils/pdfImport";
-import { importLessonFromPdf } from "features/lessons/api/pdfImportService";
+import { importPdfLesson } from "features/lessons/services/pdfImportManager";
+import { generateLessonFromInput } from "features/lessons/services/lessonGenerationManager";
 import useLessonConversations from "features/lessons/hooks/useLessonConversations";
 
 const SELECTION_ACTIONS = [
@@ -100,12 +97,12 @@ const Playground = () => {
   const handleLessonSelect = async (selectedLesson) => {
     resetConversationState();
     setLesson(selectedLesson);
-    setTitle(selectedLesson.name);
+    setTitle(selectedLesson.title || selectedLesson.name || "");
     setLessonId(selectedLesson.id);
   };
 
   useEffect(() => {
-    if (!lesson?.id || lesson?.isImported) {
+    if (!lesson?.id) {
       return;
     }
 
@@ -140,81 +137,29 @@ const Playground = () => {
       setSubmitLoading(true);
 
       try {
-        const pdfData = await extractPdfContent(file);
-        if (!pdfData.rawText) {
-          throw new Error(
-            "No readable text found. Try another PDF or check the file."
-          );
-        }
-
-        const importPayload = buildPdfImportRequest(file, pdfData);
-
-        let importedLessonId;
-        let importedLesson;
-        let generatedParts = [];
-        let suggestedTitle;
-        let finishReason;
-        let modelName;
-        let tokenUsage;
-
-        try {
-          const apiResponse = await importLessonFromPdf(importPayload);
-          if (typeof window !== "undefined") {
-            console.log("[PDF Import] API response:", apiResponse);
-          }
-          const apiSections = apiResponse?.sections;
-
-          if (Array.isArray(apiSections) && apiSections.length) {
-            generatedParts = apiSections.map((section, index) => ({
-              id: section.section_id || section.id || `imported-section-${index + 1}`,
-              number: index + 1,
-              name:
-                section.title?.trim() ||
-                `Imported Section ${index + 1}`,
-              lesson_part_content: section.text || "",
-            }));
-          }
-
-          suggestedTitle = apiResponse?.title;
-          importedLessonId = apiResponse?.id;
-          finishReason = apiResponse?.finish_reason;
-          modelName = apiResponse?.model;
-          tokenUsage = {
-            inputTokens: apiResponse?.input_tokens,
-            responseTokens: apiResponse?.response_tokens,
-            totalTokens: apiResponse?.total_tokens,
-          };
-          importedLesson = {
-            id: importedLessonId,
-            metadata: {
-              finishReason,
-              model: modelName,
-              tokenUsage,
-            },
-            isImported: true,
-          };
-          if (!generatedParts.length) {
-            throw new Error(
-              "Import service did not return any lesson sections. Please try again."
-            );
-          }
-        } catch (apiError) {
-          console.error("Lesson PDF import API failed", apiError);
-          throw apiError;
-        }
-
-        if (!generatedParts.length) {
-          throw new Error(
-            "No lesson sections were produced by the import service."
-          );
-        }
+        const {
+          lessonId,
+          parts,
+          title: importedTitle,
+          metadata,
+          language,
+        } = await importPdfLesson(file);
 
         resetConversationState();
         setLoading({});
-        setLesson(importedLessonId ? importedLesson : undefined);
-        setLessonId(importedLessonId || undefined);
-        setParts(generatedParts);
-        setTitle(suggestedTitle || "");
+        setLesson(
+          lessonId
+            ? {
+                id: lessonId,
+                title: importedTitle || "",
+                language: language || null,
+                metadata,
+              }
+            : undefined
+        );
+        setLessonId(lessonId || undefined);
+        setParts(parts);
+        setTitle(importedTitle || "");
         setIsLessonModalOpen(false);
       } catch (error) {
         console.error("Failed to import lesson from PDF", error);
@@ -222,6 +167,64 @@ const Playground = () => {
           window.alert(
             error?.message ||
               "Unable to read that PDF. Please verify the file and try again."
+          );
+        }
+      } finally {
+        setSubmitLoading(false);
+      }
+    },
+    [resetConversationState]
+  );
+
+  const handleLessonGeneration = useCallback(
+    async ({ userInput, format, audience, length, language }) => {
+      const trimmedInput = userInput?.trim();
+      if (!trimmedInput) {
+        if (typeof window !== "undefined") {
+          window.alert("Please describe the lesson before generating.");
+        }
+        return;
+      }
+
+      setSubmitLoading(true);
+
+      try {
+        const {
+          lessonId: generatedLessonId,
+          parts: generatedParts,
+          title: generatedTitle,
+          language: generatedLanguage,
+          metadata,
+        } = await generateLessonFromInput({
+          userInput: trimmedInput,
+          format,
+          audience,
+          length,
+          language,
+        });
+
+        resetConversationState();
+        setLoading({});
+        setLesson(
+          generatedLessonId
+            ? {
+                id: generatedLessonId,
+                title: generatedTitle || trimmedInput,
+                language: generatedLanguage || null,
+                metadata,
+              }
+            : undefined
+        );
+        setLessonId(generatedLessonId || undefined);
+        setParts(generatedParts);
+        setTitle(generatedTitle || trimmedInput);
+        setIsLessonModalOpen(false);
+      } catch (error) {
+        console.error("Failed to generate lesson", error);
+        if (typeof window !== "undefined") {
+          window.alert(
+            error?.message ||
+              "Unable to generate that lesson. Please verify the details and try again."
           );
         }
       } finally {
@@ -493,6 +496,7 @@ const Playground = () => {
         onTitleChange={handleTitleChangeSubmit}
         onClose={closeLessonModal}
         onImportPdf={handleLessonPdfImport}
+        onGenerateLesson={handleLessonGeneration}
       />
     </div>
   );

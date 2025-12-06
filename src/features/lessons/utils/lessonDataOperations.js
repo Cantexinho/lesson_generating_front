@@ -1,67 +1,58 @@
 import * as crudService from "../services/lessonCrudService";
 
-export const handleGenerate = async (title, setSubmitLoading, setParts) => {
-  setSubmitLoading(true);
-
-  try {
-    const lessonData = await fetchLessonData(title);
-    if (!lessonData) return;
-
-    const parts = await handleLessonData(lessonData);
-    setParts(parts);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setSubmitLoading(false);
-  }
-};
-
 export const fetchAllLessons = async (setLessons) => {
   const lessonData = await crudService.fetchAllLessons();
-  setLessons(lessonData);
+  const titles = Array.isArray(lessonData) ? lessonData : [];
+
+  const normalized = titles.map((lesson, index) => {
+    const displayTitle = lesson.title || lesson.name || `Lesson ${index + 1}`;
+    return {
+      id: lesson.id,
+      title: displayTitle,
+      name: displayTitle,
+      language: lesson.language || null,
+    };
+  });
+
+  setLessons(normalized);
+};
+
+export const fetchLessonPartsById = async (lessonId) => {
+  try {
+    const lessonRecord = await crudService.fetchLessonById(lessonId);
+    const sections = lessonRecord?.sections || [];
+    return sections
+      .map((section, index) => ({
+        id:
+          section.section_id ||
+          section.id ||
+          `lesson-${lessonId}-section-${index + 1}`,
+        number:
+          typeof section.position === "number" ? section.position : index + 1,
+        name: section.title?.trim() || `Section ${index + 1}`,
+        lesson_part_content: section.text || "",
+      }))
+      .sort((a, b) => a.number - b.number);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 export const fetchSingleLesson = async (lesson, setParts) => {
+  if (!lesson?.id) {
+    return;
+  }
+
   try {
-    const lessonData = await crudService.fetchLessonParts(lesson.id);
-    const parts = await handleLessonData(lessonData);
+    const parts = await fetchLessonPartsById(lesson.id);
     setParts(parts);
+    return parts;
   } catch (err) {
     console.error(err);
+    throw err;
   }
 };
 
-export const fetchLessonData = async (title, selectedNumber) => {
-  const lessonData = await crudService.fetchLessonByName(title);
-  return lessonData != null
-    ? crudService.fetchLessonParts(lessonData.id)
-    : await generateLessonData(title, selectedNumber);
-};
-
-export const generateLessonData = async (title, selectedNumber) => {
-  const generatorData = await crudService.generateLessonText(
-    title,
-    selectedNumber
-  );
-  await crudService.postLessonText(generatorData.content);
-  await crudService.createLesson(generatorData.lesson_name);
-  const createdLessonData = await crudService.fetchLessonByName(
-    generatorData.lesson_name
-  );
-  await handleSplitLesson(generatorData.content, createdLessonData.id);
-  return crudService.fetchLessonParts(createdLessonData.id);
-};
-
-export const handleLessonData = async (lessonData) => {
-  const sortedParts = lessonData.sort((a, b) => a.number - b.number);
-  return sortedParts;
-};
-
-export const handleSplitLesson = async (content, lessonId) => {
-  const generatorSplitData = await crudService.splitLessonText(content);
-  const splitLessonsData = generatorSplitData.map((lesson) => ({
-    ...lesson,
-    lesson_id: lessonId,
-  }));
-  await crudService.postSplitLesson(splitLessonsData);
-};
+const handleLessonData = async (lessonData) =>
+  lessonData.sort((a, b) => a.number - b.number);

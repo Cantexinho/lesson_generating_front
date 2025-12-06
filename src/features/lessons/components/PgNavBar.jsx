@@ -43,6 +43,17 @@ const PgNavBar = ({
     };
     fetchData();
   }, [pgMainState]);
+
+  const MAX_TITLE_LENGTH = 36;
+
+  const formatLessonTitle = (lesson) => {
+    const rawTitle = lesson?.title || lesson?.name || "Untitled lesson";
+    const title = rawTitle.trim();
+    if (title.length <= MAX_TITLE_LENGTH) {
+      return title;
+    }
+    return `${title.slice(0, MAX_TITLE_LENGTH - 1)}…`;
+  };
   
   return (
     <div className="relative">
@@ -97,20 +108,21 @@ const PgNavBar = ({
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-1 flex-col">
-          <ul className="flex w-full flex-1 flex-col overflow-y-auto">
+        <div className="flex w-full flex-1 flex-col px-4">
+          <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto pb-4">
             {lessons.map((lesson) => (
               <button
                 key={lesson.id}
-                className={`flex w-full items-center justify-start px-4 text-sm font-medium text-black transition hover:bg-gray-300 dark:text-white dark:hover:bg-gray-900 ${
+                className={`flex w-full items-center justify-start rounded-lg px-5 py-3 text-left text-sm font-medium text-black transition hover:bg-gray-300 dark:text-white dark:hover:bg-gray-900 ${
                   selectedLesson && selectedLesson.id === lesson.id
                     ? "bg-gray-300 dark:bg-gray-900"
-                    : ""
+                    : "bg-secondary dark:bg-primary-dark"
                 }`}
-                style={{ minHeight: "3rem" }}
                 onClick={() => handleLessonSelect(lesson)}
               >
-                {lesson.name}
+                <span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                  {formatLessonTitle(lesson)}
+                </span>
               </button>
             ))}
           </ul>

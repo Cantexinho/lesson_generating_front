@@ -14,6 +14,7 @@ const LessonSetupModal = ({
   onTitleChange,
   onClose,
   onImportPdf,
+  onGenerateLesson,
 }) => {
   const [activeTab, setActiveTab] = useState(TABS.GENERATE);
   const [isDragging, setIsDragging] = useState(false);
@@ -91,7 +92,7 @@ const LessonSetupModal = ({
       onClick={onClose}
     >
       <div
-        className="relative mx-auto flex h-[370px] w-full max-w-2xl flex-col rounded-2xl bg-secondary p-4 shadow-2xl dark:bg-secondary-dark sm:p-3"
+        className="relative mx-auto flex h-[370px] w-full max-w-4xl flex-col rounded-2xl bg-secondary p-4 shadow-2xl dark:bg-secondary-dark sm:p-3"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between">
@@ -127,15 +128,15 @@ const LessonSetupModal = ({
           </button>
         </div>
 
-        <div className="mt-3 flex flex-1 flex-col overflow-hidden">
+        <div className="mt-3 flex flex-1 flex-col">
           {activeTab === TABS.GENERATE ? (
-            <div className="flex flex-1 flex-col overflow-hidden px-1">
+            <div className="flex flex-1 flex-col px-1">
               <LessonGenerationInput
                 title={title}
                 handleTitleChange={onTitleChange}
                 passedProps="flex h-full w-full max-w-none"
                 placeholderText="Describe lesson to generate..."
-                onSubmit={null}
+                onSubmit={onGenerateLesson}
               />
             </div>
           ) : (

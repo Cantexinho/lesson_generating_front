@@ -4,37 +4,38 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWandMagicSparkles, faGear, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const LessonGenerationInput = ({
-  title,
+  title = "",
   handleTitleChange,
   passedProps,
   placeholderText,
   onSubmit,
 }) => {
-  const [format, setFormat] = useState('presentation');
-  const [audience, setAudience] = useState('beginners');
+  const [format, setFormat] = useState('sections');
+  const [audience, setAudience] = useState('beginner');
   const [length, setLength] = useState('medium');
   const [optionsExpanded, setOptionsExpanded] = useState(false);
+  const [language, setLanguage] = useState('english');
   const textareaRef = useRef(null);
 
   const formatOptions = [
-    { value: 'presentation', label: 'Presentation', icon: <span role="img" aria-label="presentation">📊</span> },
-    { value: 'lecture', label: 'Lecture', icon: <span role="img" aria-label="lecture">🎓</span> },
-    { value: 'workshop', label: 'Workshop', icon: <span role="img" aria-label="workshop">🛠️</span> },
-    { value: 'tutorial', label: 'Tutorial', icon: <span role="img" aria-label="tutorial">📝</span> },
+    { value: 'sections', label: 'Sections', icon: <span role="img" aria-label="sections">📚</span> },
   ];
   
   const audienceOptions = [
-    { value: 'beginners', label: 'Beginners', icon: <span role="img" aria-label="beginners">🔰</span> },
+    { value: 'beginner', label: 'Beginner', icon: <span role="img" aria-label="beginner">🔰</span> },
     { value: 'intermediate', label: 'Intermediate', icon: <span role="img" aria-label="intermediate">📈</span> },
     { value: 'advanced', label: 'Advanced', icon: <span role="img" aria-label="advanced">🚀</span> },
-    { value: 'all', label: 'All levels', icon: <span role="img" aria-label="all levels">👥</span> },
   ];
   
   const lengthOptions = [
     { value: 'short', label: 'Short', icon: <span role="img" aria-label="short">⏱️</span> },
     { value: 'medium', label: 'Medium', icon: <span role="img" aria-label="medium">⏲️</span> },
     { value: 'long', label: 'Long', icon: <span role="img" aria-label="long">⌛</span> },
-    { value: 'detailed', label: 'Very detailed', icon: <span role="img" aria-label="very detailed">📚</span> },
+  ];
+
+  const languageOptions = [
+    { value: 'english', label: 'English', icon: <span role="img" aria-label="english">🇬🇧</span> },
+    { value: 'lietuvių', label: 'Lietuvių', icon: <span role="img" aria-label="lietuvių">🇱🇹</span> },
   ];
 
   const toggleOptions = () => {
@@ -43,14 +44,12 @@ const LessonGenerationInput = ({
 
   const handleSubmit = () => {
     if (onSubmit) {
-      const formatLabel = formatOptions.find(opt => opt.value === format)?.label || format;
-      const audienceLabel = audienceOptions.find(opt => opt.value === audience)?.label || audience;
-      const lengthLabel = lengthOptions.find(opt => opt.value === length)?.label || length;
-      
       onSubmit({
-        format: formatLabel,
-        audience: audienceLabel,
-        length: lengthLabel
+        userInput: (title || "").trim(),
+        format,
+        audience,
+        length,
+        language,
       });
     }
   };
@@ -85,7 +84,7 @@ const LessonGenerationInput = ({
   };
 
   return (
-    <div className={`rounded-xl bg-secondary dark:bg-secondary-dark border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col w-full max-w-2xl ${passedProps}`}>
+    <div className={`rounded-xl bg-secondary dark:bg-secondary-dark border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col w-full max-w-4xl ${passedProps}`}>
       {/* Top part - Input field with reduced padding */}
       <div className="p-2 flex-1 bg-secondary dark:bg-secondary-dark rounded-t-xl">
         <textarea
@@ -101,7 +100,7 @@ const LessonGenerationInput = ({
       {/* Bottom part - Options and Generate button on the same line */}
       <div className="p-2 flex flex-wrap items-center justify-between bg-secondary dark:bg-secondary-dark rounded-b-xl">
         {/* Desktop view: Options directly visible */}
-        <div className="hidden md:flex flex-wrap items-center gap-2">
+        <div className="hidden md:flex flex-nowrap items-center gap-2 overflow-visible">
           {/* Format dropdown - Custom with icons */}
           <LessonGenerationOptions
             options={formatOptions}
@@ -127,6 +126,14 @@ const LessonGenerationInput = ({
             onChange={setLength}
             label="Length"
             width="w-24"
+          />
+
+          <LessonGenerationOptions
+            options={languageOptions}
+            selectedValue={language}
+            onChange={setLanguage}
+            label="Language"
+            width="w-32"
           />
         </div>
 
@@ -186,6 +193,17 @@ const LessonGenerationInput = ({
                 options={lengthOptions}
                 selectedValue={length}
                 onChange={setLength}
+                label=""
+                width="w-full"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">Language</span>
+              <LessonGenerationOptions
+                options={languageOptions}
+                selectedValue={language}
+                onChange={setLanguage}
                 label=""
                 width="w-full"
               />
