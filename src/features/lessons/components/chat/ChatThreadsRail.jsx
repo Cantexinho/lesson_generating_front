@@ -32,7 +32,7 @@ const ChatThreadsRail = ({
 
   return (
     <div
-      className="flex items-center gap-2 overflow-x-auto pb-1"
+      className="flex items-center gap-2 overflow-x-auto p-1"
       ref={tabsContainerRef}
     >
       <button

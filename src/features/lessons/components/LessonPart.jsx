@@ -5,12 +5,34 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import Spinner from "./Spinner";
 import useHighlightContent from "../hooks/useHighlightContent";
 import HighlightSegments from "./HighlightSegments";
 import HighlightPopover from "./HighlightPopover";
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const remarkPlugins = [remarkGfm];
+const rehypePlugins = [rehypeHighlight];
+const markdownComponents = {
+  code({ inline, className, children }) {
+    if (inline) {
+      return (
+        <code className="rounded bg-slate-100 px-1 py-0.5 text-[0.95em] text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+          {children}
+        </code>
+      );
+    }
+    return (
+      <pre className="mb-4 mt-2 overflow-auto rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+        <code className={className}>{children}</code>
+      </pre>
+    );
+  },
+};
 
 const LessonPart = ({
   part,
@@ -29,6 +51,7 @@ const LessonPart = ({
     content,
     highlights
   );
+  const hasHighlights = Array.isArray(highlights) && highlights.length > 0;
 
   const popoverHighlights = useMemo(() => {
     if (!popoverState) {
@@ -332,12 +355,12 @@ const LessonPart = ({
               </h2>
               <div className="mt-1 h-px w-full bg-gray-300 dark:bg-gray-700" />
             </div>
-            <p
+            <div
               data-section-content
               data-section-id={part.id}
               className="whitespace-pre-wrap leading-relaxed"
             >
-              {pieces.length ? (
+              {hasHighlights ? (
                 <HighlightSegments
                   pieces={pieces}
                   anchorsByOffset={anchorsByOffset}
@@ -347,9 +370,17 @@ const LessonPart = ({
                   onSegmentActivate={handleSegmentActivate}
                 />
               ) : (
-                content
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <ReactMarkdown
+                    remarkPlugins={remarkPlugins}
+                    rehypePlugins={rehypePlugins}
+                    components={markdownComponents}
+                  >
+                    {content}
+                  </ReactMarkdown>
+                </div>
               )}
-            </p>
+            </div>
           </>
         )}
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sendLessonChat } from "../api/chatService";
 import {
   createConversation,
+  deleteConversation,
   fetchConversationMessages,
   fetchLessonConversations,
 } from "../api/conversationService";
@@ -709,7 +710,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
     );
   }, [lesson, lessonId, createServerConversation]);
 
-  const removeConversation = useCallback((conversationId) => {
+  const pruneConversationState = useCallback((conversationId) => {
     if (!conversationId) {
       return;
     }
@@ -747,7 +748,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
           );
 
           if (!updatedHighlights.length) {
-            const { [removedConversation.sectionId]: _, ...rest } =
+            const { [removedConversation.sectionId]: _omit, ...rest } =
               prevHighlights;
             return rest;
           }
@@ -788,6 +789,30 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       return nextConversations;
     });
   }, []);
+
+  const removeConversation = useCallback(
+    async (conversationId) => {
+      if (!conversationId) {
+        return;
+      }
+
+      const lessonIdentifier = lesson?.id || lessonId || null;
+
+      try {
+        await deleteConversation(conversationId);
+      } catch (error) {
+        console.error("Failed to delete conversation", error);
+        return;
+      }
+
+      pruneConversationState(conversationId);
+
+      if (lessonIdentifier) {
+        await syncConversationsFromServer(lessonIdentifier);
+      }
+    },
+    [lesson?.id, lessonId, pruneConversationState, syncConversationsFromServer]
+  );
 
   const sendMessage = useCallback(
     async (rawText) => {

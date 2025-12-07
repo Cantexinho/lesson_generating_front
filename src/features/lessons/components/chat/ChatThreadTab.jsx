@@ -12,11 +12,19 @@ const ChatThreadTab = ({
     return null;
   }
 
-  const snippetText = thread.snippet || "";
-  const snippetPreview =
-    snippetText.length > 120
-      ? `${snippetText.slice(0, 117).trimEnd()}…`
-      : snippetText;
+  const formatWithEllipsis = (value, maxLength) => {
+    const text = value || "";
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+  };
+
+  const snippetPreview = formatWithEllipsis(thread.snippet, 110);
+  const sectionTitle = formatWithEllipsis(
+    thread.sectionTitle || "Lesson section",
+    60
+  );
 
   const handleSelect = () => {
     onSelectThread?.(thread.id);
@@ -57,17 +65,15 @@ const ChatThreadTab = ({
           <p className="text-[10px] font-semibold uppercase tracking-wide">
             {thread.action}
           </p>
-          <p className="text-[11px] font-semibold text-gray-900 dark:text-white">
-            {thread.sectionTitle || "Lesson section"}
+          <p
+            className="text-[11px] font-semibold text-gray-900 dark:text-white truncate"
+            title={thread.sectionTitle || "Lesson section"}
+          >
+            {sectionTitle}
           </p>
           <p
-            className="mt-1 text-[11px] text-gray-600 dark:text-gray-300"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
+            className="mt-1 text-[11px] text-gray-600 dark:text-gray-300 truncate"
+            title={thread.snippet || ""}
           >
             {snippetPreview}
           </p>
@@ -78,10 +84,25 @@ const ChatThreadTab = ({
             event.stopPropagation();
             onCloseThread?.(thread.id);
           }}
-          className="flex-none text-lg leading-none text-gray-500 transition hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
-          aria-label={`Close conversation ${thread.sectionTitle || ""}`}
+          className="flex h-6 w-6 items-center justify-center rounded-full text-gray-500 transition hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
+          aria-label={`Delete conversation ${thread.sectionTitle || ""}`}
         >
-          ×
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4 pointer-events-none"
+            aria-hidden="true"
+          >
+            <path d="M4 7h16" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+            <path d="M6 7l1 11a2 2 0 002 2h6a2 2 0 002-2l1-11" />
+            <path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+          </svg>
         </button>
       </div>
     </div>

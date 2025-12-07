@@ -90,6 +90,15 @@ const Playground = () => {
 
   const handleLessonSelect = async (selectedLesson) => {
     resetConversationState();
+
+    if (!selectedLesson) {
+      setLesson(undefined);
+      setTitle("");
+      setLessonId(undefined);
+      setParts([]);
+      return;
+    }
+
     setLesson(selectedLesson);
     setTitle(selectedLesson.title || selectedLesson.name || "");
     setLessonId(selectedLesson.id);
@@ -128,6 +137,7 @@ const Playground = () => {
         return;
       }
 
+      setIsLessonModalOpen(false);
       setSubmitLoading(true);
 
       try {
@@ -154,7 +164,6 @@ const Playground = () => {
         setLessonId(lessonId || undefined);
         setParts(parts);
         setTitle(importedTitle || "");
-        setIsLessonModalOpen(false);
       } catch (error) {
         console.error("Failed to import lesson from PDF", error);
         if (typeof window !== "undefined") {
@@ -180,6 +189,7 @@ const Playground = () => {
         return;
       }
 
+      setIsLessonModalOpen(false);
       setSubmitLoading(true);
 
       try {
@@ -212,7 +222,6 @@ const Playground = () => {
         setLessonId(generatedLessonId || undefined);
         setParts(generatedParts);
         setTitle(generatedTitle || trimmedInput);
-        setIsLessonModalOpen(false);
       } catch (error) {
         console.error("Failed to generate lesson", error);
         if (typeof window !== "undefined") {

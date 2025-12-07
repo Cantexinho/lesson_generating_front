@@ -21,11 +21,23 @@ const parseJsonOrThrow = async (response) => {
     );
   }
 
-  if (response.status === 204) {
+  if (response.status === 204 || response.status === 202) {
     return null;
   }
 
   return response.json();
+};
+
+export const deleteConversation = async (conversationId) => {
+  if (!conversationId) {
+    throw new Error("conversationId is required to delete conversation");
+  }
+
+  const url = buildUrl(`/conversations/${encodeURIComponent(conversationId)}`);
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+  return parseJsonOrThrow(response);
 };
 
 export const fetchLessonConversations = async (lessonId) => {
