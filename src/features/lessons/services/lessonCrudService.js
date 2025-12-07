@@ -7,7 +7,30 @@ const useStaticLessons = process.env.REACT_APP_USE_STATIC_LESSONS === "true";
 
 const fetchJson = async (url, options) => {
   const response = await fetch(url, options);
-  return response.json();
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    const error = new Error(
+      `Request failed with status ${response.status} for ${url}`
+    );
+    error.status = response.status;
+    error.statusText = response.statusText;
+    error.body = responseText;
+    throw error;
+  }
+
+  if (!responseText) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(responseText);
+  } catch (parseError) {
+    const error = new Error(`Failed to parse JSON response from ${url}`);
+    error.cause = parseError;
+    error.rawBody = responseText;
+    throw error;
+  }
 };
 
 const realApi = {
@@ -106,12 +129,55 @@ const realApi = {
       body: JSON.stringify({ part_id: partId }),
       headers: { "Content-Type": "application/json" },
     }),
-  deleteLesson: (lessonId) =>
-    fetchJson(`${LESSON_API_BASE}/lesson/`, {
-      method: "DELETE",
-      body: JSON.stringify({ lesson_id: lessonId }),
-      headers: { "Content-Type": "application/json" },
-    }),
+  deleteLesson: async (lessonId) => {
+    if (!lessonId) {
+      throw new Error("lessonId is required for deleteLesson");
+    }
+
+    const deleteWithBody = () =>
+      fetchJson(`${LESSON_API_BASE}/lesson/`, {
+        method: "DELETE",
+        body: JSON.stringify({ lesson_id: lessonId }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+    const deletePluralPath = () =>
+      fetchJson(
+        `${LESSON_API_BASE}/lessons/${encodeURIComponent(lessonId || "")}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+    const deleteSingularPath = () =>
+      fetchJson(
+        `${LESSON_API_BASE}/lesson/${encodeURIComponent(lessonId || "")}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+    const shouldRetry = (error) =>
+      error && (error.status === 404 || error.status === 405);
+
+    try {
+      return await deleteWithBody();
+    } catch (error) {
+      if (!shouldRetry(error)) {
+        throw error;
+      }
+    }
+
+    try {
+      return await deletePluralPath();
+    } catch (error) {
+      if (!shouldRetry(error)) {
+        throw error;
+      }
+    }
+
+    return deleteSingularPath();
+  },
 };
 
 const mockApi = (() => {

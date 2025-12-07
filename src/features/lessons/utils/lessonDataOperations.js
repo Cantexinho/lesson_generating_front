@@ -15,6 +15,7 @@ export const fetchAllLessons = async (setLessons) => {
   });
 
   setLessons(normalized);
+  return normalized;
 };
 
 export const fetchLessonPartsById = async (lessonId) => {
@@ -56,3 +57,16 @@ export const fetchSingleLesson = async (lesson, setParts) => {
 
 const handleLessonData = async (lessonData) =>
   lessonData.sort((a, b) => a.number - b.number);
+
+export const deleteLessonById = async (lessonId) => {
+  if (!lessonId) {
+    return null;
+  }
+
+  try {
+    return await crudService.deleteLesson(lessonId);
+  } catch (err) {
+    console.error("Failed to delete lesson", err);
+    throw err;
+  }
+};
