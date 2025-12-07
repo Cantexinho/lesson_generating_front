@@ -30,8 +30,6 @@ const ChatThreadsRail = ({
     }
   }, [activeThreadId, threads]);
 
-  const orderedThreads = [...threads].slice().reverse();
-
   return (
     <div
       className="flex items-center gap-2 overflow-x-auto pb-1"
@@ -45,7 +43,7 @@ const ChatThreadsRail = ({
       >
         +
       </button>
-      {orderedThreads.map((thread) => (
+      {threads.map((thread) => (
         <ChatThreadTab
           key={thread.id}
           thread={thread}
