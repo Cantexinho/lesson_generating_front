@@ -1,4 +1,4 @@
-const DEFAULT_CHAT_ENDPOINT = "http://localhost:8000/completion";
+const DEFAULT_CHAT_ENDPOINT = "http://localhost:8000/bot-response";
 
 const getChatEndpoint = () =>
   process.env.REACT_APP_LESSON_CHAT_URL || DEFAULT_CHAT_ENDPOINT;
@@ -14,14 +14,21 @@ export const sendLessonChat = async (payload = {}) => {
     body: JSON.stringify(payload),
   });
 
+  const rawBody = await response.text();
+
   if (!response.ok) {
-    const errorBody = await response.text();
     throw new Error(
-      `Lesson chat failed (${response.status})${
-        errorBody ? `: ${errorBody}` : ""
-      }`
+      `Lesson chat failed (${response.status})${rawBody ? `: ${rawBody}` : ""}`
     );
   }
 
-  return response.json();
+  if (!rawBody) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawBody);
+  } catch (error) {
+    throw new Error("Lesson chat returned invalid JSON response.");
+  }
 };

@@ -10,13 +10,7 @@ import { importPdfLesson } from "features/lessons/services/pdfImportManager";
 import { generateLessonFromInput } from "features/lessons/services/lessonGenerationManager";
 import useLessonConversations from "features/lessons/hooks/useLessonConversations";
 
-const SELECTION_ACTIONS = [
-  { id: "ask", label: "Ask" },
-  { id: "explain", label: "Explain" },
-  { id: "expand", label: "Expand" },
-  { id: "simplify", label: "Simplify" },
-  { id: "exercises", label: "Add exercises" },
-];
+const SELECTION_ACTIONS = [{ id: "ask", label: "Ask in chat" }];
 
 const MIN_CHAT_WIDTH = 320;
 const MAX_CHAT_WIDTH = 860;
@@ -246,6 +240,56 @@ const Playground = () => {
   useEffect(() => {
     if (
       !selectionDetails ||
+      typeof window === "undefined" ||
+      typeof document === "undefined"
+    ) {
+      return undefined;
+    }
+
+    let rafId = null;
+
+    const syncSelectionPosition = () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      rafId = window.requestAnimationFrame(() => {
+        const activeSelection = window.getSelection();
+        if (!activeSelection || activeSelection.rangeCount === 0) {
+          setSelectionDetails(null);
+          setSelectionPosition(null);
+          return;
+        }
+
+        const range = activeSelection.getRangeAt(0);
+        const rect = range?.getBoundingClientRect();
+
+        if (!rect || (rect.width === 0 && rect.height === 0)) {
+          return;
+        }
+
+        setSelectionPosition({
+          top: rect.top,
+          left: rect.left + rect.width / 2,
+        });
+      });
+    };
+
+    window.addEventListener("scroll", syncSelectionPosition);
+    window.addEventListener("resize", syncSelectionPosition);
+    syncSelectionPosition();
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("scroll", syncSelectionPosition);
+      window.removeEventListener("resize", syncSelectionPosition);
+    };
+  }, [selectionDetails, setSelectionDetails, setSelectionPosition]);
+
+  useEffect(() => {
+    if (
+      !selectionDetails ||
       typeof document === "undefined" ||
       typeof window === "undefined"
     ) {
@@ -322,12 +366,15 @@ const Playground = () => {
     setSelectionPosition(payload.rect);
   }, []);
 
-  const handleSelectionAction = (actionId) => {
+  const handleSelectionAction = async (actionId) => {
     if (!selectionDetails) {
       return;
     }
 
-    const result = createConversationFromSelection(selectionDetails, actionId);
+    const result = await createConversationFromSelection(
+      selectionDetails,
+      actionId
+    );
     if (!result) {
       return;
     }
