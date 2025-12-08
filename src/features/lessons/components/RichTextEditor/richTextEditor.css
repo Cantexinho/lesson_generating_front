@@ -1,0 +1,179 @@
+/* RichTextEditor styles */
+
+.rich-text-editor {
+  @apply rounded-lg border border-gray-300 bg-white dark:border-gray-700 dark:bg-slate-900;
+}
+
+/* Read-only mode: no borders, transparent background */
+.rich-text-editor.rich-text-editor--readonly {
+  @apply border-0 bg-transparent dark:bg-transparent;
+}
+
+.rich-text-editor .ProseMirror {
+  @apply min-h-[280px] px-4 py-3 text-gray-900 outline-none dark:text-white;
+}
+
+.rich-text-editor.rich-text-editor--readonly .ProseMirror {
+  @apply min-h-0 p-0;
+}
+
+.rich-text-editor .ProseMirror:focus {
+  @apply outline-none;
+}
+
+/* Placeholder */
+.rich-text-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply pointer-events-none float-left h-0 text-gray-400 dark:text-gray-500;
+  content: attr(data-placeholder);
+}
+
+/* Typography */
+.rich-text-editor .ProseMirror p {
+  @apply mb-3 leading-relaxed;
+}
+
+.rich-text-editor .ProseMirror p:last-child {
+  @apply mb-0;
+}
+
+/* Bold, Italic, Strike */
+.rich-text-editor .ProseMirror strong {
+  @apply font-bold;
+}
+
+.rich-text-editor .ProseMirror em {
+  @apply italic;
+}
+
+.rich-text-editor .ProseMirror s {
+  @apply line-through;
+}
+
+/* Inline code */
+.rich-text-editor .ProseMirror code {
+  @apply rounded border border-slate-200 bg-slate-100 px-1 py-0.5 text-[0.95em] text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100;
+}
+
+/* Read-only: subtle inline code */
+.rich-text-editor.rich-text-editor--readonly .ProseMirror code {
+  @apply bg-gray-200/50 dark:bg-gray-700/50;
+}
+
+/* Code blocks */
+.rich-text-editor .ProseMirror pre {
+  @apply my-3 overflow-auto rounded border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-700 dark:bg-slate-800;
+}
+
+.rich-text-editor .ProseMirror pre code {
+  @apply border-0 bg-transparent p-0;
+}
+
+/* Read-only: code blocks match section background */
+.rich-text-editor.rich-text-editor--readonly .ProseMirror pre {
+  @apply bg-gray-100/50 dark:bg-gray-800/50;
+}
+
+/* Blockquote */
+.rich-text-editor .ProseMirror blockquote {
+  @apply my-3 border-l-4 border-blue-400 pl-4 text-gray-700 dark:text-gray-300;
+}
+
+/* Horizontal rule */
+.rich-text-editor .ProseMirror hr {
+  @apply my-4 border-t border-gray-300 dark:border-gray-600;
+}
+
+/* Lists */
+.rich-text-editor .ProseMirror ul {
+  @apply my-2 ml-6 list-disc;
+}
+
+.rich-text-editor .ProseMirror ol {
+  @apply my-2 ml-6 list-decimal;
+}
+
+.rich-text-editor .ProseMirror li {
+  @apply mb-1 leading-relaxed;
+}
+
+.rich-text-editor .ProseMirror li p {
+  @apply mb-0;
+}
+
+/* Task list */
+.rich-text-editor .ProseMirror ul[data-type="taskList"] {
+  @apply ml-0 list-none;
+}
+
+.rich-text-editor .ProseMirror ul[data-type="taskList"] li {
+  @apply flex items-start gap-2;
+}
+
+.rich-text-editor .ProseMirror ul[data-type="taskList"] li > label {
+  @apply mt-0.5 flex-shrink-0;
+}
+
+.rich-text-editor .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  @apply h-4 w-4 cursor-pointer accent-blue-600;
+}
+
+.rich-text-editor .ProseMirror ul[data-type="taskList"] li > div {
+  @apply flex-1;
+}
+
+/* Links */
+.rich-text-editor .ProseMirror a {
+  @apply text-blue-600 underline dark:text-blue-400;
+}
+
+.rich-text-editor .ProseMirror a:hover {
+  @apply text-blue-800 dark:text-blue-300;
+}
+
+/* Tables */
+.rich-text-editor .ProseMirror table {
+  @apply my-3 w-full border-collapse overflow-hidden rounded;
+}
+
+.rich-text-editor .ProseMirror table td,
+.rich-text-editor .ProseMirror table th {
+  @apply border border-gray-300 px-3 py-2 text-left dark:border-gray-600;
+  min-width: 80px;
+}
+
+.rich-text-editor .ProseMirror table th {
+  @apply bg-gray-100 font-semibold dark:bg-gray-800;
+}
+
+.rich-text-editor .ProseMirror table td {
+  @apply bg-white dark:bg-gray-900;
+}
+
+/* Read-only: transparent table cell backgrounds */
+.rich-text-editor.rich-text-editor--readonly .ProseMirror table th {
+  @apply bg-gray-200/50 dark:bg-gray-700/50;
+}
+
+.rich-text-editor.rich-text-editor--readonly .ProseMirror table td {
+  @apply bg-transparent;
+}
+
+/* Selected table cells */
+.rich-text-editor .ProseMirror .selectedCell {
+  @apply bg-blue-100 dark:bg-blue-900/30;
+}
+
+/* Table resize handle */
+.rich-text-editor .ProseMirror .tableWrapper {
+  @apply overflow-x-auto;
+}
+
+.rich-text-editor .ProseMirror .column-resize-handle {
+  @apply absolute right-[-2px] top-0 z-10 w-1 cursor-col-resize bg-blue-500;
+  bottom: -2px;
+}
+
+.rich-text-editor .ProseMirror.resize-cursor {
+  @apply cursor-col-resize;
+}
+

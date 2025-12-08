@@ -80,7 +80,7 @@ export const extractTextFromPdf = async (file) => {
 
 const SECTION_CHAR_TARGET = 1200;
 
-export const buildLessonPartsFromText = (text) => {
+export const buildLessonSectionsFromText = (text) => {
   if (!text) {
     return [];
   }

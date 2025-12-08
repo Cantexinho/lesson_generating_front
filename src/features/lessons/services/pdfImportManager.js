@@ -1,6 +1,6 @@
 import { extractPdfContent, buildPdfImportRequest } from "../utils/pdfImport";
 import { importLessonFromPdf } from "../api/pdfImportService";
-import { fetchLessonPartsById } from "../utils/lessonDataOperations";
+import { fetchLessonSectionsById } from "../utils/lessonDataOperations";
 
 const logDebug = (message, payload) => {
   if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
@@ -31,8 +31,8 @@ export const importPdfLesson = async (file) => {
     );
   }
 
-  const parts = await fetchLessonPartsById(lessonId);
-  if (!parts?.length) {
+  const sections = await fetchLessonSectionsById(lessonId);
+  if (!sections?.length) {
     throw new Error(
       "Imported lesson does not have any sections yet. Please try again shortly."
     );
@@ -40,7 +40,7 @@ export const importPdfLesson = async (file) => {
 
   return {
     lessonId,
-    parts,
+    sections,
     title: apiResponse?.title || "",
     language: apiResponse?.language || null,
     metadata: {
