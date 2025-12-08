@@ -1,5 +1,5 @@
 import { requestLessonGeneration } from "../api/lessonGenerationService";
-import { fetchLessonPartsById } from "../utils/lessonDataOperations";
+import { fetchLessonSectionsById } from "../utils/lessonDataOperations";
 
 const buildGenerationPayload = ({
   userInput,
@@ -46,8 +46,8 @@ export const generateLessonFromInput = async ({
     );
   }
 
-  const parts = await fetchLessonPartsById(lessonId);
-  if (!parts?.length) {
+  const sections = await fetchLessonSectionsById(lessonId);
+  if (!sections?.length) {
     throw new Error(
       "Generated lesson does not have any sections yet. Please try again shortly."
     );
@@ -55,7 +55,7 @@ export const generateLessonFromInput = async ({
 
   return {
     lessonId,
-    parts,
+    sections,
     title: apiResponse?.title || trimmedInput,
     language: apiResponse?.language || language || null,
     metadata: apiResponse?.metadata || null,

@@ -1,19 +1,18 @@
 import * as crudService from "../services/lessonCrudService";
 
 export const handleDeleteLesson = async (
-  title,
   lessonId,
   setSubmitLoading,
-  setParts
+  setSections
 ) => {
   setSubmitLoading(true);
-
-  let lessonData = await crudService.fetchLessonByName(title);
-  if (lessonData) {
-    await crudService.deleteLesson(lessonData.id);
-  } else {
+  try {
+    if (!lessonId) {
+      throw new Error("lessonId is required to delete a lesson");
+    }
     await crudService.deleteLesson(lessonId);
+    setSections([]);
+  } finally {
+    setSubmitLoading(false);
   }
-  setParts([]);
-  setSubmitLoading(false);
 };

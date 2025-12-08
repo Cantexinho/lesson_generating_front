@@ -65,7 +65,7 @@ const sortConversationsByRecency = (threads = []) =>
     return bTime - aTime;
   });
 
-const alignOffsetsToSectionContent = (parts, selectionDetails) => {
+const alignOffsetsToSectionContent = (sections, selectionDetails) => {
   if (
     !selectionDetails?.sectionId ||
     !selectionDetails.text ||
@@ -74,10 +74,10 @@ const alignOffsetsToSectionContent = (parts, selectionDetails) => {
     return selectionDetails?.offsets || null;
   }
 
-  const section = parts.find(
-    (part) => String(part.id) === String(selectionDetails.sectionId)
+  const section = sections.find(
+    (section) => String(section.id) === String(selectionDetails.sectionId)
   );
-  const sectionContent = section?.lesson_part_content || "";
+  const sectionContent = section?.lesson_section_content || "";
 
   if (!sectionContent) {
     return selectionDetails.offsets;
@@ -265,7 +265,7 @@ const normalizeMessageRecord = (message, fallbackMeta) => {
   };
 };
 
-const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
+const useLessonConversations = ({ lesson, lessonId, sections = [] }) => {
   const [conversations, setConversations] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState(null);
   const [messagesByConversation, setMessagesByConversation] = useState({});
@@ -431,13 +431,13 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
   }, []);
 
   useEffect(() => {
-    if (!parts.length) {
+    if (!sections.length) {
       setHighlightsBySection({});
       return;
     }
 
     setHighlightsBySection((prev) => {
-      const validSectionIds = new Set(parts.map((part) => part.id));
+      const validSectionIds = new Set(sections.map((section) => section.id));
       const nextHighlights = {};
 
       validSectionIds.forEach((sectionId) => {
@@ -448,7 +448,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
 
       return nextHighlights;
     });
-  }, [parts]);
+  }, [sections]);
 
   const syncConversationsFromServer = useCallback(async (lessonIdentifier) => {
     if (!lessonIdentifier) {
@@ -638,7 +638,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
       }
 
       const alignedOffsets = alignOffsetsToSectionContent(
-        parts,
+        sections,
         selectionDetails
       );
 
@@ -690,7 +690,7 @@ const useLessonConversations = ({ lesson, lessonId, parts = [] }) => {
         actionPayload,
       };
     },
-    [lesson, lessonId, parts, createServerConversation]
+    [lesson, lessonId, sections, createServerConversation]
   );
 
   const startGeneralConversation = useCallback(async () => {

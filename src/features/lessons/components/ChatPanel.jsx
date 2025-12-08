@@ -4,6 +4,7 @@ import ChatThreadsRail from "./chat/ChatThreadsRail";
 import ChatMessages from "./chat/ChatMessages";
 import ChatReferencePreview from "./chat/ChatReferencePreview";
 import ChatInputBox from "./chat/ChatInputBox";
+import Spinner from "./Spinner";
 
 const ChatPanel = ({
   threads = [],
@@ -73,6 +74,12 @@ const ChatPanel = ({
 
       <div className="flex-1 overflow-y-auto px-4 py-3" ref={messagesScrollRef}>
         <ChatMessages hasActiveThread={hasActiveThread} messages={messages} />
+        {isSubmitting && hasActiveThread && (
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <Spinner />
+            Waiting for the bot…
+          </div>
+        )}
       </div>
 
       <div className="border-t border-gray-200 p-4 dark:border-gray-800">

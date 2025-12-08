@@ -1,12 +1,12 @@
 const baseLesson = (id, name, sections) => ({
   id,
   name,
-  parts: sections.map((section, index) => ({
-    id: `${id}-part-${index + 1}`,
+  sections: sections.map((section, index) => ({
+    id: `${id}-section-${index + 1}`,
     lesson_id: id,
     number: index + 1,
     name: section.name,
-    lesson_part_content: section.content,
+    lesson_section_content: section.content,
   })),
 });
 
@@ -67,17 +67,17 @@ export const MOCK_LESSONS = [
 const randomId = (prefix) =>
   `${prefix}-${Math.random().toString(36).slice(2, 10)}-${Date.now()}`;
 
-export const createMockLesson = (title, partCount = 3) => {
+export const createMockLesson = (title, sectionCount = 3) => {
   const normalizedTitle = title?.trim() || "Untitled Lesson";
   const lessonId = randomId("mock-lesson");
-  const totalParts = Math.max(1, Number(partCount) || 1);
+  const totalSections = Math.max(1, Number(sectionCount) || 1);
 
-  const parts = Array.from({ length: totalParts }, (_, index) => ({
-    id: `${lessonId}-part-${index + 1}`,
+  const sections = Array.from({ length: totalSections }, (_, index) => ({
+    id: `${lessonId}-section-${index + 1}`,
     lesson_id: lessonId,
     number: index + 1,
-    name: `${normalizedTitle} - Part ${index + 1}`,
-    lesson_part_content: `Placeholder content for ${normalizedTitle}, section ${
+    name: `${normalizedTitle} - Section ${index + 1}`,
+    lesson_section_content: `Placeholder content for ${normalizedTitle}, section ${
       index + 1
     }.`,
   }));
@@ -85,6 +85,6 @@ export const createMockLesson = (title, partCount = 3) => {
   return {
     id: lessonId,
     name: normalizedTitle,
-    parts,
+    sections,
   };
 };

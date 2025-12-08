@@ -5,53 +5,60 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPenToSquare,
+  faFloppyDisk,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import "./LessonSection.css";
 import Spinner from "./Spinner";
 import useHighlightContent from "../hooks/useHighlightContent";
 import HighlightSegments from "./HighlightSegments";
 import HighlightPopover from "./HighlightPopover";
+import RichTextEditor from "./RichTextEditor";
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
-const remarkPlugins = [remarkGfm];
-const rehypePlugins = [rehypeHighlight];
-const markdownComponents = {
-  code({ inline, className, children }) {
-    if (inline) {
-      return (
-        <code className="rounded bg-slate-100 px-1 py-0.5 text-[0.95em] text-slate-900 dark:bg-slate-900 dark:text-slate-100">
-          {children}
-        </code>
-      );
-    }
-    return (
-      <pre className="mb-4 mt-2 overflow-auto rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-        <code className={className}>{children}</code>
-      </pre>
-    );
-  },
-};
+const resolveSectionContent = (section) =>
+  section?.lesson_section_content ??
+  section?.lesson_part_content ??
+  section?.text ??
+  section?.content ??
+  "";
 
-const LessonPart = ({
-  part,
+const LessonSection = ({
+  section,
   loading,
   highlights = [],
   onHighlightSelect,
   activeHighlightId = null,
   previewHighlightId = null,
+  onSectionSave,
+  onEditingChange,
+  isEditing = false,
 }) => {
-  const content = part.lesson_part_content || "";
+  const sectionId = section.id;
+  const content = resolveSectionContent(section);
   const contentWrapperRef = useRef(null);
   const popoverRef = useRef(null);
   const [popoverState, setPopoverState] = useState(null);
+  const [draftContent, setDraftContent] = useState(content);
+  const [draftTitle, setDraftTitle] = useState(section.name || "");
+  const [isSaving, setIsSaving] = useState(false);
+  const sectionLoading = Boolean(loading[sectionId]);
+  const highlightSource = isEditing ? [] : highlights;
+  const fallbackTitle =
+    (section.name && section.name.trim().length ? section.name.trim() : null) ||
+    "Untitled section";
+  const titleInputId = `lesson-section-title-${sectionId}`;
 
   const { pieces, anchorsByOffset, highlightLookup } = useHighlightContent(
     content,
-    highlights
+    highlightSource
   );
-  const hasHighlights = Array.isArray(highlights) && highlights.length > 0;
+  const hasHighlights =
+    Array.isArray(highlightSource) && highlightSource.length > 0;
 
   const popoverHighlights = useMemo(() => {
     if (!popoverState) {
@@ -95,6 +102,81 @@ const LessonPart = ({
   const closePopover = useCallback(() => {
     setPopoverState(null);
   }, []);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setDraftContent(content);
+      setDraftTitle(section.name || "");
+      setIsSaving(false);
+    }
+  }, [content, section.name, isEditing]);
+
+  useEffect(() => {
+    if (isEditing) {
+      closePopover();
+    }
+  }, [isEditing, closePopover]);
+
+  const handleEditorChange = useCallback((value) => {
+    setDraftContent(value ?? "");
+  }, []);
+
+  const handleEnterEdit = useCallback(() => {
+    if (isEditing || sectionLoading) {
+      return;
+    }
+    setDraftContent(content);
+    setDraftTitle(section.name || "");
+    setPopoverState(null);
+    onEditingChange?.(sectionId);
+  }, [isEditing, sectionLoading, content, section.name, onEditingChange, sectionId]);
+
+  const handleCancelEdit = useCallback(() => {
+    if (isSaving) {
+      return;
+    }
+    setDraftContent(content);
+    setDraftTitle(section.name || "");
+    setPopoverState(null);
+    onEditingChange?.(null);
+  }, [isSaving, content, section.name, onEditingChange]);
+
+  const handleTitleChange = useCallback((event) => {
+    setDraftTitle(event.target.value);
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    if (isSaving || !onSectionSave) {
+      return;
+    }
+    try {
+      setIsSaving(true);
+      const normalizedTitle = (draftTitle || "").trim() || fallbackTitle;
+      await onSectionSave(sectionId, {
+        text: draftContent ?? "",
+        title: normalizedTitle,
+      });
+      setPopoverState(null);
+      onEditingChange?.(null);
+    } catch (error) {
+      console.error("Failed to save section", error);
+      if (typeof window !== "undefined") {
+        window.alert(
+          error?.message || "Unable to save section. Please try again."
+        );
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  }, [
+    isSaving,
+    onSectionSave,
+    sectionId,
+    draftContent,
+    draftTitle,
+    fallbackTitle,
+    onEditingChange,
+  ]);
 
   useEffect(() => {
     if (!popoverState) {
@@ -195,7 +277,7 @@ const LessonPart = ({
 
   const handlePopoverSelect = useCallback(
     (highlightId) => {
-      if (!highlightId) {
+      if (!highlightId || isEditing) {
         return;
       }
       onHighlightSelect?.(highlightId);
@@ -208,11 +290,14 @@ const LessonPart = ({
           : prev
       );
     },
-    [onHighlightSelect]
+    [onHighlightSelect, isEditing]
   );
 
   const handleCycle = useCallback(
     (direction) => {
+      if (isEditing) {
+        return;
+      }
       setPopoverState((prev) => {
         if (!prev || prev.highlightIds.length < 2) {
           return prev;
@@ -236,12 +321,12 @@ const LessonPart = ({
         return prev;
       });
     },
-    [onHighlightSelect]
+    [onHighlightSelect, isEditing]
   );
 
   const handlePopoverKeyDown = useCallback(
     (event) => {
-      if (!popoverState) {
+      if (!popoverState || isEditing) {
         return;
       }
       if (event.key === "ArrowRight") {
@@ -255,11 +340,14 @@ const LessonPart = ({
         closePopover();
       }
     },
-    [popoverState, handleCycle, closePopover]
+    [popoverState, handleCycle, closePopover, isEditing]
   );
 
   const handleSegmentActivate = useCallback(
     (segment, blockContext, event) => {
+      if (isEditing) {
+        return;
+      }
       if (!segment.highlightIds.length) {
         return;
       }
@@ -330,37 +418,98 @@ const LessonPart = ({
       highlightLookup,
       onHighlightSelect,
       computePopoverMetrics,
+      isEditing,
     ]
   );
 
   return (
     <div
       className="relative flex w-full justify-between text-xs md:text-base"
-      data-lesson-section={part.id}
-      data-section-title={part.name}
+      data-lesson-section={sectionId}
+      data-section-title={section.name}
     >
       <div
         className="relative w-full border border-gray-300 bg-secondary p-4 text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
         ref={contentWrapperRef}
       >
-        {loading[part.id] ? (
+        <div className="absolute right-4 top-4 flex gap-2 text-xs font-semibold">
+          {isEditing ? (
+            <>
+              <button
+                type="button"
+                className="flex items-center gap-1 rounded bg-green-600 px-3 py-1 text-white disabled:opacity-60"
+                onClick={handleSave}
+                disabled={isSaving || sectionLoading}
+              >
+                <FontAwesomeIcon icon={faFloppyDisk} className="h-3.5 w-3.5" />
+                {isSaving ? "Saving..." : "Save"}
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-1 rounded border border-gray-400 px-3 py-1 text-gray-700 dark:text-gray-100 disabled:opacity-60"
+                onClick={handleCancelEdit}
+                disabled={isSaving}
+              >
+                <FontAwesomeIcon icon={faXmark} className="h-3.5 w-3.5" />
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="flex items-center gap-1 rounded border border-gray-400 px-3 py-1 text-gray-700 dark:text-gray-100 disabled:opacity-60"
+              onClick={handleEnterEdit}
+              disabled={sectionLoading}
+              aria-label="Edit section"
+            >
+              <FontAwesomeIcon icon={faPenToSquare} className="h-3.5 w-3.5" />
+              Edit
+            </button>
+          )}
+        </div>
+        {sectionLoading ? (
           <div className="flex w-full items-center justify-center">
             <Spinner />
           </div>
         ) : (
           <>
-            <div className="mb-3">
-              <h2 className="text-lg font-semibold text-black dark:text-white">
-                {part.name}
-              </h2>
+            <div className={`mb-2 ${isEditing ? "mt-2" : ""}`}>
+              {isEditing ? (
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor={titleInputId}
+                    className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                  >
+                    Section title
+                  </label>
+                  <input
+                    id={titleInputId}
+                    type="text"
+                    className="rounded border border-gray-300 bg-white px-3 py-2 text-base font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                    value={draftTitle}
+                    onChange={handleTitleChange}
+                    placeholder="Enter a title for this section"
+                  />
+                </div>
+              ) : (
+                <h2 className="text-lg font-semibold text-black dark:text-white">
+                  {section.name || fallbackTitle}
+                </h2>
+              )}
               <div className="mt-1 h-px w-full bg-gray-300 dark:bg-gray-700" />
             </div>
             <div
               data-section-content
-              data-section-id={part.id}
-              className="whitespace-pre-wrap leading-relaxed"
+              data-section-id={sectionId}
+              className="lesson-section-content leading-relaxed"
             >
-              {hasHighlights ? (
+              {isEditing ? (
+                <RichTextEditor
+                  value={draftContent}
+                  onChange={handleEditorChange}
+                  placeholder="Update this section's content…"
+                />
+              ) : hasHighlights ? (
                 <HighlightSegments
                   pieces={pieces}
                   anchorsByOffset={anchorsByOffset}
@@ -370,31 +519,25 @@ const LessonPart = ({
                   onSegmentActivate={handleSegmentActivate}
                 />
               ) : (
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown
-                    remarkPlugins={remarkPlugins}
-                    rehypePlugins={rehypePlugins}
-                    components={markdownComponents}
-                  >
-                    {content}
-                  </ReactMarkdown>
-                </div>
+                <RichTextEditor value={content} readOnly />
               )}
             </div>
           </>
         )}
 
       </div>
-      <HighlightPopover
-        popoverState={popoverState}
-        popoverHighlights={popoverHighlights}
-        handleCycle={handleCycle}
-        handlePopoverSelect={handlePopoverSelect}
-        handlePopoverKeyDown={handlePopoverKeyDown}
-        popoverRef={popoverRef}
-      />
+      {!isEditing && (
+        <HighlightPopover
+          popoverState={popoverState}
+          popoverHighlights={popoverHighlights}
+          handleCycle={handleCycle}
+          handlePopoverSelect={handlePopoverSelect}
+          handlePopoverKeyDown={handlePopoverKeyDown}
+          popoverRef={popoverRef}
+        />
+      )}
     </div>
   );
 };
 
-export default LessonPart;
+export default LessonSection;

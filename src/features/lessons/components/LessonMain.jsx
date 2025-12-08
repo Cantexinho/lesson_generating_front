@@ -1,11 +1,10 @@
 import { useCallback } from "react";
 import Spinner from "./Spinner";
-import * as partHandlers from "../utils/partHandlers";
-import LessonPart from "./LessonPart";
+import LessonSection from "./LessonSection";
 
 const LessonMain = ({
-  parts,
-  setParts,
+  sections,
+  setSections,
   title,
   loading,
   setLoading,
@@ -15,9 +14,16 @@ const LessonMain = ({
   onHighlightSelect,
   activeHighlightId,
   previewHighlightId,
+  onSectionSave,
+  editingSectionId,
+  onEditingChange,
 }) => {
   const handleLessonMouseUp = useCallback(() => {
-    if (!onTextSelection || typeof window === "undefined") {
+    if (
+      !onTextSelection ||
+      typeof window === "undefined" ||
+      editingSectionId
+    ) {
       return;
     }
 
@@ -100,7 +106,7 @@ const LessonMain = ({
         left: rect.left + rect.width / 2,
       },
     });
-  }, [onTextSelection]);
+  }, [onTextSelection, editingSectionId]);
 
   return (
     <div className="flex h-full w-full justify-center overflow-y-auto">
@@ -112,20 +118,27 @@ const LessonMain = ({
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />
           </div>
-        ) : parts.length === 0 ? (
+        ) : sections.length === 0 ? (
           <div className="flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
             Generate a lesson to see its content here.
           </div>
         ) : (
-          parts.map((part) => (
-            <LessonPart
-              key={part.id}
-              part={part}
+          sections.map((section) => (
+            <LessonSection
+              key={section.id}
+              section={section}
               loading={loading}
-              highlights={highlights?.[part.id] || []}
-              onHighlightSelect={onHighlightSelect}
-              activeHighlightId={activeHighlightId}
-              previewHighlightId={previewHighlightId}
+              highlights={
+                editingSectionId ? [] : highlights?.[section.id] || []
+              }
+              onHighlightSelect={
+                editingSectionId ? undefined : onHighlightSelect
+              }
+              activeHighlightId={editingSectionId ? null : activeHighlightId}
+              previewHighlightId={editingSectionId ? null : previewHighlightId}
+              onSectionSave={onSectionSave}
+              onEditingChange={onEditingChange}
+              isEditing={editingSectionId === section.id}
             />
           ))
         )}

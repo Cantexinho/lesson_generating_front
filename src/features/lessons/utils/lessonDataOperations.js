@@ -18,7 +18,7 @@ export const fetchAllLessons = async (setLessons) => {
   return normalized;
 };
 
-export const fetchLessonPartsById = async (lessonId) => {
+export const fetchLessonSectionsById = async (lessonId) => {
   try {
     const lessonRecord = await crudService.fetchLessonById(lessonId);
     const sections = lessonRecord?.sections || [];
@@ -31,7 +31,7 @@ export const fetchLessonPartsById = async (lessonId) => {
         number:
           typeof section.position === "number" ? section.position : index + 1,
         name: section.title?.trim() || `Section ${index + 1}`,
-        lesson_part_content: section.text || "",
+        lesson_section_content: section.text || "",
       }))
       .sort((a, b) => a.number - b.number);
   } catch (err) {
@@ -40,15 +40,15 @@ export const fetchLessonPartsById = async (lessonId) => {
   }
 };
 
-export const fetchSingleLesson = async (lesson, setParts) => {
+export const fetchSingleLesson = async (lesson, setSections) => {
   if (!lesson?.id) {
     return;
   }
 
   try {
-    const parts = await fetchLessonPartsById(lesson.id);
-    setParts(parts);
-    return parts;
+    const sections = await fetchLessonSectionsById(lesson.id);
+    setSections(sections);
+    return sections;
   } catch (err) {
     console.error(err);
     throw err;
@@ -69,4 +69,29 @@ export const deleteLessonById = async (lessonId) => {
     console.error("Failed to delete lesson", err);
     throw err;
   }
+};
+
+export const updateLessonSectionContent = async (
+  lessonId,
+  sectionId,
+  payload
+) => {
+  if (!lessonId || !sectionId) {
+    throw new Error("lessonId and sectionId are required");
+  }
+  const normalizedPayload =
+    typeof payload === "string" ? { text: payload } : { ...(payload || {}) };
+  const textToSend =
+    typeof normalizedPayload.text === "string" ? normalizedPayload.text : "";
+  const titleToSend =
+    typeof normalizedPayload.title === "string"
+      ? normalizedPayload.title
+      : undefined;
+  await crudService.updateLessonSection({
+    lessonId,
+    sectionId,
+    text: textToSend,
+    title: titleToSend,
+  });
+  return fetchLessonSectionsById(lessonId);
 };

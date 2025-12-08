@@ -20,7 +20,7 @@ const NAV_WIDTH = 240;
 const Playground = () => {
   const [title, setTitle] = useState("");
   const [lessonId, setLessonId] = useState();
-  const [parts, setParts] = useState([]);
+  const [sections, setSections] = useState([]);
   const [pgMainState, setPgMainState] = useState([]);
   const [loading, setLoading] = useState({});
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -33,6 +33,7 @@ const Playground = () => {
   const [isResizingChat, setIsResizingChat] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [previewHighlightId, setPreviewHighlightId] = useState(null);
+  const [editingSectionId, setEditingSectionId] = useState(null);
 
   const {
     conversations,
@@ -48,7 +49,7 @@ const Playground = () => {
     removeConversation,
     startGeneralConversation,
     sendMessage,
-  } = useLessonConversations({ lesson, lessonId, parts });
+  } = useLessonConversations({ lesson, lessonId, sections });
 
   const activeHighlightId = useMemo(() => {
     const activeThread = conversations.find(
@@ -66,7 +67,8 @@ const Playground = () => {
     setSelectionDetails(null);
     setSelectionPosition(null);
     setPreviewHighlightId(null);
-  }, [resetConversations, setPreviewHighlightId]);
+    setEditingSectionId(null);
+  }, [resetConversations, setPreviewHighlightId, setEditingSectionId]);
   useEffect(() => {
     if (
       previewHighlightId &&
@@ -88,6 +90,64 @@ const Playground = () => {
     inputHandlers.handleTitleChange(e, setTitle);
   };
 
+  const handleEditingChange = useCallback(
+    (nextSectionId) => {
+      setEditingSectionId(nextSectionId);
+      if (nextSectionId) {
+        setSelectionDetails(null);
+        setSelectionPosition(null);
+      }
+    },
+    [setEditingSectionId, setSelectionDetails, setSelectionPosition]
+  );
+
+  const handleSectionSave = useCallback(
+    async (sectionId, data) => {
+      if (!lesson?.id) {
+        throw new Error("Select a lesson before editing its sections.");
+      }
+      if (!sectionId) {
+        throw new Error("A sectionId is required to save changes.");
+      }
+      const normalizedData =
+        typeof data === "string" ? { text: data } : { ...(data || {}) };
+      const normalizedText =
+        typeof normalizedData.text === "string"
+          ? normalizedData.text
+          : String(normalizedData.text ?? "");
+      const normalizedTitle =
+        typeof normalizedData.title === "string"
+          ? normalizedData.title.trim()
+          : undefined;
+      setLoading((prev) => ({
+        ...prev,
+        [sectionId]: true,
+      }));
+      try {
+        const updatedSections =
+          await lessonDataOperations.updateLessonSectionContent(
+            lesson.id,
+            sectionId,
+            {
+              text: normalizedText,
+              title: normalizedTitle,
+            }
+          );
+        setSections(updatedSections);
+      } catch (error) {
+        console.error("Failed to update lesson section", error);
+        throw error;
+      } finally {
+        setLoading((prev) => {
+          const next = { ...prev };
+          delete next[sectionId];
+          return next;
+        });
+      }
+    },
+    [lesson, setSections, setLoading]
+  );
+
   const handleLessonSelect = async (selectedLesson) => {
     resetConversationState();
 
@@ -95,7 +155,7 @@ const Playground = () => {
       setLesson(undefined);
       setTitle("");
       setLessonId(undefined);
-      setParts([]);
+      setSections([]);
       return;
     }
 
@@ -110,7 +170,7 @@ const Playground = () => {
     }
 
     const fetchData = async () => {
-      await lessonDataOperations.fetchSingleLesson(lesson, setParts);
+      await lessonDataOperations.fetchSingleLesson(lesson, setSections);
     };
 
     fetchData();
@@ -122,7 +182,7 @@ const Playground = () => {
     }
 
     setTitle("");
-    setParts([]);
+    setSections([]);
     resetConversationState();
     setIsLessonModalOpen(true);
   };
@@ -143,7 +203,7 @@ const Playground = () => {
       try {
         const {
           lessonId,
-          parts,
+          sections,
           title: importedTitle,
           metadata,
           language,
@@ -162,7 +222,7 @@ const Playground = () => {
             : undefined
         );
         setLessonId(lessonId || undefined);
-        setParts(parts);
+        setSections(sections);
         setTitle(importedTitle || "");
       } catch (error) {
         console.error("Failed to import lesson from PDF", error);
@@ -195,7 +255,7 @@ const Playground = () => {
       try {
         const {
           lessonId: generatedLessonId,
-          parts: generatedParts,
+          sections: generatedSections,
           title: generatedTitle,
           language: generatedLanguage,
           metadata,
@@ -220,7 +280,7 @@ const Playground = () => {
             : undefined
         );
         setLessonId(generatedLessonId || undefined);
-        setParts(generatedParts);
+        setSections(generatedSections);
         setTitle(generatedTitle || trimmedInput);
       } catch (error) {
         console.error("Failed to generate lesson", error);
@@ -238,13 +298,13 @@ const Playground = () => {
   );
 
   useEffect(() => {
-    setPgMainState(parts);
-  }, [parts]);
+    setPgMainState(sections);
+  }, [sections]);
 
   useEffect(() => {
     setSelectionDetails(null);
     setSelectionPosition(null);
-  }, [parts]);
+  }, [sections]);
 
   useEffect(() => {
     if (
@@ -364,19 +424,25 @@ const Playground = () => {
     };
   }, [isResizingChat]);
 
-  const handleTextSelection = useCallback((payload) => {
-    if (!payload || !payload.text) {
-      setSelectionDetails(null);
-      setSelectionPosition(null);
-      return;
-    }
+  const handleTextSelection = useCallback(
+    (payload) => {
+      if (editingSectionId) {
+        return;
+      }
+      if (!payload || !payload.text) {
+        setSelectionDetails(null);
+        setSelectionPosition(null);
+        return;
+      }
 
-    setSelectionDetails(payload);
-    setSelectionPosition(payload.rect);
-  }, []);
+      setSelectionDetails(payload);
+      setSelectionPosition(payload.rect);
+    },
+    [editingSectionId, setSelectionDetails, setSelectionPosition]
+  );
 
   const handleSelectionAction = async (actionId) => {
-    if (!selectionDetails) {
+    if (!selectionDetails || editingSectionId) {
       return;
     }
 
@@ -494,8 +560,8 @@ const Playground = () => {
         style={lessonViewportStyle}
       >
         <LessonMain
-          parts={parts}
-          setParts={setParts}
+          sections={sections}
+          setSections={setSections}
           title={title}
           loading={loading}
           setLoading={setLoading}
@@ -505,6 +571,9 @@ const Playground = () => {
           onHighlightSelect={handleHighlightSelect}
           activeHighlightId={activeHighlightId}
           previewHighlightId={previewHighlightId}
+          onSectionSave={handleSectionSave}
+          editingSectionId={editingSectionId}
+          onEditingChange={handleEditingChange}
         />
       </div>
       <div
@@ -540,7 +609,7 @@ const Playground = () => {
         </div>
       </div>
       <SelectionActions
-        visible={Boolean(selectionDetails)}
+        visible={Boolean(selectionDetails) && !editingSectionId}
         position={selectionPosition}
         actions={SELECTION_ACTIONS}
         onAction={handleSelectionAction}
