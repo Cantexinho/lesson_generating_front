@@ -560,6 +560,7 @@ const Playground = () => {
         style={lessonViewportStyle}
       >
         <LessonMain
+          lessonId={lessonId}
           sections={sections}
           setSections={setSections}
           title={title}

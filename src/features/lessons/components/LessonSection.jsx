@@ -14,6 +14,7 @@ import {
 import Spinner from "./Spinner";
 import HighlightPopover from "./HighlightPopover";
 import RichTextEditor from "./RichTextEditor";
+import ExercisesBlock from "./ExercisesBlock";
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -25,6 +26,7 @@ const resolveSectionContent = (section) =>
   "";
 
 const LessonSection = ({
+  lessonId,
   section,
   loading,
   highlights = [],
@@ -491,6 +493,12 @@ const LessonSection = ({
                 />
               )}
             </div>
+            {!isEditing && lessonId && (
+              <ExercisesBlock
+                lessonId={lessonId}
+                sectionId={sectionId}
+              />
+            )}
           </>
         )}
 
