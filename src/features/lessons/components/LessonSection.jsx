@@ -11,10 +11,7 @@ import {
   faFloppyDisk,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import "./LessonSection.css";
 import Spinner from "./Spinner";
-import useHighlightContent from "../hooks/useHighlightContent";
-import HighlightSegments from "./HighlightSegments";
 import HighlightPopover from "./HighlightPopover";
 import RichTextEditor from "./RichTextEditor";
 
@@ -53,12 +50,13 @@ const LessonSection = ({
     "Untitled section";
   const titleInputId = `lesson-section-title-${sectionId}`;
 
-  const { pieces, anchorsByOffset, highlightLookup } = useHighlightContent(
-    content,
-    highlightSource
-  );
-  const hasHighlights =
-    Array.isArray(highlightSource) && highlightSource.length > 0;
+  const highlightLookup = useMemo(() => {
+    const lookup = {};
+    highlightSource.forEach((highlight) => {
+      lookup[highlight.id] = highlight;
+    });
+    return lookup;
+  }, [highlightSource]);
 
   const popoverHighlights = useMemo(() => {
     if (!popoverState) {
@@ -343,12 +341,18 @@ const LessonSection = ({
     [popoverState, handleCycle, closePopover, isEditing]
   );
 
-  const handleSegmentActivate = useCallback(
-    (segment, blockContext, event) => {
+  const handleHighlightClick = useCallback(
+    (highlightIds, rect, event) => {
       if (isEditing) {
         return;
       }
-      if (!segment.highlightIds.length) {
+
+      // Normalize to array
+      const ids = Array.isArray(highlightIds) ? highlightIds : [highlightIds];
+
+      // Filter to valid highlights only
+      const validIds = ids.filter((id) => highlightLookup[id]);
+      if (!validIds.length) {
         return;
       }
 
@@ -364,62 +368,29 @@ const LessonSection = ({
       event.preventDefault();
       event.stopPropagation();
 
-      const targetRect = event.currentTarget.getBoundingClientRect();
+      // Select the first (primary) highlight, or keep current if it's in the list
+      const initialId =
+        activeHighlightId && validIds.includes(activeHighlightId)
+          ? activeHighlightId
+          : validIds[0];
 
-      const blockHighlightIds = blockContext?.blockHighlightIds;
-      const blockOrderedIds =
-        (blockHighlightIds && blockHighlightIds.length
-          ? blockHighlightIds
-          : segment.orderedHighlightIds) || segment.highlightIds;
-      const segmentOrderedIds =
-        segment.orderedHighlightIds && segment.orderedHighlightIds.length
-          ? segment.orderedHighlightIds
-          : segment.highlightIds;
+      onHighlightSelect?.(initialId);
 
-      const validHighlightIds = blockOrderedIds.filter(
-        (id) => highlightLookup[id]
-      );
-
-      if (!validHighlightIds.length) {
-        return;
-      }
-
-      const hasActiveOnSegment =
-        activeHighlightId && segmentOrderedIds.includes(activeHighlightId);
-      const initialHighlightId = hasActiveOnSegment
-        ? activeHighlightId
-        : segmentOrderedIds.find((id) => validHighlightIds.includes(id)) ||
-          validHighlightIds[0];
-
-      if (initialHighlightId && initialHighlightId !== activeHighlightId) {
-        onHighlightSelect?.(initialHighlightId);
-      }
-
-      const metrics = computePopoverMetrics(
-        targetRect,
-        validHighlightIds.length
-      );
+      const metrics = computePopoverMetrics(rect, validIds.length);
 
       setPopoverState({
-        blockKey: segment.blockId,
-        highlightIds: validHighlightIds,
-        activeHighlightId: initialHighlightId,
+        highlightIds: validIds,
+        activeHighlightId: initialId,
         position: {
           top: metrics.top,
           left: metrics.left,
         },
         popoverHeight: metrics.height,
-        isScrollable: metrics.isScrollable,
-        targetElement: event.currentTarget,
+        isScrollable: validIds.length > 4,
+        targetElement: event.target,
       });
     },
-    [
-      activeHighlightId,
-      highlightLookup,
-      onHighlightSelect,
-      computePopoverMetrics,
-      isEditing,
-    ]
+    [highlightLookup, activeHighlightId, onHighlightSelect, computePopoverMetrics, isEditing]
   );
 
   return (
@@ -509,17 +480,15 @@ const LessonSection = ({
                   onChange={handleEditorChange}
                   placeholder="Update this section's content…"
                 />
-              ) : hasHighlights ? (
-                <HighlightSegments
-                  pieces={pieces}
-                  anchorsByOffset={anchorsByOffset}
-                  highlightLookup={highlightLookup}
+              ) : (
+                <RichTextEditor
+                  value={content}
+                  readOnly
+                  highlights={highlightSource}
                   activeHighlightId={activeHighlightId}
                   previewHighlightId={previewHighlightId}
-                  onSegmentActivate={handleSegmentActivate}
+                  onHighlightClick={handleHighlightClick}
                 />
-              ) : (
-                <RichTextEditor value={content} readOnly />
               )}
             </div>
           </>

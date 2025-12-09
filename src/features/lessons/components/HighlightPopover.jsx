@@ -1,6 +1,8 @@
 import React from "react";
 import { createPortal } from "react-dom";
 
+const MAX_LIST_HEIGHT = 140; // Max height for the scrollable list area
+
 const HighlightPopover = ({
   popoverState,
   popoverHighlights = [],
@@ -33,14 +35,10 @@ const HighlightPopover = ({
         top: popoverState.position.top,
         left: popoverState.position.left,
         transform: "translate(-50%, 0)",
-        height: popoverState.isScrollable
-          ? `${popoverState.popoverHeight}px`
-          : "auto",
-        maxHeight: `${popoverState.popoverHeight || 320}px`,
-        overflowY: popoverState.isScrollable ? "auto" : "visible",
       }}
       onKeyDown={handlePopoverKeyDown}
     >
+      {/* Header with navigation - always visible */}
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
@@ -53,9 +51,7 @@ const HighlightPopover = ({
         </button>
         <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
           {popoverHighlights.length > 1
-            ? `Annotation ${resolvedPopoverIndex + 1} of ${
-                popoverHighlights.length
-              }`
+            ? `Annotation ${resolvedPopoverIndex + 1} of ${popoverHighlights.length}`
             : "Annotation"}
         </div>
         <button
@@ -69,7 +65,11 @@ const HighlightPopover = ({
         </button>
       </div>
 
-      <ul className="mt-2 space-y-1">
+      {/* Scrollable list area */}
+      <ul
+        className="mt-2 space-y-1 overflow-y-auto"
+        style={{ maxHeight: `${MAX_LIST_HEIGHT}px` }}
+      >
         {popoverHighlights.map((highlight) => {
           const isActive = highlight.id === popoverState.activeHighlightId;
           return (
@@ -86,7 +86,7 @@ const HighlightPopover = ({
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                   {highlight.action}
                 </p>
-                <p className="text-sm leading-snug text-black dark:text-white">
+                <p className="line-clamp-2 text-sm leading-snug text-black dark:text-white">
                   {highlight.text}
                 </p>
               </button>
