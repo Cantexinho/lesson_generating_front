@@ -95,3 +95,16 @@ export const updateLessonSectionContent = async (
   });
   return fetchLessonSectionsById(lessonId);
 };
+
+export const addLessonSection = async (lessonId, payload) => {
+  if (!lessonId) {
+    throw new Error("lessonId is required");
+  }
+  const { text, title } = payload || {};
+  await crudService.createLessonSection({
+    lessonId,
+    text: text || "",
+    title: title || "",
+  });
+  return fetchLessonSectionsById(lessonId);
+};

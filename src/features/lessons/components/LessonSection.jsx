@@ -35,7 +35,9 @@ const LessonSection = ({
   previewHighlightId = null,
   onSectionSave,
   onEditingChange,
+  onCancelNew,
   isEditing = false,
+  isNewSection = false,
 }) => {
   const sectionId = section.id;
   const content = resolveSectionContent(section);
@@ -135,11 +137,15 @@ const LessonSection = ({
     if (isSaving) {
       return;
     }
+    if (isNewSection && onCancelNew) {
+      onCancelNew();
+      return;
+    }
     setDraftContent(content);
     setDraftTitle(section.name || "");
     setPopoverState(null);
     onEditingChange?.(null);
-  }, [isSaving, content, section.name, onEditingChange]);
+  }, [isSaving, content, section.name, onEditingChange, isNewSection, onCancelNew]);
 
   const handleTitleChange = useCallback((event) => {
     setDraftTitle(event.target.value);
@@ -149,9 +155,20 @@ const LessonSection = ({
     if (isSaving || !onSectionSave) {
       return;
     }
+
+    const trimmedTitle = (draftTitle || "").trim();
+    const trimmedContent = (draftContent || "").trim();
+
+    if (isNewSection && (!trimmedTitle || !trimmedContent)) {
+      if (typeof window !== "undefined") {
+        window.alert("Please provide both a title and content for the new section.");
+      }
+      return;
+    }
+
     try {
       setIsSaving(true);
-      const normalizedTitle = (draftTitle || "").trim() || fallbackTitle;
+      const normalizedTitle = trimmedTitle || fallbackTitle;
       await onSectionSave(sectionId, {
         text: draftContent ?? "",
         title: normalizedTitle,
@@ -176,6 +193,7 @@ const LessonSection = ({
     draftTitle,
     fallbackTitle,
     onEditingChange,
+    isNewSection,
   ]);
 
   useEffect(() => {
