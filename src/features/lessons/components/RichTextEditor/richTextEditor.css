@@ -1,179 +1,380 @@
 /* RichTextEditor styles */
 
 .rich-text-editor {
-  @apply rounded-lg border border-gray-300 bg-white dark:border-gray-700 dark:bg-slate-900;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+}
+
+.dark .rich-text-editor {
+  border-color: #374151;
+  background-color: #0f172a;
 }
 
 /* Read-only mode: no borders, transparent background */
 .rich-text-editor.rich-text-editor--readonly {
-  @apply border-0 bg-transparent dark:bg-transparent;
+  border: none;
+  background-color: transparent;
+}
+
+.dark .rich-text-editor.rich-text-editor--readonly {
+  background-color: transparent;
 }
 
 .rich-text-editor .ProseMirror {
-  @apply min-h-[280px] px-4 py-3 text-gray-900 outline-none dark:text-white;
+  min-height: 280px;
+  padding: 0.75rem 1rem;
+  color: #111827;
+  outline: none;
+}
+
+.dark .rich-text-editor .ProseMirror {
+  color: #ffffff;
 }
 
 .rich-text-editor.rich-text-editor--readonly .ProseMirror {
-  @apply min-h-0 p-0;
+  min-height: 0;
+  padding: 0;
 }
 
 .rich-text-editor .ProseMirror:focus {
-  @apply outline-none;
+  outline: none;
 }
 
 /* Placeholder */
 .rich-text-editor .ProseMirror p.is-editor-empty:first-child::before {
-  @apply pointer-events-none float-left h-0 text-gray-400 dark:text-gray-500;
+  pointer-events: none;
+  float: left;
+  height: 0;
+  color: #9ca3af;
   content: attr(data-placeholder);
+}
+
+.dark .rich-text-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: #6b7280;
 }
 
 /* Typography */
 .rich-text-editor .ProseMirror p {
-  @apply mb-3 leading-relaxed;
+  margin-bottom: 0.75rem;
+  line-height: 1.625;
 }
 
 .rich-text-editor .ProseMirror p:last-child {
-  @apply mb-0;
+  margin-bottom: 0;
 }
 
 /* Bold, Italic, Strike */
 .rich-text-editor .ProseMirror strong {
-  @apply font-bold;
+  font-weight: 700;
 }
 
 .rich-text-editor .ProseMirror em {
-  @apply italic;
+  font-style: italic;
 }
 
 .rich-text-editor .ProseMirror s {
-  @apply line-through;
+  text-decoration: line-through;
 }
 
 /* Inline code */
 .rich-text-editor .ProseMirror code {
-  @apply rounded border border-slate-200 bg-slate-100 px-1 py-0.5 text-[0.95em] text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100;
+  border-radius: 0.25rem;
+  border: 1px solid #94a3b8;
+  background-color: #cbd5e1;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.95em;
+  color: #0f172a;
+}
+
+.dark .rich-text-editor .ProseMirror code {
+  border-color: #374151;
+  background-color: #1e293b;
+  color: #f1f5f9;
 }
 
 /* Read-only: subtle inline code */
 .rich-text-editor.rich-text-editor--readonly .ProseMirror code {
-  @apply bg-gray-200/50 dark:bg-gray-700/50;
+  background-color: rgba(209, 213, 219, 0.6);
+}
+
+.dark .rich-text-editor.rich-text-editor--readonly .ProseMirror code {
+  background-color: rgba(55, 65, 81, 0.5);
 }
 
 /* Code blocks */
 .rich-text-editor .ProseMirror pre {
-  @apply my-3 overflow-auto rounded border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-700 dark:bg-slate-800;
+  margin: 0.75rem 0;
+  overflow: auto;
+  border-radius: 0.25rem;
+  border: 1px solid #94a3b8;
+  background-color: #cbd5e1;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+.dark .rich-text-editor .ProseMirror pre {
+  border-color: #374151;
+  background-color: #1e293b;
 }
 
 .rich-text-editor .ProseMirror pre code {
-  @apply border-0 bg-transparent p-0;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  border-radius: 0 !important;
 }
 
 /* Read-only: code blocks match section background */
 .rich-text-editor.rich-text-editor--readonly .ProseMirror pre {
-  @apply bg-gray-100/50 dark:bg-gray-800/50;
+  background-color: rgba(209, 213, 219, 0.5);
+}
+
+.dark .rich-text-editor.rich-text-editor--readonly .ProseMirror pre {
+  background-color: rgba(31, 41, 55, 0.5);
+}
+
+.rich-text-editor.rich-text-editor--readonly .ProseMirror pre code {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  border-radius: 0 !important;
 }
 
 /* Blockquote */
 .rich-text-editor .ProseMirror blockquote {
-  @apply my-3 border-l-4 border-blue-400 pl-4 text-gray-700 dark:text-gray-300;
+  margin: 0.75rem 0;
+  border-left: 4px solid #60a5fa;
+  padding-left: 1rem;
+  color: #374151;
+}
+
+.dark .rich-text-editor .ProseMirror blockquote {
+  color: #d1d5db;
 }
 
 /* Horizontal rule */
 .rich-text-editor .ProseMirror hr {
-  @apply my-4 border-t border-gray-300 dark:border-gray-600;
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid #d1d5db;
+}
+
+.dark .rich-text-editor .ProseMirror hr {
+  border-top-color: #4b5563;
 }
 
 /* Lists */
 .rich-text-editor .ProseMirror ul {
-  @apply my-2 ml-6 list-disc;
+  margin: 0.5rem 0;
+  margin-left: 1.5rem;
+  list-style-type: disc;
 }
 
 .rich-text-editor .ProseMirror ol {
-  @apply my-2 ml-6 list-decimal;
+  margin: 0.5rem 0;
+  margin-left: 1.5rem;
+  list-style-type: decimal;
 }
 
 .rich-text-editor .ProseMirror li {
-  @apply mb-1 leading-relaxed;
+  margin-bottom: 0.25rem;
+  line-height: 1.625;
 }
 
 .rich-text-editor .ProseMirror li p {
-  @apply mb-0;
+  margin-bottom: 0;
 }
 
 /* Task list */
 .rich-text-editor .ProseMirror ul[data-type="taskList"] {
-  @apply ml-0 list-none;
+  margin-left: 0;
+  list-style-type: none;
 }
 
 .rich-text-editor .ProseMirror ul[data-type="taskList"] li {
-  @apply flex items-start gap-2;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .rich-text-editor .ProseMirror ul[data-type="taskList"] li > label {
-  @apply mt-0.5 flex-shrink-0;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
 }
 
 .rich-text-editor .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
-  @apply h-4 w-4 cursor-pointer accent-blue-600;
+  height: 1rem;
+  width: 1rem;
+  cursor: pointer;
+  accent-color: #2563eb;
 }
 
 .rich-text-editor .ProseMirror ul[data-type="taskList"] li > div {
-  @apply flex-1;
+  flex: 1;
 }
 
 /* Links */
 .rich-text-editor .ProseMirror a {
-  @apply text-blue-600 underline dark:text-blue-400;
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.dark .rich-text-editor .ProseMirror a {
+  color: #60a5fa;
 }
 
 .rich-text-editor .ProseMirror a:hover {
-  @apply text-blue-800 dark:text-blue-300;
+  color: #1e40af;
+}
+
+.dark .rich-text-editor .ProseMirror a:hover {
+  color: #93c5fd;
 }
 
 /* Tables */
 .rich-text-editor .ProseMirror table {
-  @apply my-3 w-full border-collapse overflow-hidden rounded;
+  margin: 0.75rem 0;
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 0.25rem;
 }
 
 .rich-text-editor .ProseMirror table td,
 .rich-text-editor .ProseMirror table th {
-  @apply border border-gray-300 px-3 py-2 text-left dark:border-gray-600;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
   min-width: 80px;
 }
 
+.dark .rich-text-editor .ProseMirror table td,
+.dark .rich-text-editor .ProseMirror table th {
+  border-color: #4b5563;
+}
+
 .rich-text-editor .ProseMirror table th {
-  @apply bg-gray-100 font-semibold dark:bg-gray-800;
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.dark .rich-text-editor .ProseMirror table th {
+  background-color: #1f2937;
 }
 
 .rich-text-editor .ProseMirror table td {
-  @apply bg-white dark:bg-gray-900;
+  background-color: #ffffff;
+}
+
+.dark .rich-text-editor .ProseMirror table td {
+  background-color: #111827;
 }
 
 /* Read-only: transparent table cell backgrounds */
 .rich-text-editor.rich-text-editor--readonly .ProseMirror table th {
-  @apply bg-gray-200/50 dark:bg-gray-700/50;
+  background-color: rgba(229, 231, 235, 0.5);
+}
+
+.dark .rich-text-editor.rich-text-editor--readonly .ProseMirror table th {
+  background-color: rgba(55, 65, 81, 0.5);
 }
 
 .rich-text-editor.rich-text-editor--readonly .ProseMirror table td {
-  @apply bg-transparent;
+  background-color: transparent;
 }
 
 /* Selected table cells */
 .rich-text-editor .ProseMirror .selectedCell {
-  @apply bg-blue-100 dark:bg-blue-900/30;
+  background-color: #dbeafe;
+}
+
+.dark .rich-text-editor .ProseMirror .selectedCell {
+  background-color: rgba(30, 58, 138, 0.3);
 }
 
 /* Table resize handle */
 .rich-text-editor .ProseMirror .tableWrapper {
-  @apply overflow-x-auto;
+  overflow-x: auto;
 }
 
 .rich-text-editor .ProseMirror .column-resize-handle {
-  @apply absolute right-[-2px] top-0 z-10 w-1 cursor-col-resize bg-blue-500;
+  position: absolute;
+  right: -2px;
+  top: 0;
   bottom: -2px;
+  z-index: 10;
+  width: 4px;
+  cursor: col-resize;
+  background-color: #3b82f6;
 }
 
 .rich-text-editor .ProseMirror.resize-cursor {
-  @apply cursor-col-resize;
+  cursor: col-resize;
 }
 
+/* Highlight decorations */
+.highlight-decoration {
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.highlight-decoration--idle {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: rgba(59, 130, 246, 0.7);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.24em;
+}
+
+.highlight-decoration--active.highlight-decoration--default,
+.highlight-decoration--active.highlight-decoration--ask {
+  background-color: rgba(191, 219, 254, 0.6);
+  border-top: 1px solid rgba(96, 165, 250, 0.8);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.8);
+  border-left: 1px solid rgba(96, 165, 250, 0.8);
+  border-right: 1px solid rgba(96, 165, 250, 0.8);
+  text-decoration: none;
+}
+
+.highlight-decoration--preview.highlight-decoration--default,
+.highlight-decoration--preview.highlight-decoration--ask {
+  background-color: rgba(219, 234, 254, 0.4);
+  border-top: 1px solid rgba(147, 197, 253, 0.6);
+  border-bottom: 1px solid rgba(147, 197, 253, 0.6);
+  border-left: 1px solid rgba(147, 197, 253, 0.6);
+  border-right: 1px solid rgba(147, 197, 253, 0.6);
+  text-decoration: none;
+}
+
+.dark .highlight-decoration--active.highlight-decoration--default,
+.dark .highlight-decoration--active.highlight-decoration--ask {
+  background-color: rgba(59, 130, 246, 0.25);
+  border-color: rgba(96, 165, 250, 0.7);
+}
+
+.dark .highlight-decoration--preview.highlight-decoration--default,
+.dark .highlight-decoration--preview.highlight-decoration--ask {
+  background-color: rgba(59, 130, 246, 0.15);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+/* Continuous highlight segments - remove borders between connected segments */
+.highlight-decoration--active.highlight-decoration--continues-left,
+.highlight-decoration--preview.highlight-decoration--continues-left {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
+}
+
+.highlight-decoration--active.highlight-decoration--continues-right,
+.highlight-decoration--preview.highlight-decoration--continues-right {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right-width: 0;
+}

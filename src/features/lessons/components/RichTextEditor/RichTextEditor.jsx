@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo, useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -10,6 +10,7 @@ import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import { Markdown } from 'tiptap-markdown';
 import RichTextToolbar from './RichTextToolbar';
+import HighlightExtension, { updateHighlights, setHighlightClickHandler } from './highlightExtension';
 import { normalizeMarkdown, postProcessMarkdown } from './markdownConverter';
 import './richTextEditor.css';
 
@@ -19,14 +20,30 @@ const RichTextEditor = ({
   readOnly = false,
   placeholder = 'Start typing...',
   className = '',
+  highlights = [],
+  activeHighlightId = null,
+  previewHighlightId = null,
+  onHighlightClick,
 }) => {
   const isInternalUpdate = useRef(false);
   const lastExternalValue = useRef(value);
+  const onHighlightClickRef = useRef(onHighlightClick);
 
-  const editor = useEditor({
-    extensions: [
+  // Keep the ref updated
+  useEffect(() => {
+    onHighlightClickRef.current = onHighlightClick;
+  }, [onHighlightClick]);
+
+  // Stable click handler that uses the ref
+  const stableHighlightClick = useCallback((highlightId, rect, event) => {
+    onHighlightClickRef.current?.(highlightId, rect, event);
+  }, []);
+
+  // Extensions are stable - only depend on readOnly
+  const extensions = useMemo(() => {
+    const baseExtensions = [
       StarterKit.configure({
-        heading: false, // Disable headings to keep content flat
+        heading: false,
         codeBlock: {
           HTMLAttributes: {
             class: 'code-block',
@@ -58,7 +75,25 @@ const RichTextEditor = ({
         transformPastedText: true,
         transformCopiedText: true,
       }),
-    ],
+    ];
+
+    // Always include HighlightExtension in readOnly mode to keep editor stable
+    if (readOnly) {
+      baseExtensions.push(
+        HighlightExtension.configure({
+          highlights: [],
+          activeHighlightId: null,
+          previewHighlightId: null,
+          onHighlightClick: stableHighlightClick,
+        })
+      );
+    }
+
+    return baseExtensions;
+  }, [readOnly, stableHighlightClick]);
+
+  const editor = useEditor({
+    extensions,
     content: normalizeMarkdown(value),
     editable: !readOnly,
     editorProps: {
@@ -75,12 +110,23 @@ const RichTextEditor = ({
       const processed = postProcessMarkdown(markdown);
       onChange(processed);
       
-      // Reset flag after a tick
       requestAnimationFrame(() => {
         isInternalUpdate.current = false;
       });
     },
-  });
+  }, [extensions]);
+
+  // Update highlights via transaction when they change (works even with empty array)
+  useEffect(() => {
+    if (!editor || !readOnly) return;
+    updateHighlights(editor, highlights, activeHighlightId, previewHighlightId);
+  }, [editor, readOnly, highlights, activeHighlightId, previewHighlightId]);
+
+  // Update click handler in the extension
+  useEffect(() => {
+    if (!editor || !readOnly) return;
+    setHighlightClickHandler(editor, stableHighlightClick);
+  }, [editor, readOnly, stableHighlightClick]);
 
   // Sync external value changes (e.g., cancel restoring original content)
   useEffect(() => {
