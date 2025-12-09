@@ -14,13 +14,16 @@ import HighlightExtension, { updateHighlights, setHighlightClickHandler } from '
 import { normalizeMarkdown, postProcessMarkdown } from './markdownConverter';
 import './richTextEditor.css';
 
+// Stable empty array to prevent unnecessary re-renders
+const EMPTY_HIGHLIGHTS = [];
+
 const RichTextEditor = ({
   value = '',
   onChange,
   readOnly = false,
   placeholder = 'Start typing...',
   className = '',
-  highlights = [],
+  highlights,
   activeHighlightId = null,
   previewHighlightId = null,
   onHighlightClick,
@@ -28,6 +31,10 @@ const RichTextEditor = ({
   const isInternalUpdate = useRef(false);
   const lastExternalValue = useRef(value);
   const onHighlightClickRef = useRef(onHighlightClick);
+
+  // Use stable empty array if highlights not provided
+  const stableHighlights = highlights || EMPTY_HIGHLIGHTS;
+  const hasHighlightSupport = Boolean(onHighlightClick);
 
   // Keep the ref updated
   useEffect(() => {
@@ -39,7 +46,7 @@ const RichTextEditor = ({
     onHighlightClickRef.current?.(highlightId, rect, event);
   }, []);
 
-  // Extensions are stable - only depend on readOnly
+  // Extensions are stable - only depend on readOnly and whether highlight support is needed
   const extensions = useMemo(() => {
     const baseExtensions = [
       StarterKit.configure({
@@ -77,11 +84,11 @@ const RichTextEditor = ({
       }),
     ];
 
-    // Always include HighlightExtension in readOnly mode to keep editor stable
-    if (readOnly) {
+    // Only include HighlightExtension when highlight support is needed
+    if (readOnly && hasHighlightSupport) {
       baseExtensions.push(
         HighlightExtension.configure({
-          highlights: [],
+          highlights: EMPTY_HIGHLIGHTS,
           activeHighlightId: null,
           previewHighlightId: null,
           onHighlightClick: stableHighlightClick,
@@ -90,7 +97,7 @@ const RichTextEditor = ({
     }
 
     return baseExtensions;
-  }, [readOnly, stableHighlightClick]);
+  }, [readOnly, hasHighlightSupport, stableHighlightClick]);
 
   const editor = useEditor({
     extensions,
@@ -116,17 +123,19 @@ const RichTextEditor = ({
     },
   }, [extensions]);
 
-  // Update highlights via transaction when they change (works even with empty array)
+  // Update highlights via transaction when they change
+  // Only run when highlight support is enabled and there are actual highlights
   useEffect(() => {
-    if (!editor || !readOnly) return;
-    updateHighlights(editor, highlights, activeHighlightId, previewHighlightId);
-  }, [editor, readOnly, highlights, activeHighlightId, previewHighlightId]);
+    if (!editor || !readOnly || !hasHighlightSupport) return;
+    if (stableHighlights.length === 0 && !activeHighlightId && !previewHighlightId) return;
+    updateHighlights(editor, stableHighlights, activeHighlightId, previewHighlightId);
+  }, [editor, readOnly, hasHighlightSupport, stableHighlights, activeHighlightId, previewHighlightId]);
 
   // Update click handler in the extension
   useEffect(() => {
-    if (!editor || !readOnly) return;
+    if (!editor || !readOnly || !hasHighlightSupport) return;
     setHighlightClickHandler(editor, stableHighlightClick);
-  }, [editor, readOnly, stableHighlightClick]);
+  }, [editor, readOnly, hasHighlightSupport, stableHighlightClick]);
 
   // Sync external value changes (e.g., cancel restoring original content)
   useEffect(() => {
