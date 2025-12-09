@@ -3,6 +3,7 @@ import Spinner from "./Spinner";
 import LessonSection from "./LessonSection";
 
 const LessonMain = ({
+  lessonId,
   sections,
   setSections,
   title,
@@ -126,6 +127,7 @@ const LessonMain = ({
           sections.map((section) => (
             <LessonSection
               key={section.id}
+              lessonId={lessonId}
               section={section}
               loading={loading}
               highlights={
