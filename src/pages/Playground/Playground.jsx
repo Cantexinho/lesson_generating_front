@@ -148,6 +148,34 @@ const Playground = () => {
     [lesson, setSections, setLoading]
   );
 
+  const handleSectionAdd = useCallback(
+    async (data) => {
+      if (!lesson?.id) {
+        throw new Error("Select a lesson before adding sections.");
+      }
+      setLoading((prev) => ({ ...prev, adding: true }));
+      try {
+        const updatedSections = await lessonDataOperations.addLessonSection(
+          lesson.id,
+          data
+        );
+        setSections(updatedSections);
+        setEditingSectionId(null);
+        return true;
+      } catch (error) {
+        console.error("Failed to add section", error);
+        throw error;
+      } finally {
+        setLoading((prev) => {
+          const next = { ...prev };
+          delete next.adding;
+          return next;
+        });
+      }
+    },
+    [lesson]
+  );
+
   const handleLessonSelect = async (selectedLesson) => {
     resetConversationState();
 
@@ -573,6 +601,7 @@ const Playground = () => {
           activeHighlightId={activeHighlightId}
           previewHighlightId={previewHighlightId}
           onSectionSave={handleSectionSave}
+          onSectionAdd={handleSectionAdd}
           editingSectionId={editingSectionId}
           onEditingChange={handleEditingChange}
         />

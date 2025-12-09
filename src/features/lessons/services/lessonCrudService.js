@@ -36,6 +36,19 @@ const realApi = {
   fetchLessonById: (id) =>
     fetchJson(`${LESSON_API_BASE}/lessons/${encodeURIComponent(id || "")}`),
   fetchAllLessons: () => fetchJson(`${LESSON_API_BASE}/lessons/titles`),
+  createLessonSection: async ({ lessonId, text, title }) => {
+    if (!lessonId) {
+      throw new Error("lessonId is required");
+    }
+    return fetchJson(
+      `${LESSON_API_BASE}/lessons/${encodeURIComponent(lessonId)}/sections`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, title, name: title }),
+      }
+    );
+  },
   updateLessonSection: async ({ lessonId, sectionId, text, title }) => {
     if (!lessonId || !sectionId) {
       throw new Error("lessonId and sectionId are required");
@@ -155,6 +168,26 @@ const mockApi = (() => {
     },
     fetchAllLessons: async () =>
       lessons.map((lesson) => deepClone(cloneBasicLesson(lesson))),
+    createLessonSection: async ({ lessonId, text, title }) => {
+      if (!lessonId) {
+        throw new Error("lessonId is required");
+      }
+      const lessonIndex = findLessonIndex(lessonId);
+      if (lessonIndex === -1) {
+        throw new Error("Lesson not found");
+      }
+      const lesson = lessons[lessonIndex];
+      const newId = `section-${Date.now()}`;
+      const newSection = {
+        id: newId,
+        number: (lesson.sections?.length || 0) + 1,
+        name: title || "",
+        lesson_section_content: text || "",
+      };
+      lesson.sections = [...(lesson.sections || []), newSection];
+      lessons[lessonIndex] = lesson;
+      return { section_id: newId };
+    },
     updateLessonSection: async ({ lessonId, sectionId, text, title }) => {
       if (!lessonId || !sectionId) {
         throw new Error("lessonId and sectionId are required");
@@ -194,4 +227,5 @@ const api = useStaticLessons ? mockApi : realApi;
 export const fetchLessonById = api.fetchLessonById;
 export const fetchAllLessons = api.fetchAllLessons;
 export const deleteLesson = api.deleteLesson;
+export const createLessonSection = api.createLessonSection;
 export const updateLessonSection = api.updateLessonSection;
