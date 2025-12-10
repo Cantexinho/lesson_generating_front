@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import LessonSetupModal from "features/lessons/components/LessonSetupModal";
 import LessonMain from "features/lessons/components/LessonMain";
 import PgNavBar from "features/lessons/components/PgNavBar";
@@ -174,6 +174,72 @@ const Playground = () => {
       }
     },
     [lesson]
+  );
+
+  const handleSectionDelete = useCallback(
+    async (sectionId) => {
+      if (!lesson?.id || !sectionId) {
+        throw new Error("Lesson and section are required for deletion.");
+      }
+      setLoading((prev) => ({ ...prev, [sectionId]: true }));
+      try {
+        const updatedSections = await lessonDataOperations.removeLessonSection(
+          lesson.id,
+          sectionId
+        );
+        setSections(updatedSections);
+      } catch (error) {
+        console.error("Failed to delete section", error);
+        throw error;
+      } finally {
+        setLoading((prev) => {
+          const next = { ...prev };
+          delete next[sectionId];
+          return next;
+        });
+      }
+    },
+    [lesson]
+  );
+
+  const isSectionMovingRef = useRef(false);
+  const handleSectionMove = useCallback(
+    async (sectionId, newPosition) => {
+      if (isSectionMovingRef.current) {
+        return;
+      }
+      if (!lesson?.id || !sectionId) {
+        throw new Error("Lesson and section are required for moving.");
+      }
+      isSectionMovingRef.current = true;
+
+      // Optimistic update: reorder locally immediately
+      const previousSections = sections;
+      const currentIndex = sections.findIndex((s) => s.id === sectionId);
+      if (currentIndex !== -1 && newPosition >= 0 && newPosition < sections.length) {
+        const reordered = [...sections];
+        const [moved] = reordered.splice(currentIndex, 1);
+        reordered.splice(newPosition, 0, moved);
+        setSections(reordered);
+      }
+
+      try {
+        const updatedSections = await lessonDataOperations.moveLessonSection(
+          lesson.id,
+          sectionId,
+          newPosition
+        );
+        setSections(updatedSections);
+      } catch (error) {
+        console.error("Failed to move section", error);
+        // Revert on error
+        setSections(previousSections);
+        throw error;
+      } finally {
+        isSectionMovingRef.current = false;
+      }
+    },
+    [lesson, sections]
   );
 
   const handleLessonSelect = async (selectedLesson) => {
@@ -602,6 +668,8 @@ const Playground = () => {
           previewHighlightId={previewHighlightId}
           onSectionSave={handleSectionSave}
           onSectionAdd={handleSectionAdd}
+          onSectionDelete={handleSectionDelete}
+          onSectionMove={handleSectionMove}
           editingSectionId={editingSectionId}
           onEditingChange={handleEditingChange}
         />

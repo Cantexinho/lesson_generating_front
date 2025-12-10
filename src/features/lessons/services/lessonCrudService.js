@@ -76,6 +76,32 @@ const realApi = {
       }
     );
   },
+  deleteLessonSection: async ({ lessonId, sectionId }) => {
+    if (!lessonId || !sectionId) {
+      throw new Error("lessonId and sectionId are required");
+    }
+    return fetchJson(
+      `${LESSON_API_BASE}/lessons/${encodeURIComponent(
+        lessonId
+      )}/sections/${encodeURIComponent(sectionId)}`,
+      { method: "DELETE" }
+    );
+  },
+  updateSectionPosition: async ({ lessonId, sectionId, position }) => {
+    if (!lessonId || !sectionId) {
+      throw new Error("lessonId and sectionId are required");
+    }
+    return fetchJson(
+      `${LESSON_API_BASE}/lessons/${encodeURIComponent(
+        lessonId
+      )}/sections/${encodeURIComponent(sectionId)}/position`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ position }),
+      }
+    );
+  },
   deleteLesson: async (lessonId) => {
     if (!lessonId) {
       throw new Error("lessonId is required for deleteLesson");
@@ -219,6 +245,47 @@ const mockApi = (() => {
       lessons = lessons.filter((lesson) => lesson.id !== lessonId);
       return { success: true };
     },
+    deleteLessonSection: async ({ lessonId, sectionId }) => {
+      if (!lessonId || !sectionId) {
+        throw new Error("lessonId and sectionId are required");
+      }
+      const lessonIndex = findLessonIndex(lessonId);
+      if (lessonIndex === -1) {
+        throw new Error("Lesson not found");
+      }
+      const lesson = lessons[lessonIndex];
+      lesson.sections = (lesson.sections || []).filter(
+        (section) => String(section.id) !== String(sectionId)
+      );
+      lessons[lessonIndex] = lesson;
+      return { success: true };
+    },
+    updateSectionPosition: async ({ lessonId, sectionId, position }) => {
+      if (!lessonId || !sectionId) {
+        throw new Error("lessonId and sectionId are required");
+      }
+      const lessonIndex = findLessonIndex(lessonId);
+      if (lessonIndex === -1) {
+        throw new Error("Lesson not found");
+      }
+      const lesson = lessons[lessonIndex];
+      const sections = lesson.sections || [];
+      const currentIndex = sections.findIndex(
+        (s) => String(s.id) === String(sectionId)
+      );
+      if (currentIndex === -1) {
+        throw new Error("Section not found");
+      }
+      const [moved] = sections.splice(currentIndex, 1);
+      const newIndex = Math.max(0, Math.min(position - 1, sections.length));
+      sections.splice(newIndex, 0, moved);
+      sections.forEach((s, i) => {
+        s.number = i + 1;
+      });
+      lesson.sections = sections;
+      lessons[lessonIndex] = lesson;
+      return null;
+    },
   };
 })();
 
@@ -229,3 +296,5 @@ export const fetchAllLessons = api.fetchAllLessons;
 export const deleteLesson = api.deleteLesson;
 export const createLessonSection = api.createLessonSection;
 export const updateLessonSection = api.updateLessonSection;
+export const deleteLessonSection = api.deleteLessonSection;
+export const updateSectionPosition = api.updateSectionPosition;

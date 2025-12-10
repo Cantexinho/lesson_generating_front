@@ -108,3 +108,23 @@ export const addLessonSection = async (lessonId, payload) => {
   });
   return fetchLessonSectionsById(lessonId);
 };
+
+export const removeLessonSection = async (lessonId, sectionId) => {
+  if (!lessonId || !sectionId) {
+    throw new Error("lessonId and sectionId are required");
+  }
+  await crudService.deleteLessonSection({ lessonId, sectionId });
+  return fetchLessonSectionsById(lessonId);
+};
+
+export const moveLessonSection = async (lessonId, sectionId, newPosition) => {
+  if (!lessonId || !sectionId) {
+    throw new Error("lessonId and sectionId are required");
+  }
+  await crudService.updateSectionPosition({
+    lessonId,
+    sectionId,
+    position: newPosition,
+  });
+  return fetchLessonSectionsById(lessonId);
+};

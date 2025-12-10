@@ -19,6 +19,8 @@ const LessonMain = ({
   previewHighlightId,
   onSectionSave,
   onSectionAdd,
+  onSectionDelete,
+  onSectionMove,
   editingSectionId,
   onEditingChange,
 }) => {
@@ -167,7 +169,7 @@ const LessonMain = ({
           </div>
         ) : (
           <>
-            {allSections.map((section) => {
+            {allSections.map((section, index) => {
               const isNewSection = section.id === pendingNewSection?.id;
               return (
                 <LessonSection
@@ -184,10 +186,14 @@ const LessonMain = ({
                   activeHighlightId={editingSectionId ? null : activeHighlightId}
                   previewHighlightId={editingSectionId ? null : previewHighlightId}
                   onSectionSave={isNewSection ? handleNewSectionSave : onSectionSave}
+                  onSectionDelete={isNewSection ? undefined : onSectionDelete}
+                  onSectionMove={isNewSection ? undefined : onSectionMove}
                   onEditingChange={isNewSection ? undefined : onEditingChange}
                   onCancelNew={isNewSection ? handleNewSectionCancel : undefined}
                   isEditing={editingSectionId === section.id}
                   isNewSection={isNewSection}
+                  sectionIndex={index}
+                  totalSections={sections.length}
                 />
               );
             })}

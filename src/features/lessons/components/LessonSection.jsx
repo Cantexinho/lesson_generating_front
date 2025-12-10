@@ -34,10 +34,14 @@ const LessonSection = ({
   activeHighlightId = null,
   previewHighlightId = null,
   onSectionSave,
+  onSectionDelete,
+  onSectionMove,
   onEditingChange,
   onCancelNew,
   isEditing = false,
   isNewSection = false,
+  sectionIndex = 0,
+  totalSections = 1,
 }) => {
   const sectionId = section.id;
   const content = resolveSectionContent(section);
@@ -47,6 +51,9 @@ const LessonSection = ({
   const [draftContent, setDraftContent] = useState(content);
   const [draftTitle, setDraftTitle] = useState(section.name || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
+  const isMovingRef = useRef(false);
   const sectionLoading = Boolean(loading[sectionId]);
   const highlightSource = isEditing ? [] : highlights;
   const fallbackTitle =
@@ -195,6 +202,85 @@ const LessonSection = ({
     onEditingChange,
     isNewSection,
   ]);
+
+  const handleDelete = useCallback(async () => {
+    if (isDeleting || !onSectionDelete || isNewSection) {
+      return;
+    }
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this section? This action cannot be undone."
+    );
+    if (!confirmed) {
+      return;
+    }
+    try {
+      setIsDeleting(true);
+      await onSectionDelete(sectionId);
+    } catch (error) {
+      console.error("Failed to delete section", error);
+      if (typeof window !== "undefined") {
+        window.alert(
+          error?.message || "Unable to delete section. Please try again."
+        );
+      }
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [isDeleting, onSectionDelete, sectionId, isNewSection]);
+
+  const handleMoveUp = useCallback(async () => {
+    if (
+      isMovingRef.current ||
+      !onSectionMove ||
+      isNewSection ||
+      sectionIndex === 0
+    ) {
+      return;
+    }
+    const targetPosition = sectionIndex - 1;
+    try {
+      isMovingRef.current = true;
+      setIsMoving(true);
+      await onSectionMove(sectionId, targetPosition);
+    } catch (error) {
+      console.error("Failed to move section up", error);
+      if (typeof window !== "undefined") {
+        window.alert(
+          error?.message || "Unable to move section. Please try again."
+        );
+      }
+    } finally {
+      isMovingRef.current = false;
+      setIsMoving(false);
+    }
+  }, [onSectionMove, sectionId, sectionIndex, isNewSection]);
+
+  const handleMoveDown = useCallback(async () => {
+    if (
+      isMovingRef.current ||
+      !onSectionMove ||
+      isNewSection ||
+      sectionIndex >= totalSections - 1
+    ) {
+      return;
+    }
+    const targetPosition = sectionIndex + 1;
+    try {
+      isMovingRef.current = true;
+      setIsMoving(true);
+      await onSectionMove(sectionId, targetPosition);
+    } catch (error) {
+      console.error("Failed to move section down", error);
+      if (typeof window !== "undefined") {
+        window.alert(
+          error?.message || "Unable to move section. Please try again."
+        );
+      }
+    } finally {
+      isMovingRef.current = false;
+      setIsMoving(false);
+    }
+  }, [onSectionMove, sectionId, sectionIndex, totalSections, isNewSection]);
 
   useEffect(() => {
     if (!popoverState) {
@@ -413,16 +499,19 @@ const LessonSection = ({
     [highlightLookup, activeHighlightId, onHighlightSelect, computePopoverMetrics, isEditing]
   );
 
+  const showMoveArrows = !isEditing && !isNewSection && onSectionMove && totalSections > 1;
+
   return (
     <div
-      className="relative flex w-full justify-between text-xs md:text-base"
+      className="relative flex w-full text-xs md:text-base"
       data-lesson-section={sectionId}
       data-section-title={section.name}
     >
       <div
-        className="relative w-full border border-gray-300 bg-secondary p-4 text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
+        className="flex w-full border border-gray-300 bg-secondary text-black dark:border-gray-800 dark:bg-primary-dark dark:text-white"
         ref={contentWrapperRef}
       >
+        <div className="flex-1 p-4">
         <div className="absolute right-4 top-4 flex gap-2 text-xs font-semibold">
           {isEditing ? (
             <>
@@ -446,16 +535,44 @@ const LessonSection = ({
               </button>
             </>
           ) : (
-            <button
-              type="button"
-              className="flex items-center gap-1 rounded border border-gray-400 px-3 py-1 text-gray-700 dark:text-gray-100 disabled:opacity-60"
-              onClick={handleEnterEdit}
-              disabled={sectionLoading}
-              aria-label="Edit section"
-            >
-              <FontAwesomeIcon icon={faPenToSquare} className="h-3.5 w-3.5" />
-              Edit
-            </button>
+            <>
+              <button
+                type="button"
+                className="flex items-center gap-1 rounded border border-gray-400 px-3 py-1 text-gray-700 dark:text-gray-100 disabled:opacity-60"
+                onClick={handleEnterEdit}
+                disabled={sectionLoading || isDeleting}
+                aria-label="Edit section"
+              >
+                <FontAwesomeIcon icon={faPenToSquare} className="h-3.5 w-3.5" />
+                Edit
+              </button>
+              {onSectionDelete && !isNewSection && (
+                <button
+                  type="button"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 transition hover:bg-red-50 hover:text-red-600 dark:text-gray-400 dark:hover:bg-red-950 dark:hover:text-red-400 disabled:opacity-60"
+                  onClick={handleDelete}
+                  disabled={sectionLoading || isDeleting}
+                  aria-label="Delete section"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 pointer-events-none"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 7h16" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M6 7l1 11a2 2 0 002 2h6a2 2 0 002-2l1-11" />
+                    <path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2" />
+                  </svg>
+                </button>
+              )}
+            </>
           )}
         </div>
         {sectionLoading ? (
@@ -483,7 +600,7 @@ const LessonSection = ({
                   />
                 </div>
               ) : (
-                <h2 className="text-lg font-semibold text-black dark:text-white">
+                <h2 className="pr-28 text-lg font-semibold text-black dark:text-white">
                   {section.name || fallbackTitle}
                 </h2>
               )}
@@ -519,7 +636,51 @@ const LessonSection = ({
             )}
           </>
         )}
-
+        </div>
+        {showMoveArrows && (
+          <div className="flex flex-col items-center justify-center">
+            <button
+              type="button"
+              onClick={handleMoveUp}
+              disabled={sectionLoading || isMoving || sectionIndex === 0}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-200 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-30 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+              aria-label="Move section up"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 pointer-events-none"
+                aria-hidden="true"
+              >
+                <path d="M18 15l-6-6-6 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={handleMoveDown}
+              disabled={sectionLoading || isMoving || sectionIndex >= totalSections - 1}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-200 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-30 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+              aria-label="Move section down"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 pointer-events-none"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
       {!isEditing && (
         <HighlightPopover
